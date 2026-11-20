@@ -396,12 +396,12 @@ function displayTime(value) {
 
 function fillMember(row, name) {
   const member = members.get(normalize(name));
-  row.cells[1].textContent = member?.Character || '—';
+  row.cells[1].textContent = member?.Character || '-';
 
   const level = String(member?.Level ?? '').trim();
   row.cells[2].textContent = level !== '' && Number.isFinite(Number(level))
     ? Number(level)
-    : '—';
+    : '-';
 }
 
 function updateCount(card, party) {
@@ -664,7 +664,13 @@ async function loadRanking() {
     const data = await response.json();
     if (!Array.isArray(data?.Rankings)) throw new Error('랭킹 형식 오류');
 
-    for (const member of data.Rankings) {
+    const unrankedMembers = Array.isArray(data.NotFound)
+      ? data.NotFound
+          .filter(nickname => typeof nickname === 'string')
+          .map(nickname => ({ UserId: nickname.trim() }))
+      : [];
+
+    for (const member of [...data.Rankings, ...unrankedMembers]) {
       const name = normalize(member?.UserId);
       if (!name || members.has(name)) continue;
 
