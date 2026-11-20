@@ -37,6 +37,7 @@
   }
   .panel, dialog, .empty { border: 1px solid #544060; border-radius: 14px; background: #21192f; }
   .panel { overflow: hidden; }
+  .panel.departed { filter: brightness(.82); }
   .card-heading { padding: 14px 16px; }
   .card-heading { align-content: start; gap: 2px; }
   .departure { width: 100%; }
@@ -266,15 +267,22 @@ function updateCount(card, party) {
   status.classList.toggle('full', filled === party.names.length);
 }
 
+const partyVisibilityDuration = 7 * 24 * 60 * 60 * 1000;
+
+function updatePartyVisibility(now = Date.now()) {
+  let hasVisibleParty = false;
+  for (const card of collection.querySelectorAll('.panel')) {
+    const age = now - Date.parse(card.querySelector('time').dateTime);
+    card.classList.toggle('departed', age >= 0);
+    card.hidden = age >= partyVisibilityDuration;
+    if (!card.hidden) hasVisibleParty = true;
+  }
+  const empty = collection.querySelector('.empty');
+  if (empty) empty.hidden = hasVisibleParty;
+}
+
 function render() {
   collection.replaceChildren();
-  if (!parties.length) {
-    const empty = document.createElement('p');
-    empty.className = 'empty';
-    empty.textContent = '등록된 숙제 모집이 없습니다.';
-    collection.append(empty);
-    return;
-  }
 
   parties.forEach((party, index) => {
     const card = $('party-card').content.firstElementChild.cloneNode(true);
@@ -357,6 +365,12 @@ function render() {
     });
     collection.append(card);
   });
+
+  const empty = document.createElement('p');
+  empty.className = 'empty';
+  empty.textContent = '표시할 숙제 모집이 없습니다.';
+  collection.append(empty);
+  updatePartyVisibility();
 }
 
 function showDetails() {
@@ -477,6 +491,7 @@ if (window.self !== window.top) $('club-home').hidden = true;
 $('open-form').disabled = true;
 requestParties();
 loadRanking();
+setInterval(updatePartyVisibility, 15_000);
 </script>
 </body>
 </html>
