@@ -17,14 +17,14 @@
   },
   {
     "id": "85e3d9a3-ca6d-4d83-a7da-643a55731f2e",
-    "version": 5,
+    "version": 6,
     "content": "신어헬",
     "departure": "2026-11-20T20:30",
     "names": [
       "테스트",
       "A",
       "B",
-      "C"
+      "테스트"
     ]
   }
 ]
