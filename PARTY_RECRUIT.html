@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>파티 모집 · 삐약 클럽</title>
 <style>
+  #notice.code-required,
+#edit-error.code-required {
+  color: #ff8080;
+}
   :root { color-scheme: dark; font: 16px/1.55 system-ui, sans-serif; color: #f5f0ff; background: #14101e; }
   * { box-sizing: border-box; }
   body { margin: 0; min-height: 100vh; background: radial-gradient(ellipse at 85% 0, #302143, transparent 62%); }
@@ -237,8 +241,9 @@ async function requestParties(change) {
 
   const error = dialog.open ? $('edit-error') : $('notice');
   const code = $('club-code').value.trim();
-
+  error.classList.remove('code-required');
   if (change && !code) {
+    error.classList.add('code-required');
     error.textContent = '클럽 공용 코드를 먼저 입력해 주세요.';
     error.hidden = false;
     return false;
@@ -491,6 +496,7 @@ function openPartyForm(index = null) {
 $('open-form').addEventListener('click', () => openPartyForm());
 form.addEventListener('input', () => { $('edit-error').hidden = true; });
 $('cancel-form').addEventListener('click', () => { if (!busy) dialog.close(); });
+  $('notice').classList.add('code-required');
 dialog.addEventListener('cancel', event => { if (busy) event.preventDefault(); });
 
 $('previous').addEventListener('click', () => {
