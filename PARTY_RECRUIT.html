@@ -5,23 +5,54 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>파티 모집 · 삐약 클럽</title>
 <style>
-  #notice.code-required,
-#edit-error.code-required {
-  color: #ff8080;
-}
-  :root { color-scheme: dark; font: 16px/1.55 system-ui, sans-serif; color: #f5f0ff; background: #14101e; }
+  :root {
+    color-scheme: dark;
+    font: 16px/1.55 system-ui, sans-serif;
+    color: #f5f0ff;
+    background: #14101e;
+  }
+
   * { box-sizing: border-box; }
-  body { margin: 0; min-height: 100vh; background: radial-gradient(ellipse at 85% 0, #302143, transparent 62%); }
-  header { background: linear-gradient(115deg, #1c1728, #2f2143); border-bottom: 1px solid #544060; }
-  .wrap { width: min(1100px, 100%); margin: auto; padding-inline: clamp(12px, 4vw, 24px); }
-  header .wrap { min-height: 56px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: radial-gradient(ellipse at 85% 0, #302143, transparent 62%);
+  }
+
+  header {
+    background: linear-gradient(115deg, #1c1728, #2f2143);
+    border-bottom: 1px solid #544060;
+  }
+
+  .wrap {
+    width: min(1100px, 100%);
+    margin: auto;
+    padding-inline: clamp(12px, 4vw, 24px);
+  }
+
+  header .wrap {
+    min-height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
   .brand { color: #f6d891; font-weight: 700; }
   a { color: #e3d8f4; text-underline-offset: 4px; }
   main { padding-block: 12px 48px; }
   h1, h2, h3, p { margin: 0; }
   h1 { font-size: clamp(25px, 5vw, 40px); letter-spacing: -.055em; }
   h2 { font-size: 1.25rem; }
-  h3, .departure { color: inherit; font-size: 1.12rem; font-weight: 700; overflow-wrap: anywhere; }
+
+  h3, .departure {
+    color: inherit;
+    font-size: 1.12rem;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+  }
+
   .toolbar, .card-heading, .group, .actions {
     display: flex;
     align-items: center;
@@ -29,11 +60,14 @@
     flex-wrap: wrap;
     gap: 8px 14px;
   }
+
   .toolbar { margin-top: 22px; }
   .hint, .status { color: #cfc3df; font-size: .875rem; }
   .hint { margin-top: 8px; }
   #notice:empty, #ranking-status:empty { display: none; }
-  #notice { color: #f6d891; }
+  #notice, #edit-error { color: #f6d891; }
+  #notice.code-required, #edit-error.code-required { color: #ff8080; }
+
   #parties {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -41,46 +75,82 @@
     gap: 14px;
     margin-top: 14px;
   }
+
   #parties > .empty { grid-column: 1 / -1; }
+
   @media (max-width: 580px) {
     #parties { grid-template-columns: minmax(0, 1fr); }
   }
-  .panel, dialog, .empty { border: 1px solid #544060; border-radius: 14px; background: #21192f; }
+
+  .panel, dialog, .empty {
+    border: 1px solid #544060;
+    border-radius: 14px;
+    background: #21192f;
+  }
+
   .panel { overflow: hidden; }
-  .panel.departed { filter: brightness(.30); }
+  .panel.departed { filter: brightness(.25); }
   .card-heading { padding: 14px 16px; align-content: start; gap: 2px; }
   .departure { width: 100%; }
   .group { background: #302143; padding: 10px 16px; }
   .seat-actions { display: flex; flex-wrap: wrap; gap: 3px; }
-  .shared-controls { display: flex; flex-wrap: wrap; align-items: end; gap: 8px; margin-top: 10px; }
+
+  .shared-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
   .shared-controls label { font-size: .875rem; }
   .group-actions { display: flex; gap: 5px; }
-  #edit-error { color: #f6d891; }
   .group-info { display: flex; gap: 6px 12px; align-items: center; flex-wrap: wrap; }
   .count, .eta { color: #f6d891; font-variant-numeric: tabular-nums; }
   .status { border: 1px solid #6d5784; border-radius: 8px; padding: 2px 8px; }
-  .status.full { background: #d6baff; border-color: #d6baff; color: #231731; font-weight: 700; }
-  button, input, select { font: inherit; color: inherit; border: 1px solid #5b486e; border-radius: 8px; }
-  button { background: #2a203b; padding: 8px 12px; cursor: pointer; font-weight: 650; }
+
+  .status.full {
+    background: #d6baff;
+    border-color: #d6baff;
+    color: #231731;
+    font-weight: 700;
+  }
+
+  button, input, select {
+    font: inherit;
+    color: inherit;
+    border: 1px solid #5b486e;
+    border-radius: 8px;
+  }
+
+  button {
+    background: #2a203b;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-weight: 650;
+  }
+
   button:hover { background: #403052; }
   button.primary { background: #d6baff; border-color: #d6baff; color: #231731; }
   button.primary:hover { background: #e3cfff; }
   button.remove { padding: 4px 8px; font-size: .875rem; }
+  button:disabled { opacity: .55; cursor: default; }
   :focus-visible { outline: 2px solid #f6d891; outline-offset: 2px; }
   input, select { background: #191325; padding: 7px 8px; width: 100%; min-width: 0; }
   table { width: 100%; border-collapse: collapse; table-layout: fixed; text-align: left; }
   th, td { padding: 6px 4px; overflow-wrap: anywhere; }
-  .nickname-field input { padding-inline: 4px; }
-  .nickname-field button, td button.remove { padding-inline: 4px; white-space: nowrap; }
   th { color: #e3d8f4; background: #2a203b; font-size: .875rem; }
   th:first-child { width: 46%; }
   th:nth-child(3) { width: 15%; }
   th:last-child { width: 83px; }
-  .nickname-field { display: flex; gap: 5px; align-items: center; }
-  .nickname-field button { flex: none; }
-  button:disabled { opacity: .55; cursor: default; }
-  #member-list { min-height: 120px; }
   td { border-top: 1px solid #3f304e; }
+
+  .nickname-field { display: flex; gap: 5px; align-items: center; }
+  .nickname-field input { padding-inline: 4px; }
+  .nickname-field button { flex: none; }
+  .nickname-field button, td button.remove { padding-inline: 4px; white-space: nowrap; }
+
+  #member-list { min-height: 120px; }
   .empty { padding: 22px 16px; text-align: center; color: #cfc3df; }
   dialog { width: min(420px, calc(100% - 28px)); padding: 20px; color: inherit; }
   dialog::backdrop { background: #100b19bd; }
@@ -213,9 +283,12 @@ const partyApiUrl = 'https://stable-jaime-91primula-ba73a0ee.apps.mistral.run/pa
 const collection = $('parties');
 const dialog = $('party-dialog');
 const form = $('party-form');
+const notice = $('notice');
+const editError = $('edit-error');
 const members = new Map();
 const memberDialog = $('member-dialog');
 const memberList = $('member-list');
+
 const koreaClock = new Intl.DateTimeFormat('sv-SE', {
   timeZone: 'Asia/Seoul',
   year: 'numeric',
@@ -236,24 +309,30 @@ let loaded = false;
 let draft = null;
 let editingIndex = null;
 
+function showCodeRequired(target) {
+  target.textContent = '클럽 공용 코드를 먼저 입력해 주세요.';
+  target.classList.add('code-required');
+  target.hidden = false;
+}
+
 async function requestParties(change) {
   if (busy) return false;
 
-  const error = dialog.open ? $('edit-error') : $('notice');
+  const error = dialog.open ? editError : notice;
   const code = $('club-code').value.trim();
-  error.classList.remove('code-required');
+
   if (change && !code) {
-    error.classList.add('code-required');
-    error.textContent = '클럽 공용 코드를 먼저 입력해 주세요.';
-    error.hidden = false;
+    showCodeRequired(error);
     return false;
   }
 
+  notice.classList.remove('code-required');
+  editError.classList.remove('code-required');
   busy = true;
   $('reload-parties').disabled = true;
   $('next').disabled = true;
-  $('notice').textContent = change ? '저장 중…' : '모집을 불러오는 중…';
-  if (dialog.open) $('edit-error').hidden = true;
+  notice.textContent = change ? '저장 중…' : '모집을 불러오는 중…';
+  if (dialog.open) editError.hidden = true;
 
   try {
     if (partyApiUrl.includes('YOUR-SERVICE')) {
@@ -279,10 +358,10 @@ async function requestParties(change) {
     parties = data.parties;
     loaded = true;
     render();
-    $('notice').textContent = change ? '저장했습니다.' : '';
+    notice.textContent = change ? '저장했습니다.' : '';
     return true;
   } catch (failure) {
-    $('notice').textContent = dialog.open ? '' : '연결 상태를 확인하거나 모집 새로고침을 눌러 주세요.';
+    notice.textContent = '';
     error.textContent = failure instanceof TypeError || failure.name === 'TimeoutError'
       ? '서버에 연결할 수 없습니다. 모집 새로고침으로 반영 여부를 확인해 주세요.'
       : failure.message;
@@ -362,6 +441,7 @@ function render() {
 
     party.names.forEach((name, seat) => {
       const row = tbody.insertRow();
+
       const input = document.createElement('input');
       input.type = 'text';
       input.maxLength = 40;
@@ -379,6 +459,7 @@ function render() {
       choose.setAttribute('aria-label', `${seat + 1}번 자리 닉네임 목록`);
       choose.disabled = !members.size;
       choose.dataset.memberPicker = '';
+
       choose.addEventListener('click', () => {
         activeNickname = input;
         memberDialog.showModal();
@@ -419,17 +500,19 @@ function render() {
       });
 
       save.addEventListener('click', () => changeSeat(input.value.trim()));
+      cancel.addEventListener('click', () => changeSeat(''));
+
       input.addEventListener('keydown', event => {
         if (event.key === 'Enter' && !save.disabled) save.click();
       });
-      cancel.addEventListener('click', () => changeSeat(''));
-      fillMember(row, name);
 
       input.addEventListener('input', () => {
         const nextName = input.value.trim();
         save.disabled = !nextName || nextName === name;
         fillMember(row, nextName);
       });
+
+      fillMember(row, name);
     });
 
     updateCount(card, party);
@@ -459,7 +542,8 @@ function render() {
 function showDetails() {
   draft = null;
   $('details').hidden = false;
-  $('edit-error').hidden = true;
+  editError.hidden = true;
+  editError.classList.remove('code-required');
   $('summary').hidden = true;
   $('previous').hidden = true;
   $('next').textContent = '내용 확인';
@@ -469,7 +553,7 @@ function openPartyForm(index = null) {
   if (busy) return;
 
   if (!$('club-code').value.trim()) {
-    $('notice').textContent = '클럽 공용 코드를 먼저 입력해 주세요.';
+    showCodeRequired(notice);
     $('club-code').focus();
     return;
   }
@@ -494,9 +578,8 @@ function openPartyForm(index = null) {
 }
 
 $('open-form').addEventListener('click', () => openPartyForm());
-form.addEventListener('input', () => { $('edit-error').hidden = true; });
+form.addEventListener('input', () => { editError.hidden = true; });
 $('cancel-form').addEventListener('click', () => { if (!busy) dialog.close(); });
-  $('notice').classList.add('code-required');
 dialog.addEventListener('cancel', event => { if (busy) event.preventDefault(); });
 
 $('previous').addEventListener('click', () => {
@@ -512,7 +595,7 @@ form.addEventListener('submit', async event => {
   if (draft) {
     if (await requestParties(draft)) {
       dialog.close();
-      const edit = collection.querySelector(`[data-party-index="${editingIndex}"] .edit`);
+      const edit = collection.querySelector(`[data-party-index="${editingIndex}"]:not([hidden]) .edit`);
       (edit ?? $('open-form')).focus();
     }
     return;
@@ -522,18 +605,17 @@ form.addEventListener('submit', async event => {
   const content = fields.get('content');
   const capacity = Number(fields.get('capacity'));
   const departure = fields.get('departure');
-  const existingNames = parties[editingIndex]?.names ?? [];
-  const participants = existingNames.filter(name => name.trim());
+  const party = parties[editingIndex];
+  const participants = (party?.names ?? []).filter(name => name.trim());
 
   if (capacity < participants.length) {
-    const error = $('edit-error');
-    error.textContent = `현재 참가자가 ${participants.length}명입니다. 모집인원을 ${participants.length}명 이상으로 선택해 주세요.`;
-    error.hidden = false;
+    editError.classList.remove('code-required');
+    editError.textContent = `현재 참가자가 ${participants.length}명입니다. 모집인원을 ${participants.length}명 이상으로 선택해 주세요.`;
+    editError.hidden = false;
     form.elements.capacity.focus();
     return;
   }
 
-  const party = parties[editingIndex];
   draft = party
     ? { action: 'edit', id: party.id, version: party.version, content, departure, capacity }
     : { action: 'add', requestId: crypto.randomUUID(), content, departure, capacity };
@@ -567,6 +649,7 @@ async function loadRanking() {
     });
 
     if (!response.ok) throw new Error('랭킹 조회 실패');
+
     const data = await response.json();
     if (!Array.isArray(data?.Rankings)) throw new Error('랭킹 형식 오류');
 
