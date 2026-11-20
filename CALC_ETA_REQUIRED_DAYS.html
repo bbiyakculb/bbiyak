@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>에타의 의지 레벨업 소요일 계산기 · 삐약</title>
+<style>
+:root { color-scheme:dark; --panel:#211a2e; --line:#48385c; --accent:#e1c7ff; --muted:#cfc2df; }
+* { box-sizing:border-box; }
+body { margin:0; min-height:100vh; background:radial-gradient(ellipse at top right,#372649,transparent 60%),#14101e; color:#faf4ff; font:16px/1.55 system-ui,sans-serif; }
+main { max-width:1040px; margin:auto; padding:38px 20px; }
+header p { margin:0; color:var(--accent); }
+h1 { font-size:clamp(28px,5vw,48px); letter-spacing:-.05em; margin:6px 0 24px; }
+h2 { font-size:21px; margin:0 0 14px; }
+.layout { display:grid; grid-template-columns: 1fr 1.25fr; gap:16px; align-items:start; }
+.card { background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:20px; min-width:0; }
+.result { background:linear-gradient(145deg,#352447,var(--panel)); }
+.levels { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.levels label { display:grid; gap:6px; }
+input { font:inherit; accent-color:var(--accent); }
+input[type=number] { background:#161120; color:inherit; width:100%; padding:8px; border:1px solid var(--line); border-radius:8px; }
+fieldset { margin:18px 0 0; padding:12px; border:1px solid var(--line); border-radius:10px; }
+fieldset label { display:flex; align-items:center; gap:8px; padding:4px 0; cursor:pointer; }
+#days { display:block; color:var(--accent); font-size:clamp(26px,5vw,44px); font-weight:750; line-height:1.2; margin-bottom:14px; }
+p, small { color:var(--muted); }
+#warning { color:#ffd2a9; margin:12px 0 0; }
+table { width:100%; border-collapse:collapse; font-variant-numeric:tabular-nums; }
+th,td { padding:8px 5px; text-align:left; border-bottom:1px solid var(--line); }
+.level-table { max-height:440px; overflow:auto; }
+.level-table th[scope=col] { position:sticky; top:0; background:var(--panel); }
+.reference { margin-top:16px; }
+:focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
+@media(max-width:720px) { .layout { grid-template-columns:1fr; } main { padding:24px 12px; } .card { padding:16px; } }
+</style>
+</head>
+<body>
+<main>
+  <header><p>삐약 · 테일즈위버</p><h1>에타의 의지 레벨업 소요일 계산기</h1></header>
+  <div class="layout">
+    <form id="settings" class="card">
+      <h2>레벨업 조건</h2>
+      <div class="levels">
+        <label>현재 레벨<input id="current" type="number" min="1" max="99" step="1" value="1" required></label>
+        <label>목표 레벨<input id="target" type="number" min="2" max="100" step="1" value="100" required></label>
+      </div>
+      <fieldset>
+        <legend>매일 진행하는 활동</legend>
+        <label><input type="checkbox" name="activity" checked> 일일퀘 진행</label>
+        <label><input type="checkbox" name="activity"> TP퀘 진행</label>
+        <label><input type="checkbox" name="activity"> TP 교환</label>
+        <label><input type="checkbox" name="activity"> 도전과제 진행</label>
+        <label><input type="checkbox" name="activity"> 골고다 진행</label>
+      </fieldset>
+      <p id="warning" role="status" hidden></p>
+    </form>
+    <section class="card result">
+      <h2>소요 예상일</h2>
+      <output id="days" aria-live="polite"></output>
+      <p id="hint"></p>
+      <table>
+        <thead><tr><th scope="col">재료</th><th scope="col">필요량</th><th scope="col">하루 획득</th><th scope="col">소요일</th></tr></thead>
+        <tbody id="materials"></tbody>
+      </table>
+      <p><small>보유량 0개 기준입니다. 루이나 라피스는 6레벨, 루이나 젬마는 21레벨, 제네로 젬마는 41레벨부터 획득합니다. 레벨 구간별 소요일을 올림한 뒤 합산합니다.</small></p>
+    </section>
+  </div>
+  <section class="card reference" aria-labelledby="level-table-title">
+    <h2 id="level-table-title">레벨별 필요 재료</h2>
+    <div class="level-table" tabindex="0" role="region" aria-labelledby="level-table-title">
+      <table>
+        <thead><tr><th scope="col">강화 구간</th><th scope="col">루이나 라피스</th><th scope="col">루이나 젬마</th><th scope="col">제네로 젬마</th></tr></thead>
+        <tbody id="requirements"></tbody>
+      </table>
+    </div>
+    <p>선택한 활동 1개당 하루에 루이나 라피스 10개, 루이나 젬마 2개, 제네로 젬마 2개를 더합니다.</p>
+  </section>
+</main>
+<script>
+const materialNames = ['루이나 라피스', '루이나 젬마', '제네로 젬마'];
+const dailyPerActivity = [10, 2, 2];
+const levelBands = [
+  { first: 6, last: 20, material: 0, amount: 60 },
+  { first: 21, last: 40, material: 1, amount: 25 },
+  { first: 41, last: 80, material: 2, amount: 30 },
+  { first: 81, last: 100, material: 2, amount: 40 }
+];
+
+function calculate(current, target, activityCount) {
+  const needed = [0, 0, 0];
+  for (const { first, last, material, amount } of levelBands) {
+    const levels = Math.max(0, Math.min(target - 1, last) - Math.max(current, first) + 1);
+    needed[material] += levels * amount;
+  }
+
+  const daily = dailyPerActivity.map(amount => amount * activityCount);
+  const days = needed.map((amount, index) => {
+    if (amount === 0) return 0;
+    return daily[index] ? Math.ceil(amount / daily[index]) : Infinity;
+  });
+  return { needed, daily, days, totalDays: days.reduce((sum, duration) => sum + duration, 0) };
+}
+
+const settings = document.getElementById('settings');
+const currentInput = document.getElementById('current');
+const targetInput = document.getElementById('target');
+const warning = document.getElementById('warning');
+const output = document.getElementById('days');
+const hint = document.getElementById('hint');
+const materials = document.getElementById('materials');
+const format = value => value.toLocaleString('ko-KR');
+
+function render() {
+  const current = currentInput.valueAsNumber;
+  const target = targetInput.valueAsNumber;
+  let error = '';
+  if (!Number.isInteger(current) || current < 1 || current > 99) {
+    error = '현재 레벨을 1~99 사이의 정수로 입력해 주세요.';
+  } else if (!Number.isInteger(target) || target < 2 || target > 100) {
+    error = '목표 레벨을 2~100 사이의 정수로 입력해 주세요.';
+  } else if (target < current) {
+    error = '목표 레벨이 현재 레벨보다 낮습니다.';
+  }
+  warning.textContent = error;
+  warning.hidden = !error;
+  if (error) {
+    output.textContent = '—';
+    hint.textContent = '';
+    materials.replaceChildren();
+    return;
+  }
+
+  const activityCount = settings.querySelectorAll('input[name="activity"]:checked').length;
+  const { needed, daily, days, totalDays } = calculate(current, target, activityCount);
+  if (!Number.isFinite(totalDays)) {
+    output.textContent = '계산 불가';
+    hint.textContent = '매일 진행하는 활동을 하나 이상 체크해 주세요.';
+  } else {
+    output.textContent = format(totalDays) + '일 소요';
+    hint.textContent = current === target ? '이미 목표 레벨입니다.' : current + '레벨 → ' + target + '레벨';
+  }
+
+  materials.innerHTML = materialNames.map((name, index) => {
+    const duration = Number.isFinite(days[index]) ? format(days[index]) + '일' : '—';
+    return '<tr><th scope="row">' + name + '</th><td>' + format(needed[index]) +
+      '개</td><td>' + format(daily[index]) + '개</td><td>' + duration + '</td></tr>';
+  }).join('');
+}
+
+const requirementRows = Array.from({ length: 99 }, (_, index) => {
+  const level = index + 1;
+  const { needed } = calculate(level, level + 1, 1);
+  const cells = needed.map(amount => '<td>' + (amount ? format(amount) + '개' : '—') + '</td>');
+  return '<tr><th scope="row">' + level + ' → ' + (level + 1) + '</th>' + cells.join('') + '</tr>';
+});
+document.getElementById('requirements').innerHTML = requirementRows.join('');
+
+settings.addEventListener('input', render);
+settings.addEventListener('submit', event => event.preventDefault());
+render();
+</script>
+</body>
+</html>

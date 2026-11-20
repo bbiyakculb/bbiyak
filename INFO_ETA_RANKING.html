@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>삐약 클럽 에타 랭킹</title>
+<style>
+:root{color-scheme:dark;font:16px/1.55 system-ui,sans-serif;background:#111520;color:#eef1f9}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 85% 0,#3b294f,transparent 55%)}
+.wrap{width:min(950px,calc(100% - 36px));margin:auto}
+header{border-bottom:1px solid #373449;background:#191926}
+header .wrap{min-height:64px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{font-weight:800;color:#f6d891}a{color:#ded0ff;text-underline-offset:4px}
+main{padding-block:clamp(38px,7vw,75px)}h1{margin:0;font-size:clamp(34px,7vw,66px);letter-spacing:-.065em;line-height:1.15}
+#status{color:#c7c4d7;margin:14px 0 26px}
+.panel{border:1px solid #414056;border-radius:16px;overflow:hidden;background:#1c1e2c}
+.tools{display:flex;flex-wrap:wrap;gap:10px;padding:15px}
+button,input{font:inherit;padding:8px 12px;border:1px solid #5c516e;border-radius:9px;background:#252538;color:inherit}
+button{cursor:pointer}button:disabled{opacity:.55;cursor:default}
+#refresh{background:#f6d891;border-color:#f6d891;color:#221924;font-weight:750}input{flex:1;min-width:150px}
+table{width:100%;border-collapse:collapse;text-align:left;table-layout:fixed}th,td{padding:13px clamp(6px,2vw,18px);overflow-wrap:anywhere}
+th{font-size:.86em;color:#e0d9ee;background:#30283d}th:last-child{width:25%}
+td{border-top:1px solid #333347}td:last-child{color:#f6d891;font-variant-numeric:tabular-nums}
+.empty{text-align:center;padding:30px 12px}
+</style>
+</head>
+<body>
+<header><div class="wrap"><span class="brand">삐약 · 하이아칸</span><a href="https://github.com/91primula/tw-eta-data/blob/main/eta_ranking.json" target="_blank" rel="noopener">랭킹 데이터 ↗</a></div></header>
+<main class="wrap">
+<h1>클럽 에타 랭킹</h1>
+<p id="status" role="status">클럽원 목록을 불러오는 중…</p>
+<section class="panel" aria-label="클럽원 에타 랭킹">
+  <div class="tools">
+    <input id="filter" type="search" placeholder="닉네임 또는 캐릭터 검색" aria-label="닉네임 또는 캐릭터 검색">
+    <button id="refresh" type="button">새로고침</button>
+  </div>
+  <table>
+    <thead><tr><th scope="col">닉네임</th><th scope="col">캐릭터</th><th scope="col">에타 레벨</th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table>
+</section>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+const source = 'https://raw.githubusercontent.com/91primula/tw-eta-data/main/eta_ranking.json';
+let ranking = null;
+const key = value => String(value ?? '').trim().normalize('NFC').toLowerCase();
+
+function display() {
+  const tbody = $('rows');
+  tbody.replaceChildren();
+  if (!ranking) return;
+  const query = key($('filter').value);
+  for (const member of ranking) {
+    if (!key(member.UserId).includes(query) && !key(member.Character).includes(query)) continue;
+    const row = tbody.insertRow();
+    for (const value of [member.UserId, member.Character, member.Level]) {
+      row.insertCell().textContent = value ?? '—';
+    }
+  }
+  if (!tbody.rows.length) {
+    const cell = tbody.insertRow().insertCell();
+    cell.colSpan = 3;
+    cell.className = 'empty';
+    cell.textContent = ranking.length ? '검색 결과가 없습니다.' : '등록된 랭킹이 없습니다.';
+  }
+}
+
+async function load() {
+  $('refresh').disabled = true;
+  $('status').textContent = 'GitHub에서 에타 랭킹을 불러오는 중…';
+  try {
+    const response = await fetch(source, {cache:'no-store', signal:AbortSignal.timeout(15000)});
+    if (!response.ok) throw new Error('HTTP ' + response.status);
+    const data = await response.json();
+    if (!Array.isArray(data?.Rankings)) throw new Error('랭킹 데이터 형식 오류');
+    ranking = data.Rankings;
+    const date = data.OfficialHaiacanDate || data.CollectDate;
+    $('status').textContent = `총 ${ranking.length}명` + (date ? ' · 데이터 기준 ' + date : '');
+    display();
+  } catch {
+    $('status').textContent = ranking
+      ? '새 데이터를 불러오지 못했습니다. 이전에 불러온 목록을 표시합니다.'
+      : '랭킹을 불러오지 못했습니다. 새로고침을 눌러 다시 시도해 주세요.';
+  } finally {
+    $('refresh').disabled = false;
+  }
+}
+
+$('filter').addEventListener('input', display);
+$('refresh').addEventListener('click', load);
+load();
+</script>
+</body>
+</html>

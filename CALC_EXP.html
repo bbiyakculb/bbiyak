@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="ko">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>사냥 경험치 계산기 · 삐약</title>
+<style>
+*{box-sizing:border-box} :root{color-scheme:dark;--bg:#13101d;--panel:#211b2e;--line:#413753;--text:#f8f3ff;--muted:#c8bdd8;--accent:#dfc4ff} body{margin:0;background:radial-gradient(ellipse at top right,#39244f,transparent 60%),var(--bg);color:var(--text);font:16px/1.5 system-ui,sans-serif} main{max-width:1080px;margin:auto;padding:36px 22px} header p{color:var(--accent);margin:0} h1{font-size:clamp(30px,6vw,51px);letter-spacing:-.05em;margin:5px 0 24px} h2{font-size:21px;margin:0 0 14px} .layout{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:16px;align-items:start} .card{padding:20px;border:1px solid var(--line);border-radius:16px;background:var(--panel);margin-bottom:16px} .result{grid-column:2;grid-row:1/span 2;position:sticky;top:16px;background:linear-gradient(145deg,#38254d,#211b2e)} .settings{display:grid;grid-template-columns:1fr 1fr;gap:14px} fieldset{margin:0;border:0;padding:0;min-width:0} legend{font-weight:700;margin-bottom:8px} .option{display:flex;gap:8px;align-items:baseline;padding:5px 0;cursor:pointer} input{font:inherit;accent-color:var(--accent)} input[type=number]{background:#171221;border:1px solid var(--line);color:var(--text);padding:6px 8px;border-radius:7px;width:100%;min-width:0} .custom{display:grid;grid-template-columns:1fr minmax(70px,90px);align-items:center;gap:7px} small,.muted,dt{color:var(--muted)} .buff{display:grid;grid-template-columns:1fr 94px;align-items:center;gap:10px;border-top:1px solid var(--line);padding:9px 0} .buff label{display:flex;align-items:baseline;gap:8px;cursor:pointer} small{display:block;font-size:13px} .percent{display:flex;align-items:center;gap:5px} dl{margin:0} dt{padding-top:10px;border-top:1px solid var(--line)} dd{margin:0 0 12px;color:var(--accent);font-size:clamp(22px,4vw,33px);font-weight:750;overflow-wrap:anywhere;font-variant-numeric:tabular-nums} p.muted{margin:8px 0;font-size:14px} #notice{color:var(--accent);font-size:14px} #notice:empty{display:none} a{color:var(--accent)} @media(max-width:730px){.layout{grid-template-columns:1fr}.result{grid-column:1;position:static;grid-row:2}.dopings{grid-row:3}} @media(max-width:420px){main{padding:24px 12px}.settings{grid-template-columns:1fr}} 
+</style>
+<main>
+<header><p>삐약 · 테일즈위버</p><h1>사냥 경험치 계산기</h1></header>
+<form id="calculator" class="layout">
+<section class="card" style="grid-column:1"><h2>사냥 조건</h2>
+<div class="settings">
+<fieldset><legend>사냥터</legend>
+<label class="option"><input type="radio" name="ground" value="200000" checked><span>대장간<small>200,000 XP / 마리</small></span></label>
+<label class="option"><input type="radio" name="ground" value="720000"><span>골고다 협곡 방어전<small>720,000 XP / 마리</small></span></label>
+<label class="option"><input type="radio" name="ground" value="980000"><span>공허의 영역<small>980,000 XP / 마리</small></span></label>
+</fieldset>
+<fieldset><legend>시간당 처치 수</legend>
+<label class="option"><input type="radio" name="kills" value="23000"><span>대장간 일반<small>23,000마리</small></span></label>
+<label class="option"><input type="radio" name="kills" value="32000" checked><span>대장간 범연<small>32,000마리</small></span></label>
+<div class="custom"><label class="option"><input id="custom-choice" type="radio" name="kills" value="custom"><span>기타</span></label><input id="custom" type="number" aria-label="시간당 처치 수 직접 입력" value="40000" min="0" step="1"></div>
+</fieldset>
+</div>
+<label class="option"><input id="happy" type="checkbox" checked> 해피아워 ×1.5</label>
+</section>
+<section class="card result"><h2>계산 결과</h2><dl aria-live="polite">
+<dt>적용 도핑</dt><dd id="bonus"></dd>
+<dt>마리당 경험치</dt><dd id="per-kill"></dd>
+<dt>시간당 경험치</dt><dd id="per-hour"></dd>
+<dt>시간당 경험의 정수</dt><dd id="essence"></dd>
+</dl><small>경험의 정수 1개 상당 = 100억 XP</small></section>
+<section class="card dopings" style="grid-column:1"><h2>경험치 도핑</h2>
+<p class="muted">체크한 항목의 비율을 더합니다. 지속시간과 재사용 공백은 사냥 시간에 자동 반영되지 않습니다.</p>
+<p id="notice" role="status"></p><div id="buffs"></div>
+</section>
+</form>
+</main>
+<script>
+const buffs = [
+  ['cat','길고양이1 경험치 버프','60분 · 1일 1회',30],
+  ['pass','패스 룬 정원 경험치','120분 · 1일 2회',200],
+  ['secret','이자벨의 비법(경험)','30분',100,true],
+  ['special','이자벨의 특선 묘약(경험)','30분',500,true],
+  ['elixir','이자발의 선약(경험)','30분',1000,true],
+  ['club1','클럽 상점 버프(E-1)','30분',150],
+  ['club2','클럽 상점 버프(E-2)','30분 · E-1과 중첩 불가',200,true],
+  ['heart','경험의 심장','20분',400,true],
+  ['supreme','최상급 에오스의 파편','30분 · 캐쉬 3종',500,true],
+  ['early','얼리버드 경험치 부스터','30분 · 캐쉬 3종',300,true],
+  ['legend','전설의 군고구마','30분 · 캐쉬 3종',1000,true],
+  ['potato','경험의 군고구마','30분 · 재사용 40분 · 공백 10분 · 전설의 군고구마와 중첩 불가',900],
+  ['challenge','도전 과제 완료 도장','60분 · 500개',400],
+  ['stamp100','참 잘했어요 도장(100%)','120분 · 20개',100],
+  ['stamp150','참 잘했어요 도장(150%)','60분 · 50개',150,true],
+  ['flower','조언의 꽃','30일 · 캐쉬',50],
+  ['helm','헬름 부가옵션(1.5배)','무제한',50,true],
+  ['scroll','헬름 부가옵션(스크롤부가)','무제한',100],
+  ['moon','칭호(달토끼)','무제한',150],
+  ['title','칭호(기타 경험치, % 수정용)','무제한',50],
+  ['core','코어(시오칸, % 수정용)','무제한',260,true],
+  ['explore','탐험 포인트','30분, 60분',100],
+  ['illumination','일루미네이션 축제 음료','120분',15],
+  ['snow','눈사람족 특제 포션','30분 · 따뜻한 에오스, 일루미와 중첩 불가',100,true],
+  ['teacher','스승의 증표(고급)','3시간 36분 · 따뜻한 에오스와 세트',80],
+  ['warm','따뜻한 에오스의 파편','60분 · 클럽 버프 미사용 시',100],
+  ['pet','펫 경험치','-',50]
+];
+const conflicts = [
+  ['club1','club2'], ['club1','warm'], ['club2','warm'],
+  ['legend','potato'], ['snow','warm'], ['snow','illumination']
+];
+const byId = id => document.getElementById(id);
+const form = byId('calculator');
+const number = (value) => Number.isFinite(Number(value)) ? Math.min(Number.MAX_SAFE_INTEGER,Math.max(0,Number(value))) : 0;
+const format = (value, digits=0) => value.toLocaleString('ko-KR',{maximumFractionDigits:digits});
+byId('buffs').innerHTML = buffs.map(([key,name,note,percent,checked]) =>
+  '<div class="buff"><label><input type="checkbox" id="buff-'+key+'" data-buff="'+key+'"'+(checked ? ' checked' : '')+'><span>'+name+'<small>'+note+'</small></span></label>'+
+  '<div class="percent"><input id="pct-'+key+'" aria-label="'+name+' 증가율 (%)" type="number" min="0" step="any" value="'+percent+'">%</div></div>'
+).join('');
+
+function calculate() {
+  const ground = number(form.elements.ground.value);
+  const selection = form.elements.kills.value;
+  const kills = Math.floor(number(selection === 'custom' ? byId('custom').value : selection));
+  const bonus = buffs.reduce((sum,[key]) => byId('buff-'+key).checked ? sum + number(byId('pct-'+key).value) : sum,0);
+  const happy = byId('happy').checked ? 1.5 : 1;
+  const perKill = Math.round(number(ground * (1 + bonus / 100) * happy));
+  const perHour = Math.round(number(perKill * kills));
+  byId('bonus').textContent = '+'+format(bonus,4)+'%';
+  byId('per-kill').textContent = format(perKill)+' XP';
+  byId('per-hour').textContent = format(perHour / 100000000,6)+'억 XP';
+  byId('essence').textContent = format(perHour / 10000000000,8)+'개 상당';
+}
+
+form.addEventListener('submit',event => event.preventDefault());
+form.addEventListener('input',event => {
+  const changed = event.target;
+  if (changed.id === 'custom') byId('custom-choice').checked = true;
+  const disabledNames = [];
+  const selected = changed.dataset.buff;
+  if (selected && changed.checked) {
+    for (const pair of conflicts) {
+      if (!pair.includes(selected)) continue;
+      const other = pair.find(key => key !== selected);
+      const checkbox = byId('buff-'+other);
+      if (!checkbox.checked) continue;
+      checkbox.checked = false;
+      disabledNames.push(buffs.find(([key]) => key === other)[1]);
+    }
+  }
+  byId('notice').textContent = disabledNames.length
+    ? '중첩 제한으로 '+disabledNames.join(', ')+' 체크를 해제했어요.'
+    : '';
+  calculate();
+});
+calculate();
+</script>
+</html>

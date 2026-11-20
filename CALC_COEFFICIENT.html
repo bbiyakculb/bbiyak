@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>테일즈위버 계수 계산기 · 삐약</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #15101e;
+      --panel: #221a2e;
+      --line: #423553;
+      --text: #f8efff;
+      --muted: #cbbcd9;
+      --accent: #e2c5ff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: radial-gradient(ellipse at top right, #3b2451, transparent 50%), var(--bg);
+      color: var(--text);
+      font: 16px/1.5 system-ui, sans-serif;
+    }
+
+    main { max-width: 1120px; margin: auto; padding: 32px 20px; }
+    header p { margin: 0; color: var(--accent); }
+    h1 { margin: 5px 0 22px; font-size: clamp(29px, 5vw, 52px); letter-spacing: -.05em; }
+    h2 { margin: 0 0 12px; font-size: 20px; }
+
+    .top {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr) minmax(0, 1.2fr);
+      gap: 14px;
+    }
+
+    .card {
+      min-width: 0;
+      margin-bottom: 14px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--panel);
+    }
+
+    .result { background: linear-gradient(155deg, #3a254d, var(--panel)); }
+    .result p { margin: 6px 0; }
+    fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
+    legend { margin-bottom: 8px; font-weight: 700; }
+    .types { display: flex; flex-wrap: wrap; gap: 7px; }
+    .types label { position: relative; cursor: pointer; }
+    .types input { position: absolute; opacity: 0; }
+
+    .types span {
+      display: block;
+      padding: 7px 11px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+    }
+
+    .types input:checked + span {
+      background: var(--accent);
+      color: #211330;
+      font-weight: 700;
+    }
+
+    :focus-visible, .types input:focus-visible + span {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 15px;
+    }
+
+    .stats label { display: grid; gap: 5px; }
+    .stats span, small, .note { color: var(--muted); font-size: 14px; }
+
+    input[type="number"], input[type="text"] {
+      width: 100%;
+      min-width: 0;
+      padding: 6px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #171120;
+      color: var(--text);
+      font: inherit;
+    }
+
+    input[type="number"] { font-variant-numeric: tabular-nums; }
+
+    output {
+      display: block;
+      color: var(--accent);
+      font-size: clamp(26px, 5vw, 44px);
+      font-weight: 750;
+      font-variant-numeric: tabular-nums;
+      overflow-wrap: anywhere;
+    }
+
+    .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+
+    .actions button {
+      padding: 7px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #342644;
+      color: var(--text);
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .save-status { margin: 8px 0 0; }
+    .scroll { overflow: auto; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-variant-numeric: tabular-nums;
+    }
+
+    th, td {
+      padding: 7px 6px;
+      border-bottom: 1px solid var(--line);
+      text-align: right;
+    }
+
+    th:first-child { text-align: left; white-space: nowrap; }
+    thead th { color: var(--muted); font-size: 14px; }
+    td input[type="number"] { text-align: right; }
+    tfoot { font-weight: 700; }
+    .gear-table { min-width: 740px; }
+    .item-column { min-width: 190px; }
+
+    .gear-table th:last-child,
+    .gear-table td:last-child {
+      min-width: 100px;
+      white-space: nowrap;
+    }
+
+    .content-table th:first-child { white-space: normal; }
+    .content-table td:last-child { white-space: nowrap; }
+    .available { color: #a8efbd; }
+    .below { color: #ffcaad; }
+
+    @media (max-width: 900px) {
+      .top { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 680px) {
+      main { padding: 24px 12px; }
+      .card { padding: 13px; }
+    }
+.equipment-field {
+  display: flex;
+  gap: 4px;
+}
+
+.equipment-picker {
+  flex: 0 0 34px;
+  min-width: 0;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #342644;
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+}
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <p>삐약 · 테일즈위버</p>
+    <h1>계수 계산기</h1>
+  </header>
+
+  <div class="top">
+    <section class="card">
+      <fieldset>
+        <legend>공격 유형</legend>
+        <div id="types" class="types"></div>
+      </fieldset>
+
+      <div class="stats">
+        <label>
+          <span id="main-label"></span>
+          <input id="main-stat" type="number" min="0" step="any" placeholder="0">
+        </label>
+        <label>
+          <span id="sub-label"></span>
+          <input id="sub-stat" type="number" min="0" step="any" placeholder="0">
+        </label>
+        <label>
+          <span id="core-label"></span>
+          <input id="core-stat" type="number" min="0" step="any" placeholder="0">
+        </label>
+      </div>
+
+      <div class="actions">
+        <button type="button" id="save">파일 저장</button>
+        <button type="button" id="load">파일 불러오기</button>
+      </div>
+      <input id="save-file" type="file" accept=".json,application/json" hidden>
+      <p id="save-status" class="note save-status" role="status"></p>
+    </section>
+
+    <section class="card result">
+      <h2>최종 계수</h2>
+      <output id="total" aria-live="polite"></output>
+      <p>코어 제외 <strong id="without-core"></strong></p>
+      <small id="summary"></small>
+    </section>
+
+    <section class="card">
+      <h2 id="content-heading">콘텐츠 가능 여부</h2>
+      <p class="note">코어를 포함한 최종 계수가 기준 이상이면 가능으로 표시합니다.</p>
+      <div class="scroll" tabindex="0" role="region" aria-labelledby="content-heading">
+        <table class="content-table">
+          <thead>
+            <tr>
+              <th scope="col">콘텐츠</th>
+              <th scope="col">기준 계수</th>
+              <th scope="col">판정</th>
+            </tr>
+          </thead>
+          <tbody id="content-rows"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <section class="card">
+    <h2 id="gear-heading">부위별 스탯</h2>
+    <p class="note">투구·머리·몸·손·다리의 아이템명 칸에서 장비를 검색하거나 직접 입력할 수 있습니다. 자동 입력된 스탯도 수정할 수 있습니다.</p>
+    <p class="note">어빌리티 수치는 기본 스탯에 포함하세요. 아바타와 시에나·소울링크 보너스는 해당 행에 입력합니다.</p>
+    <div class="scroll" tabindex="0" role="region" aria-labelledby="gear-heading">
+      <table class="gear-table">
+        <thead>
+          <tr>
+            <th scope="col">부위</th>
+            <th scope="col" class="item-column">아이템명</th>
+            <th scope="col" id="gear-0"></th>
+            <th scope="col" id="gear-1"></th>
+            <th scope="col" id="gear-2"></th>
+            <th scope="col" id="gear-3"></th>
+            <th scope="col">계수</th>
+          </tr>
+        </thead>
+        <tbody id="gear-rows"></tbody>
+        <tfoot>
+          <tr>
+            <th scope="row" colspan="2">합계</th>
+            <td id="sum-0"></td>
+            <td id="sum-1"></td>
+            <td id="sum-2"></td>
+            <td id="sum-3"></td>
+            <td id="gear-total"></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </section>
+</main>
+
+<script>
+const types = [
+  { name: '찌르기', stats: ['찌르기', '베기'], character: ['STAB', 'HACK'], weights: [23.75, 32.5, 3.75, 18.75, 2.1, 1.08, 32.5] },
+  { name: '베기', stats: ['베기', '찌르기'], character: ['HACK', 'STAB'], weights: [23.75, 32.5, 3.75, 18.75, 2.1, 1.08, 32.5] },
+  { name: '물리복합', stats: ['찌르기', '베기'], character: ['STAB', 'HACK'], weights: [14.5, 28.75, 14.5, 28.75, 1.8, 1.8, 28.75] },
+  { name: '마법공격', stats: ['마법공격', '마법방어'], character: ['INT', 'MR'], weights: [23.75, 32.5, 2.5, 18.25, 2.4, 0.6, 32.5] },
+  { name: '마법베기', stats: ['베기', '마법공격'], character: ['HACK', 'INT'], weights: [14.5, 28.75, 14.5, 28.75, 1.8, 1.8, 28.75] },
+  { name: '마법방어', stats: ['마법방어', '마법공격'], character: ['MR', 'INT'], weights: [20.5, 32.5, 2.5, 16.75, 2.55, 0.45, 32.5] }
+];
+
+const slots = [
+  '시에나스탯', '소울링크스탯', '아바타', '투구', '머리', '몸', '손', '다리',
+  '갑옷', '무기', '손목', '커프', '효과', '아티팩트', '렐릭', '칭호'
+];
+
+const contents = [
+  ['최후의 결전', 95000],
+  ['아페테리아(어려움)', 72500],
+  ['이클립스 토벌전', 72500],
+  ['이클립스 6보스', 55000],
+  ['오딘 전면전', 51000]
+];
+
+// 아이템명, 찌르기 기본·강화, 베기 기본·강화, 마법공격 기본·강화, 마법방어 기본·강화
+const equipmentPresets = {
+  '투구': [
+    ['아퀼루스 헬름', 83, 30, 85, 30, 85, 30, 81, 40],
+    ['어비스 헬름', 102, 20, 102, 20, 102, 20, 134, 30],
+    ['이클립스 헬름', 112, 60, 112, 60, 112, 60, 230, 90],
+    ['세크리드 헬름', 122, 70, 122, 70, 122, 70, 320, 110],
+    ['개-세크리드 헬름', 132, 70, 132, 70, 132, 70, 335, 125]
+  ],
+  '머리': [
+    ['아퀼루스 아뮬렛', 83, 30, 85, 30, 83, 30, 94, 30],
+    ['어비스 아뮬렛', 102, 20, 102, 20, 102, 20, 102, 20],
+    ['이클립스 아뮬렛', 112, 60, 112, 60, 112, 60, 112, 60],
+    ['세크리드 아뮬렛', 122, 70, 122, 70, 122, 70, 122, 70],
+    ['개-세크리드 아뮬렛', 132, 70, 132, 70, 132, 70, 132, 70]
+  ],
+  '몸': [
+    ['아퀼루스 윙', 86, 30, 86, 30, 86, 30, 88, 30],
+    ['어비스 윙', 124, 30, 124, 30, 124, 30, 92, 20],
+    ['이클립스 윙', 220, 90, 220, 90, 220, 90, 102, 60],
+    ['세크리드 망토', 320, 110, 320, 110, 320, 110, 122, 70],
+    ['개-세크리드 망토', 335, 125, 335, 125, 335, 125, 132, 60]
+  ],
+  '손': [
+    ['아퀼루스 건틀렛', 82, 30, 82, 30, 82, 30, 82, 30],
+    ['어비스 건틀렛', 102, 20, 102, 20, 102, 20, 102, 20],
+    ['이클립스 건틀렛', 112, 60, 112, 60, 112, 60, 112, 60],
+    ['세크리드 건틀렛', 122, 70, 122, 70, 122, 70, 122, 70],
+    ['개-세크리드 건틀렛', 132, 70, 132, 70, 132, 70, 132, 70]
+  ],
+  '다리': [
+    ['아퀼루스 부츠', 82, 30, 82, 30, 82, 30, 82, 30],
+    ['어비스 부츠', 102, 20, 102, 20, 102, 20, 102, 20],
+    ['이클립스 부츠', 112, 60, 112, 60, 112, 60, 112, 60],
+    ['세크리드 부츠', 122, 70, 122, 70, 122, 70, 122, 70],
+    ['개-세크리드 부츠', 132, 70, 132, 70, 132, 70, 132, 70]
+  ]
+};
+
+const statOffsets = { '찌르기': 0, '베기': 2, '마법공격': 4, '마법방어': 6 };
+const byId = id => document.getElementById(id);
+const format = value => value.toLocaleString('ko-KR', { maximumFractionDigits: 2 });
+const read = input => Math.max(0, Number.isFinite(input.valueAsNumber) ? input.valueAsNumber : 0);
+const score = (values, weights) =>
+  values.reduce((sum, value, index) => sum + value * weights[index], 0);
+
+let active = 0;
+const saved = types.map(() => []);
+const stats = [byId('main-stat'), byId('sub-stat'), byId('core-stat')];
+
+byId('types').innerHTML = types.map(({ name }, index) =>
+  `<label><input type="radio" name="type" value="${index}"${index === 0 ? ' checked' : ''}><span>${name}</span></label>`
+).join('');
+
+byId('gear-rows').innerHTML = slots.map(name => {
+  const numericCells = Array.from({ length: 4 }, () =>
+    '<td><input type="number" min="0" step="any" placeholder="0"></td>'
+  ).join('');
+
+  return `<tr><th scope="row">${name}</th>` +
+    `<td><input type="text" aria-label="${name} 아이템명"></td>` +
+    `${numericCells}<td></td></tr>`;
+}).join('');
+
+const rows = Array.from(byId('gear-rows').rows);
+const gearInputs = rows.map(row => Array.from(row.querySelectorAll('input[type="number"]')));
+const itemInputs = rows.map(row => row.querySelector('input[type="text"]'));
+const allInputs = [...stats, ...gearInputs.flat(), ...itemInputs];
+const fileInput = byId('save-file');
+const saveStatus = byId('save-status');
+
+slots.forEach((slot, rowIndex) => {
+  const presets = equipmentPresets[slot];
+  if (!presets) return;
+
+  const nameInput = itemInputs[rowIndex];
+  nameInput.placeholder = '아이템명 직접 입력';
+
+  const field = document.createElement('div');
+  field.className = 'equipment-field';
+
+  const picker = document.createElement('select');
+  picker.className = 'equipment-picker';
+  picker.setAttribute('aria-label', `${slot} 장비 전체 목록`);
+  picker.add(new Option('▾', '', true, true));
+
+  presets.forEach(([name], index) => {
+    picker.add(new Option(name, String(index)));
+  });
+
+  nameInput.before(field);
+  field.append(nameInput, picker);
+
+  function applyPreset(preset) {
+    const [name, ...values] = preset;
+    const [main, sub] = types[active].stats.map(stat => statOffsets[stat]);
+    const selectedStats = [
+      values[main], values[main + 1],
+      values[sub], values[sub + 1]
+    ];
+
+    nameInput.value = name;
+    gearInputs[rowIndex].forEach((input, index) => {
+      input.value = String(selectedStats[index]);
+    });
+    render();
+  }
+
+  picker.addEventListener('change', () => {
+    if (picker.value === '') return;
+
+    applyPreset(presets[Number(picker.value)]);
+    picker.value = '';
+  });
+
+  nameInput.addEventListener('change', () => {
+    const name = nameInput.value.trim();
+    const preset = presets.find(([presetName]) => presetName === name);
+    if (preset) applyPreset(preset);
+  });
+});
+
+function render() {
+  const { weights } = types[active];
+  const totals = [0, 0, 0, 0];
+
+  gearInputs.forEach((inputs, index) => {
+    const values = inputs.map(read);
+    values.forEach((value, column) => { totals[column] += value; });
+    rows[index].cells[6].textContent = format(score(values, weights));
+  });
+
+  const gear = score(totals, weights);
+  const [main, sub, core] = stats.map(read);
+  const character = score([main, sub], weights.slice(4, 6));
+  const coreScore = core * weights[6];
+  const total = gear + character + coreScore;
+
+  totals.forEach((value, index) => {
+    byId(`sum-${index}`).textContent = format(value);
+  });
+
+  byId('gear-total').textContent = format(gear);
+  byId('without-core').textContent = format(gear + character);
+  byId('total').textContent = format(total);
+  byId('summary').textContent =
+    `캐릭터 ${format(character)} · 장비 ${format(gear)} · 코어 ${format(coreScore)}`;
+
+  byId('content-rows').innerHTML = contents.map(([name, minimum]) => {
+    const available = Math.round(total * 100) >= minimum * 100;
+    const statusClass = available ? 'available' : 'below';
+    const statusText = available ? '가능' : '미달';
+
+    return `<tr><th scope="row">${name}</th><td>${format(minimum)}</td>` +
+      `<td class="${statusClass}">${statusText}</td></tr>`;
+  }).join('');
+}
+
+function showType() {
+  const { stats: labels, character } = types[active];
+  byId('main-label').textContent = '캐릭터 ' + character[0];
+  byId('sub-label').textContent = '캐릭터 ' + character[1];
+  byId('core-label').textContent = '코어 ' + labels[0];
+
+  const headers = [
+    '기본 ' + labels[0], '강화 ' + labels[0],
+    '기본 ' + labels[1], '강화 ' + labels[1]
+  ];
+
+  headers.forEach((title, index) => {
+    byId(`gear-${index}`).textContent = title;
+    gearInputs.forEach((inputs, rowIndex) => {
+      inputs[index].setAttribute('aria-label', `${slots[rowIndex]} ${title}`);
+    });
+  });
+
+  allInputs.forEach((input, index) => {
+    input.value = saved[active][index] ?? '';
+  });
+
+  render();
+}
+
+byId('types').addEventListener('change', event => {
+  saved[active] = allInputs.map(input => input.value);
+  active = Number(event.target.value);
+  showType();
+});
+
+document.querySelectorAll('input[type="number"]').forEach(input => {
+  input.addEventListener('input', render);
+});
+
+byId('save').addEventListener('click', () => {
+  saved[active] = allInputs.map(input => input.value);
+
+  const data = { format: 'bbiyak-coefficient', version: 1, active, values: saved };
+  const file = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(file);
+  const link = document.createElement('a');
+
+  link.href = url;
+  link.download = 'bbiyak-coefficient.json';
+  document.body.append(link);
+  link.click();
+  link.remove();
+
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  saveStatus.textContent = '저장 파일 다운로드를 시작했어요.';
+});
+
+byId('load').addEventListener('click', () => fileInput.click());
+
+fileInput.addEventListener('change', async () => {
+  const file = fileInput.files[0];
+  fileInput.value = '';
+  if (!file) return;
+
+  try {
+    const data = JSON.parse(await file.text());
+
+    if (data?.format !== 'bbiyak-coefficient' || data.version !== 1 ||
+        !Number.isInteger(data.active) || !types[data.active] ||
+        !Array.isArray(data.values) || data.values.length !== types.length ||
+        !data.values.every(values => Array.isArray(values) &&
+          (values.length === 0 || values.length === allInputs.length) &&
+          values.every(value => typeof value === 'string'))) {
+      throw new Error('Invalid saved inputs');
+    }
+
+    data.values.forEach((values, index) => { saved[index] = values; });
+    active = data.active;
+    byId('types').querySelectorAll('input')[active].checked = true;
+    showType();
+    saveStatus.textContent = '저장 파일을 불러왔어요.';
+  } catch {
+    saveStatus.textContent = '계수 계산기에서 저장한 JSON 파일을 선택해 주세요.';
+  }
+});
+
+showType();
+</script>
+</body>
+</html>

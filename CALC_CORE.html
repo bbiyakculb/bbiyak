@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>테시스 코어 계산기 · 삐약</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #f3f1ff;
+      --muted: #c0b9d6;
+      --line: #383049;
+      --accent: #d6baff;
+      --panel: #201b2d;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: radial-gradient(ellipse at 80% 0, #302145, transparent 50%), #14101e;
+      color: var(--ink);
+      font: 16px system-ui, sans-serif;
+    }
+
+    header, main, footer {
+      max-width: 1100px;
+      margin: auto;
+      padding: 0 24px;
+    }
+
+    header, footer {
+      padding-top: 25px;
+      padding-bottom: 25px;
+      color: var(--muted);
+    }
+
+    header strong { color: var(--accent); }
+    h1 { font-size: clamp(36px, 6vw, 64px); letter-spacing: -.06em; margin: 22px 0 30px; }
+    h2 { margin: 0 0 20px; font-size: 23px; }
+    button, input, select { font: inherit; }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.25fr 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 18px;
+      padding: 24px;
+    }
+
+    .results { background: linear-gradient(145deg, #35234d, #211a30); }
+    .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    label { display: grid; gap: 6px; color: var(--muted); font-size: 14px; }
+
+    input:not([type=checkbox]), select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #171222;
+      color: var(--ink);
+      padding: 10px;
+      min-width: 0;
+    }
+
+    .metric { padding: 14px 0; border-top: 1px solid var(--line); color: var(--muted); }
+    .metric strong {
+      display: block;
+      color: var(--accent);
+      font-size: clamp(21px, 3vw, 32px);
+      overflow-wrap: anywhere;
+      font-variant-numeric: tabular-nums;
+    }
+
+    p, summary { color: var(--muted); line-height: 1.55; }
+    summary { cursor: pointer; }
+    details { margin-top: 16px; }
+    a { color: var(--accent); }
+    [hidden] { display: none !important; }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+    table { border-collapse: collapse; width: 100%; font-size: 14px; }
+    td, th { text-align: left; padding: 8px 5px; border-bottom: 1px solid var(--line); }
+
+    @media (max-width: 720px) {
+      .layout { grid-template-columns: 1fr; }
+      .card { padding: 18px; }
+      header, main, footer { padding-left: 16px; padding-right: 16px; }
+    }
+
+    @media (max-width: 360px) {
+      .fields { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header><strong>삐약</strong> / 테일즈위버</header>
+
+  <main>
+    <h1>테시스 코어 계산기</h1>
+    <section id="core" class="layout">
+      <div class="card">
+        <h2>테시스 코어 강화</h2>
+        <div id="core-fields" class="fields"></div>
+      </div>
+
+      <div class="card results">
+        <h2>강화 기댓값</h2>
+        <div id="core-results" aria-live="polite"></div>
+      </div>
+
+      <div class="card" id="core-breakdown">
+        <details>
+          <summary>단계별 성공률과 기댓값 (1조각 기준)</summary>
+          <table>
+            <thead>
+              <tr>
+                <th>도착 단계</th>
+                <th>성공률</th>
+                <th>가루</th>
+                <th>결정</th>
+                <th>화폐</th>
+              </tr>
+            </thead>
+            <tbody id="core-rows"></tbody>
+          </table>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const rateGroups = Object.values({
+      mercurial_abyss: {
+        0: [1.0, 0.8, 0.6, 0.35],
+        1: [0.25, 0.2, 0.2, 0.2, 0.2],
+        2: [0.15, 0.15, 0.15, 0.15, 0.15],
+        3: [0.08, 0.08, 0.08, 0.08, 0.08],
+        4: [0.05, 0.05, 0.05, 0.05, 0.05]
+      },
+      eclipse_rubicona: {
+        0: [1.0, 0.7, 0.5, 0.2],
+        1: [0.1, 0.07, 0.07, 0.07, 0.07],
+        2: [0.05, 0.05, 0.05, 0.05, 0.05],
+        3: [0.02, 0.02, 0.02, 0.02, 0.02],
+        4: [0.01, 0.01, 0.01, 0.01, 0.01]
+      }
+    });
+
+    const transitions = [
+      // 0진 0강 → 0진 4강
+      { powder: 10, crystal: 0, seed: 400, elso: 600, rateTier: 0, rateIdx: 0 },
+      { powder: 20, crystal: 0, seed: 440, elso: 660, rateTier: 0, rateIdx: 1 },
+      { powder: 30, crystal: 0, seed: 480, elso: 720, rateTier: 0, rateIdx: 2 },
+      { powder: 40, crystal: 0, seed: 520, elso: 780, rateTier: 0, rateIdx: 3 },
+
+      // 0진 4강 → 1진 4강
+      { powder: 50, crystal: 0, seed: 560, elso: 840, rateTier: 1, rateIdx: 0 },
+      { powder: 60, crystal: 0, seed: 600, elso: 900, rateTier: 1, rateIdx: 1 },
+      { powder: 70, crystal: 0, seed: 640, elso: 960, rateTier: 1, rateIdx: 2 },
+      { powder: 80, crystal: 0, seed: 680, elso: 1020, rateTier: 1, rateIdx: 3 },
+      { powder: 90, crystal: 0, seed: 720, elso: 1060, rateTier: 1, rateIdx: 4 },
+
+      // 1진 4강 → 2진 4강
+      { powder: 100, crystal: 0, seed: 760, elso: 1140, rateTier: 2, rateIdx: 0 },
+      { powder: 110, crystal: 0, seed: 800, elso: 1200, rateTier: 2, rateIdx: 1 },
+      { powder: 120, crystal: 0, seed: 840, elso: 1260, rateTier: 2, rateIdx: 2 },
+      { powder: 130, crystal: 0, seed: 880, elso: 1320, rateTier: 2, rateIdx: 3 },
+      { powder: 140, crystal: 0, seed: 920, elso: 1380, rateTier: 2, rateIdx: 4 },
+
+      // 2진 4강 → 3진 4강
+      { powder: 200, crystal: 5, seed: 1200, elso: 1800, rateTier: 3, rateIdx: 0 },
+      { powder: 210, crystal: 5, seed: 1240, elso: 1860, rateTier: 3, rateIdx: 1 },
+      { powder: 220, crystal: 5, seed: 1280, elso: 1920, rateTier: 3, rateIdx: 2 },
+      { powder: 230, crystal: 5, seed: 1320, elso: 1980, rateTier: 3, rateIdx: 3 },
+      { powder: 240, crystal: 5, seed: 1360, elso: 2040, rateTier: 3, rateIdx: 4 },
+
+      // 3진 4강 → 4진 4강
+      { powder: 250, crystal: 5, seed: 1400, elso: 2100, rateTier: 4, rateIdx: 0 },
+      { powder: 260, crystal: 5, seed: 1440, elso: 2160, rateTier: 4, rateIdx: 1 },
+      { powder: 270, crystal: 5, seed: 1480, elso: 2220, rateTier: 4, rateIdx: 2 },
+      { powder: 290, crystal: 5, seed: 1520, elso: 2280, rateTier: 4, rateIdx: 3 },
+      { powder: 290, crystal: 5, seed: 1560, elso: 2340, rateTier: 4, rateIdx: 4 }
+    ];
+
+    const $ = id => document.getElementById(id);
+    const format = (number, digits = 0) =>
+      number.toLocaleString('ko-KR', { maximumFractionDigits: digits });
+
+    const field = (id, name, input) =>
+      `<label for="${id}"><span>${name}</span>${input}</label>`;
+
+    const numeric = (id, name, value, step = 'any') =>
+      field(id, name, `<input id="${id}" type="number" value="${value}" min="0" step="${step}">`);
+
+    const select = (id, name, options, initial = 0) => {
+      const items = options.map((label, index) =>
+        `<option value="${index}"${initial === index ? ' selected' : ''}>${label}</option>`
+      );
+      return field(id, name, `<select id="${id}">${items.join('')}</select>`);
+    };
+
+    const num = id => {
+      const value = Number($(id).value);
+      return Number.isFinite(value)
+        ? Math.min(Number.MAX_SAFE_INTEGER, Math.max(0, value))
+        : 0;
+    };
+
+    const metric = (name, text) =>
+      `<div class="metric">${name}<strong>${text}</strong></div>`;
+
+    const stageNames = Array.from(
+      { length: 25 },
+      (_, index) => `${Math.floor(index / 5)}진화 ${index % 5}강`
+    );
+
+$('core-fields').innerHTML =
+  select('region', '코어 지역', ['머큐리얼 · 어비스', '이클립스 · 루비코나'], 1) +
+  select('stat', '스탯', ['주스탯', '부스탯']) +
+  select('start', '시작 단계', stageNames) +
+  select('goal', '목표 단계', stageNames, stageNames.length - 1) +
+  select('currency', '강화 화폐', ['시드', '엘소']) +
+  select('pieces', '조각 수', ['1조각', '2조각', '3조각', '4조각', '5조각', '6조각'], 5) +
+  numeric('discount', '화폐 할인율 (%), 이벤트(20%)', 0) +
+  numeric('boxes', '구매 상자 수량', 0, 1) +
+  numeric('box-price', '개당 가격 (만 시드)', 0, 1);
+
+    function renderCore() {
+      const start = num('start');
+      const goal = num('goal');
+      const boxCost = Math.trunc(num('boxes')) * Math.trunc(num('box-price'));
+      $('core-breakdown').hidden = start >= goal;
+
+      if (start >= goal) {
+        $('core-results').innerHTML =
+          '<p>목표 단계를 시작 단계보다 높게 선택해 주세요.</p>' +
+          metric('상자 구매비', `${format(boxCost)} 만 시드`);
+        $('core-rows').replaceChildren();
+        return;
+      }
+
+      const useElso = num('currency') === 1;
+      const unit = useElso ? ' 엘소' : ' 만 시드';
+      const statFactor = num('stat') === 1 ? 0.5 : 1;
+      const discount = 1 - Math.min(100, num('discount')) / 100;
+      const pieceCount = num('pieces') + 1;
+      const rates = rateGroups[num('region')];
+      const totals = [0, 0, 0];
+
+      const rows = transitions.slice(start, goal).map((row, index) => {
+        const rate = rates[row.rateTier][row.rateIdx];
+        const currency = (useElso ? row.elso : row.seed) * discount;
+        const expected = [row.powder, row.crystal, currency]
+          .map(value => value * statFactor / rate);
+
+        expected.forEach((value, column) => {
+          totals[column] += value;
+        });
+
+        const cells = expected.map(value => `<td>${format(Math.round(value))}</td>`);
+        return `<tr><td>${stageNames[start + index + 1]}</td>` +
+          `<td>${format(rate * 100, 1)}%</td>${cells.join('')}</tr>`;
+      });
+
+      const [powder, crystal, cost] = totals.map(value => Math.round(value) * pieceCount);
+      const final = useElso
+        ? `${format(boxCost)} 만 시드 + ${format(cost)}${unit}`
+        : `${format(boxCost + cost)}${unit}`;
+
+      $('core-results').innerHTML =
+        metric('가루', `${format(powder)}개`) +
+        metric('결정', `${format(crystal)}개`) +
+        metric('강화 화폐', `${format(cost)}${unit}`) +
+        metric('상자 구매비', `${format(boxCost)} 만 시드`) +
+        metric('총 비용', final);
+
+      $('core-rows').innerHTML = rows.join('');
+    }
+
+    $('core').addEventListener('input', renderCore);
+    renderCore();
+  </script>
+</body>
+</html>
