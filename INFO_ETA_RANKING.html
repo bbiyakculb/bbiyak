@@ -202,14 +202,14 @@ function display() {
 
     const rankCell = row.insertCell();
     rankCell.className = 'rank';
-    rankCell.textContent = member.clubRank === null ? '—' : `${member.clubRank}위`;
+    rankCell.textContent = member.clubRank === null ? '-' : `${member.clubRank}위`;
 
     row.insertCell().textContent = member.UserId ?? '—';
-    row.insertCell().textContent = member.Character ?? '—';
+    row.insertCell().textContent = member.Character ?? '-';
 
     const levelCell = row.insertCell();
     levelCell.className = 'level';
-    levelCell.textContent = member.etaLevel ?? '—';
+    levelCell.textContent = member.etaLevel ?? '-';
   }
 
   if (!tbody.rows.length) {
@@ -239,6 +239,22 @@ async function load() {
     }
 
     ranking = createClubRanking(data.Rankings);
+    const seen = new Set(ranking.map(member => key(member.UserId)));
+    if (Array.isArray(data.NotFound)) {
+      for (const nickname of data.NotFound) {
+        if (typeof nickname !== 'string') continue;
+        const userId = key(nickname);
+        if (!userId || seen.has(userId)) continue;
+
+        seen.add(userId);
+        ranking.push({
+          UserId: nickname.trim(),
+          Character: null,
+          etaLevel: null,
+          clubRank: null
+        });
+      }
+    }
     const date = data.OfficialHaiacanDate || data.CollectDate;
 $('status').textContent =
   `총 ${ranking.length}명` +
