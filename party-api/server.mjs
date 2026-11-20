@@ -172,7 +172,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
     code: process.env.CLUB_WRITE_CODE
   };
   if (!/^[\w.-]+\/[\w.-]+$/.test(config.repo) || !config.token || !config.code ||
-      !/^[\x21-\x7e]{16,128}$/.test(config.code)) {
+      !/^[0-9]{6}$/.test(config.code)) {
     throw new Error('Set PARTY_REPO, GITHUB_TOKEN and a 16–128 character ASCII CLUB_WRITE_CODE.');
   }
   const server = makeServer(config);
