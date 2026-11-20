@@ -675,6 +675,12 @@ async function loadRanking() {
       if (!name || members.has(name)) continue;
 
       members.set(name, member);
+    }
+
+    const collator = new Intl.Collator('ko');
+    const sortedNames = [...members.keys()].sort(collator.compare);
+    for (const name of sortedNames) {
+      const member = members.get(name);
       const option = document.createElement('option');
       option.value = member.UserId;
       option.textContent = member.UserId;
