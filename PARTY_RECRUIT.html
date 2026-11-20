@@ -20,31 +20,43 @@
     background: radial-gradient(ellipse at 85% 0, #302143, transparent 62%);
   }
 
-  header {
-    background: linear-gradient(115deg, #1c1728, #2f2143);
-    border-bottom: 1px solid #544060;
-  }
-
-  .wrap {
-    width: min(1100px, 100%);
+  main {
+    max-width: 1120px;
     margin: auto;
-    padding-inline: clamp(12px, 4vw, 24px);
+    padding: 32px 20px 48px;
   }
 
-  header .wrap {
-    min-height: 56px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
+  @media (max-width: 680px) {
+    main { padding: 24px 12px 48px; }
   }
 
-  .brand { color: #f6d891; font-weight: 700; }
   a { color: #e3d8f4; text-underline-offset: 4px; }
-  main { padding-block: 12px 48px; }
   h1, h2, h3, p { margin: 0; }
-  h1 { font-size: clamp(25px, 5vw, 40px); letter-spacing: -.055em; }
   h2 { font-size: 1.25rem; }
+
+  .party-heading {
+    color: #f8efff;
+    font: 16px/1.5 system-ui, sans-serif;
+  }
+
+  .party-heading-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+  }
+
+  .party-heading p {
+    margin: 0;
+    color: #e2c5ff;
+  }
+
+  .party-heading h1 {
+    margin: 5px 0 22px;
+    font-size: clamp(29px, 5vw, 52px);
+    letter-spacing: -.05em;
+  }
 
   h3, .departure {
     color: inherit;
@@ -61,7 +73,6 @@
     gap: 8px 14px;
   }
 
-  .toolbar { margin-top: 22px; }
   .hint, .status { color: #cfc3df; font-size: .875rem; }
   .hint { margin-top: 8px; }
   #notice:empty, #ranking-status:empty { display: none; }
@@ -89,7 +100,7 @@
   }
 
   .panel { overflow: hidden; }
-  .panel.departed { filter: brightness(.25); }
+  .panel.departed { filter: brightness(.65); }
   .card-heading { padding: 14px 16px; align-content: start; gap: 2px; }
   .departure { width: 100%; }
   .group { background: #302143; padding: 10px 16px; }
@@ -161,15 +172,15 @@
 </style>
 </head>
 <body>
-<header>
-  <div class="wrap">
-    <span class="brand">삐약 · 테일즈위버</span>
-    <a id="club-home" href="https://bbiyakculb.github.io/bbiyak/" target="_top">삐약 클럽 홈</a>
-  </div>
-</header>
+<main>
+  <header class="party-heading">
+    <div class="party-heading-top">
+      <p>삐약 · 테일즈위버</p>
+      <a id="club-home" href="https://bbiyakculb.github.io/bbiyak/" target="_top">삐약 클럽 홈</a>
+    </div>
+    <h1>파티 모집</h1>
+  </header>
 
-<main class="wrap">
-  <h1>파티 모집</h1>
   <section aria-labelledby="recruit-title">
     <div class="toolbar">
       <h2 id="recruit-title">숙제 모집</h2>
