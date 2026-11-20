@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>파티 모집 · 삐약 클럽</title>
+<style>
+  :root { color-scheme: dark; font: 16px/1.55 system-ui, sans-serif; color: #f5f0ff; background: #14101e; }
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100vh; background: radial-gradient(ellipse at 85% 0, #302143, transparent 62%); }
+  header { background: linear-gradient(115deg, #1c1728, #2f2143); border-bottom: 1px solid #544060; }
+  .wrap { width: min(1100px, 100%); margin: auto; padding-inline: clamp(12px, 4vw, 24px); }
+  header .wrap { min-height: 56px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .brand { color: #f6d891; font-weight: 700; }
+  a { color: #e3d8f4; text-underline-offset: 4px; }
+  main { padding-block: 12px 48px; }
+  h1, h2, h3, p { margin: 0; }
+  h1 { font-size: clamp(25px, 5vw, 40px); letter-spacing: -.055em; }
+  h2 { font-size: 1.25rem; }
+  h3, .departure { color: inherit; font-size: 1.12rem; font-weight: 700; overflow-wrap: anywhere; }
+  .toolbar, .card-heading, .group, .actions { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px 14px; }
+  .toolbar { margin-top: 22px; }
+  .hint, .status { color: #cfc3df; font-size: .875rem; }
+  .hint { margin-top: 8px; }
+  #notice:empty, #ranking-status:empty { display: none; }
+  #notice { color: #f6d891; }
+  #parties {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: 14px;
+    margin-top: 14px;
+  }
+  #parties > .empty { grid-column: 1 / -1; }
+  @media (max-width: 580px) {
+    #parties { grid-template-columns: minmax(0, 1fr); }
+  }
+  .panel, dialog, .empty { border: 1px solid #544060; border-radius: 14px; background: #21192f; }
+  .panel { overflow: hidden; }
+  .card-heading { padding: 14px 16px; }
+  .card-heading { align-content: start; gap: 2px; }
+  .departure { width: 100%; }
+  .group { background: #302143; padding: 10px 16px; }
+  .seat-actions { display: flex; flex-wrap: wrap; gap: 3px; }
+  th:last-child { width: 83px; }
+  .shared-controls { display: flex; flex-wrap: wrap; align-items: end; gap: 8px; margin-top: 10px; }
+  .shared-controls label { font-size: .875rem; }
+  .group-actions { display: flex; gap: 5px; }
+  #edit-error { color: #f6d891; }
+  .group-info { display: flex; gap: 6px 12px; align-items: center; flex-wrap: wrap; }
+  .count, .eta { color: #f6d891; font-variant-numeric: tabular-nums; }
+  .status { border: 1px solid #6d5784; border-radius: 8px; padding: 2px 8px; }
+  .status.full { background: #d6baff; border-color: #d6baff; color: #231731; font-weight: 700; }
+  button, input, select { font: inherit; color: inherit; border: 1px solid #5b486e; border-radius: 8px; }
+  button { background: #2a203b; padding: 8px 12px; cursor: pointer; font-weight: 650; }
+  button:hover { background: #403052; }
+  button.primary { background: #d6baff; border-color: #d6baff; color: #231731; }
+  button.primary:hover { background: #e3cfff; }
+  button.remove { padding: 4px 8px; font-size: .875rem; }
+  :focus-visible { outline: 2px solid #f6d891; outline-offset: 2px; }
+  input, select { background: #191325; padding: 7px 8px; width: 100%; min-width: 0; }
+  table { width: 100%; border-collapse: collapse; table-layout: fixed; text-align: left; }
+  th, td { padding: 6px 4px; overflow-wrap: anywhere; }
+  .nickname-field input { padding-inline: 4px; }
+  .nickname-field button, td button.remove { padding-inline: 4px; white-space: nowrap; }
+  th { color: #e3d8f4; background: #2a203b; font-size: .875rem; }
+  th:first-child { width: 46%; }
+  th:nth-child(3) { width: 15%; }
+  .nickname-field { display: flex; gap: 5px; align-items: center; }
+  .nickname-field button { flex: none; }
+  button:disabled { opacity: .55; cursor: default; }
+  #member-list { min-height: 120px; }
+  td { border-top: 1px solid #3f304e; }
+  .empty { padding: 22px 16px; text-align: center; color: #cfc3df; }
+  dialog { width: min(420px, calc(100% - 28px)); padding: 20px; color: inherit; }
+  dialog::backdrop { background: #100b19bd; }
+  form, label { display: grid; gap: 6px; }
+  form { gap: 14px; }
+  .actions { justify-content: flex-end; }
+  #summary { white-space: pre-line; padding: 12px; border-radius: 8px; background: #302143; }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <span class="brand">삐약 · 테일즈위버</span>
+    <a id="club-home" href="https://bbiyakculb.github.io/bbiyak/" target="_top">삐약 클럽 홈</a>
+  </div>
+</header>
+<main class="wrap">
+  <h1>파티 모집</h1>
+  <section aria-labelledby="recruit-title">
+    <div class="toolbar">
+      <h2 id="recruit-title">숙제 모집</h2>
+      <button class="primary" id="open-form" type="button">숙제 추가</button>
+    </div>
+    <div class="shared-controls">
+      <label>클럽 공용 코드 <input id="club-code" type="password" autocomplete="off" maxlength="128"></label>
+      <button id="reload-parties" type="button">모집 새로고침</button>
+    </div>
+    <p class="hint">조회는 누구나 가능합니다. 변경하려면 공용 코드를 입력해 주세요.</p>
+    <p class="hint" id="ranking-status" role="status">에타 랭킹을 불러오는 중…</p>
+    <p class="hint" id="notice" role="status"></p>
+    <div id="parties"></div>
+  </section>
+</main>
+
+<dialog id="party-dialog" aria-labelledby="dialog-title">
+  <form id="party-form">
+    <h2 id="dialog-title">숙제 모집 내용</h2>
+    <div id="details">
+      <label>콘텐츠명
+        <select name="content" required>
+          <option value="">선택</option>
+          <option>신어헬</option>
+          <option>신어헬오방</option>
+          <option>신어헬오방아어</option>
+          <option>오방</option>
+          <option>아페(어렴)</option>
+        </select>
+      </label>
+      <label>모집인원
+        <select name="capacity" required>
+          <option value="">선택</option>
+          <option value="4">4명</option>
+          <option value="6">6명</option>
+          <option value="8">8명</option>
+          <option value="16">16명</option>
+        </select>
+      </label>
+      <label>출발 일시
+        <input type="datetime-local" name="departure" required>
+      </label>
+    </div>
+    <p id="edit-error" role="alert" hidden></p>
+    <p id="summary" hidden></p>
+    <div class="actions">
+      <button id="cancel-form" type="button">취소</button>
+      <button id="previous" type="button" hidden>이전</button>
+      <button id="next" class="primary" type="submit">내용 확인</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="member-dialog" aria-labelledby="member-title">
+  <form id="member-form">
+    <h2 id="member-title">닉네임 선택</h2>
+    <label>클럽원 목록 <select id="member-list" size="7" required></select></label>
+    <div class="actions">
+      <button id="member-close" type="button">닫기</button>
+      <button class="primary" type="submit">선택</button>
+    </div>
+  </form>
+</dialog>
+<template id="party-card">
+  <article class="panel">
+    <div class="card-heading">
+      <h3></h3>
+      <span class="departure">출발 <time></time></span>
+    </div>
+    <div class="group">
+      <div class="group-info">
+        <strong class="group-name"></strong>
+        <span class="count" aria-live="polite"></span>
+        <span class="status" aria-live="polite"></span>
+      </div>
+      <div class="group-actions">
+        <button class="edit remove" type="button">편집</button>
+        <button class="delete remove" type="button">삭제</button>
+      </div>
+    </div>
+    <table>
+      <thead><tr><th scope="col">닉네임</th><th scope="col">캐릭터</th><th scope="col">에타</th><th scope="col">참가</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </article>
+</template>
+
+<script>
+const $ = id => document.getElementById(id);
+const rankingUrl = 'https://raw.githubusercontent.com/91primula/tw-eta-data/main/eta_ranking.json';
+const partyApiUrl = 'https://stable-jaime-91primula-ba73a0ee.apps.mistral.run/parties';
+const collection = $('parties');
+const dialog = $('party-dialog');
+const form = $('party-form');
+const members = new Map();
+const memberDialog = $('member-dialog');
+const memberList = $('member-list');
+const koreaClock = new Intl.DateTimeFormat('sv-SE', {
+  timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit',
+  hour: '2-digit', minute: '2-digit', hourCycle: 'h23'
+});
+let activeNickname = null;
+const normalize = name => String(name ?? '').trim().normalize('NFC').toLowerCase();
+let parties = [];
+let busy = false;
+let loaded = false;
+let draft = null;
+let editingIndex = null;
+
+async function requestParties(change) {
+  if (busy) return false;
+  const error = dialog.open ? $('edit-error') : $('notice');
+  const code = $('club-code').value.trim();
+  if (change && !code) {
+    error.textContent = '클럽 공용 코드를 먼저 입력해 주세요.';
+    error.hidden = false;
+    return false;
+  }
+  busy = true;
+  $('reload-parties').disabled = true;
+  $('next').disabled = true;
+  $('notice').textContent = change ? '저장 중…' : '모집을 불러오는 중…';
+  if (dialog.open) $('edit-error').hidden = true;
+  try {
+    if (partyApiUrl.includes('YOUR-SERVICE')) throw new Error('모집 API 주소를 설정해 주세요.');
+    const options = change ? {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Club-Code': code },
+      body: JSON.stringify(change)
+    } : {};
+    const response = await fetch(partyApiUrl, { ...options, signal: AbortSignal.timeout(change ? 90000 : 15000) });
+    const data = await response.json();
+    if (!response.ok || !Array.isArray(data.parties)) throw new Error(data.error || '모집을 불러올 수 없습니다.');
+    parties = data.parties;
+    loaded = true;
+    render();
+    $('notice').textContent = change ? '저장했습니다.' : '';
+    return true;
+  } catch (failure) {
+    $('notice').textContent = dialog.open ? '' : '연결 상태를 확인하거나 모집 새로고침을 눌러 주세요.';
+    error.textContent = failure instanceof TypeError || failure.name === 'TimeoutError'
+      ? '서버에 연결할 수 없습니다. 모집 새로고침으로 반영 여부를 확인해 주세요.'
+      : failure.message;
+    error.hidden = false;
+    return false;
+  } finally {
+    busy = false;
+    $('reload-parties').disabled = false;
+    $('open-form').disabled = !loaded;
+    $('next').disabled = false;
+  }
+}
+
+$('reload-parties').addEventListener('click', () => requestParties());
+
+function displayTime(value) {
+  const [date, time] = value.split('T');
+  const [, month, day] = date.split('-');
+  return `${Number(month)}월 ${Number(day)}일 ${time}`;
+}
+
+function fillMember(row, name) {
+  const member = members.get(normalize(name));
+  row.cells[1].textContent = member?.Character || '—';
+  const level = String(member?.Level ?? '').trim();
+  row.cells[2].textContent = level !== '' && Number.isFinite(Number(level)) ? Number(level) : '—';
+}
+
+function updateCount(card, party) {
+  const filled = party.names.filter(name => name.trim()).length;
+  card.querySelector('.count').textContent = `${filled} / ${party.names.length}명`;
+  const status = card.querySelector('.status');
+  const description = filled === party.names.length ? '모집완료' : '모집중';
+  if (status.textContent !== description) status.textContent = description;
+  status.classList.toggle('full', filled === party.names.length);
+}
+
+function render() {
+  collection.replaceChildren();
+  if (!parties.length) {
+    const empty = document.createElement('p');
+    empty.className = 'empty';
+    empty.textContent = '등록된 숙제 모집이 없습니다.';
+    collection.append(empty);
+    return;
+  }
+
+  parties.forEach((party, index) => {
+    const card = $('party-card').content.firstElementChild.cloneNode(true);
+    card.querySelector('h3').textContent = party.content;
+    const departure = card.querySelector('time');
+    departure.dateTime = party.departure + '+09:00';
+    departure.textContent = displayTime(party.departure);
+    card.querySelector('.group-name').textContent = `${index + 1}번 그룹`;
+    const tbody = card.querySelector('tbody');
+
+    party.names.forEach((name, seat) => {
+      const row = tbody.insertRow();
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.maxLength = 40;
+      input.setAttribute('aria-label', `${index + 1}번 그룹 ${seat + 1}번 자리 닉네임`);
+      input.placeholder = '닉네임 입력';
+      input.value = name;
+      const field = document.createElement('div');
+      field.className = 'nickname-field';
+      const choose = document.createElement('button');
+      choose.type = 'button';
+      choose.className = 'remove';
+      choose.textContent = '목록';
+      choose.setAttribute('aria-label', `${seat + 1}번 자리 닉네임 목록`);
+      choose.disabled = !members.size;
+      choose.dataset.memberPicker = '';
+      choose.addEventListener('click', () => {
+        activeNickname = input;
+        memberDialog.showModal();
+        memberList.focus();
+        memberList.value = members.get(normalize(input.value))?.UserId ?? '';
+      });
+      field.append(input, choose);
+      row.insertCell().append(field);
+      row.insertCell();
+      row.insertCell().className = 'eta';
+      const cancel = document.createElement('button');
+      cancel.type = 'button';
+      cancel.className = 'remove';
+      cancel.textContent = '취소';
+      cancel.setAttribute('aria-label', `${seat + 1}번 자리 참가 취소`);
+      cancel.disabled = !name.trim();
+      const save = document.createElement('button');
+      save.type = 'button';
+      save.className = 'remove';
+      save.textContent = '저장';
+      save.setAttribute('aria-label', `${seat + 1}번 자리 닉네임 저장`);
+      save.disabled = true;
+      const actions = document.createElement('div');
+      actions.className = 'seat-actions';
+      actions.append(save, cancel);
+      row.insertCell().append(actions);
+      const changeSeat = name => requestParties({
+        action: 'seat', id: party.id, version: party.version, seat, name
+      });
+      save.addEventListener('click', () => changeSeat(input.value.trim()));
+      input.addEventListener('keydown', event => {
+        if (event.key === 'Enter' && !save.disabled) save.click();
+      });
+      cancel.addEventListener('click', () => changeSeat(''));
+      fillMember(row, name);
+
+      input.addEventListener('input', () => {
+        const nextName = input.value.trim();
+        save.disabled = !nextName || nextName === name;
+        fillMember(row, nextName);
+      });
+    });
+
+    updateCount(card, party);
+    const edit = card.querySelector('.edit');
+    edit.setAttribute('aria-label', `${index + 1}번 그룹 편집`);
+    edit.addEventListener('click', () => openPartyForm(index));
+    const remove = card.querySelector('.delete');
+    remove.setAttribute('aria-label', `${index + 1}번 그룹 삭제`);
+    remove.addEventListener('click', () => {
+      if (!confirm(`${index + 1}번 그룹 (${party.content}) 모집을 삭제할까요?`)) return;
+      requestParties({ action: 'delete', id: party.id, version: party.version });
+    });
+    collection.append(card);
+  });
+}
+
+function showDetails() {
+  draft = null;
+  $('details').hidden = false;
+  $('edit-error').hidden = true;
+  $('summary').hidden = true;
+  $('previous').hidden = true;
+  $('next').textContent = '내용 확인';
+}
+
+function openPartyForm(index = null) {
+  if (busy) return;
+  if (!$('club-code').value.trim()) {
+    $('notice').textContent = '클럽 공용 코드를 먼저 입력해 주세요.';
+    $('club-code').focus();
+    return;
+  }
+  editingIndex = index;
+  const party = parties[index];
+  form.reset();
+  $('dialog-title').textContent = party ? `${index + 1}번 그룹 편집` : '숙제 모집 내용';
+  if (party) {
+    form.elements.content.value = party.content;
+    form.elements.capacity.value = String(party.names.length);
+  }
+  form.elements.departure.value = party?.departure ?? koreaClock.format(new Date()).replace(' ', 'T');
+  showDetails();
+  dialog.showModal();
+  form.elements.content.focus();
+}
+
+$('open-form').addEventListener('click', () => openPartyForm());
+form.addEventListener('input', () => { $('edit-error').hidden = true; });
+$('cancel-form').addEventListener('click', () => { if (!busy) dialog.close(); });
+dialog.addEventListener('cancel', event => { if (busy) event.preventDefault(); });
+$('previous').addEventListener('click', () => {
+  if (busy) return;
+  showDetails();
+  form.elements.content.focus();
+});
+form.addEventListener('submit', async event => {
+  event.preventDefault();
+  if (busy) return;
+  if (draft) {
+    if (await requestParties(draft)) {
+      dialog.close();
+      const edit = collection.children[editingIndex]?.querySelector('.edit');
+      (edit ?? $('open-form')).focus();
+    }
+    return;
+  }
+
+  const fields = new FormData(form);
+  const content = fields.get('content');
+  const capacity = Number(fields.get('capacity'));
+  const departure = fields.get('departure');
+  const existingNames = parties[editingIndex]?.names ?? [];
+  const participants = existingNames.filter(name => name.trim());
+  if (capacity < participants.length) {
+    const error = $('edit-error');
+    error.textContent = `현재 참가자가 ${participants.length}명입니다. 모집인원을 ${participants.length}명 이상으로 선택해 주세요.`;
+    error.hidden = false;
+    form.elements.capacity.focus();
+    return;
+  }
+
+  const party = parties[editingIndex];
+  draft = party
+    ? { action: 'edit', id: party.id, version: party.version, content, departure, capacity }
+    : { action: 'add', requestId: crypto.randomUUID(), content, departure, capacity };
+  $('summary').textContent = `콘텐츠명  ${content}\n모집인원  ${capacity}명\n출발  ${displayTime(departure)}`;
+  $('details').hidden = true;
+  $('summary').hidden = false;
+  $('previous').hidden = false;
+  $('next').textContent = editingIndex === null ? '모집 추가' : '변경 저장';
+  $('next').focus();
+});
+
+$('member-close').addEventListener('click', () => memberDialog.close());
+$('member-form').addEventListener('submit', event => {
+  event.preventDefault();
+  if (!activeNickname || !memberList.value) return;
+  activeNickname.value = memberList.value;
+  activeNickname.dispatchEvent(new Event('input'));
+  memberDialog.close();
+});
+memberDialog.addEventListener('close', () => { activeNickname = null; });
+
+async function loadRanking() {
+  try {
+    const response = await fetch(rankingUrl, { cache: 'no-store', signal: AbortSignal.timeout(15000) });
+    if (!response.ok) throw new Error('랭킹 조회 실패');
+    const data = await response.json();
+    if (!Array.isArray(data?.Rankings)) throw new Error('랭킹 형식 오류');
+    for (const member of data.Rankings) {
+      const name = normalize(member?.UserId);
+      if (!name || members.has(name)) continue;
+      members.set(name, member);
+      const option = document.createElement('option');
+      option.value = member.UserId;
+      option.textContent = member.UserId;
+      memberList.append(option);
+    }
+    for (const button of collection.querySelectorAll('[data-member-picker]')) {
+      button.disabled = !members.size;
+    }
+    for (const row of collection.querySelectorAll('tbody tr')) {
+      fillMember(row, row.querySelector('input').value);
+    }
+    $('ranking-status').textContent = members.size ? '' : '에타 랭킹에 등록된 닉네임이 없습니다. 직접 입력할 수 있습니다.';
+  } catch {
+    $('ranking-status').textContent = '에타 랭킹을 불러오지 못했습니다. 닉네임은 직접 입력할 수 있습니다.';
+  }
+}
+
+if (window.self !== window.top) $('club-home').hidden = true;
+$('open-form').disabled = true;
+requestParties();
+loadRanking();
+</script>
+</body>
+</html>
