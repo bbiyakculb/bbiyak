@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>삐약 클럽 에타 랭킹</title>
 <style>
+#status {
+  white-space: pre-line;
+}
 :root {
   color-scheme: dark;
   font: 16px/1.55 system-ui, sans-serif;
@@ -38,16 +41,11 @@ header .wrap {
   gap: 12px;
 }
 
-.brand { font-weight: 800; color: #f6d891; }
+header p { margin: 0; color: #e2c5ff; font: 16px/1.5 system-ui, sans-serif; }
 a { color: #ded0ff; text-underline-offset: 4px; }
-main { padding-block: clamp(38px, 7vw, 75px); }
+main { padding-block: 0 clamp(38px, 7vw, 75px); }
 
-h1 {
-  margin: 0;
-  font-size: clamp(34px, 7vw, 66px);
-  letter-spacing: -.065em;
-  line-height: 1.15;
-}
+h1 { margin: 5px 0 22px; font-size: clamp(29px, 5vw, 52px); letter-spacing: -.05em; color: #f8efff; line-height: 1.5; }
 
 #status { color: #c7c4d7; margin: 14px 0 26px; }
 
@@ -120,8 +118,9 @@ td.rank { font-weight: 700; }
 <header>
   <div class="wrap">
     <p>삐약 · 테일즈위버</p>
-    <a href="https://github.com/91primula/tw-eta-data/blob/main/eta_ranking.json"
-       target="_blank" rel="noopener">랭킹 데이터 ↗</a>
+
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLScANX8oDu7O9AABsu7Rbxs8U1ifPwDKarE6hwYD6i37621BRw/viewform"
+       target="_blank" rel="noopener">클럽원등록 ↗</a>
   </div>
 </header>
 
@@ -241,8 +240,10 @@ async function load() {
 
     ranking = createClubRanking(data.Rankings);
     const date = data.OfficialHaiacanDate || data.CollectDate;
-    $('status').textContent =
-      `총 ${ranking.length}명` + (date ? ' · 데이터 기준 ' + date : '');
+$('status').textContent =
+  `총 ${ranking.length}명` +
+  (date ? ' · 데이터 기준 ' + date : '') +
+  '\n매일 2회(06시, 19시 30분) 최신화(에타 레벨, 클럽원등록 등)';
 
     display();
   } catch {
