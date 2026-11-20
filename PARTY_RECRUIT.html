@@ -691,7 +691,11 @@ async function loadRanking() {
   }
 }
 
-if (window.self !== window.top) $('club-home').hidden = true;
+const clubHome = $('club-home');
+
+if (window.self !== window.top && clubHome) {
+  clubHome.hidden = true;
+}
 $('open-form').disabled = true;
 
 requestParties();
