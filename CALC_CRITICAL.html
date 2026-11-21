@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>크리티컬 계산기 · 삐약</title>
+<style>
+:root{color-scheme:dark;--ink:#f3f1ff;--muted:#c0b9d6;--line:#383049;--accent:#d6baff;--panel:#201b2d}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at 80% 0,#302145,transparent 50%),#14101e;color:var(--ink);font:16px system-ui,sans-serif}
+header,main,footer{max-width:1100px;margin:auto;padding:0 24px}
+header,footer{padding-top:25px;padding-bottom:25px;color:var(--muted)}
+header strong{color:var(--accent)}
+header p{margin:0;color:#e2c5ff;font:16px/1.5 system-ui,sans-serif}
+h1{margin:5px 0 22px;font-size:clamp(29px,5vw,52px);letter-spacing:-.05em;color:#f8efff;line-height:1.5}
+h2{margin:0 0 20px;font-size:23px}
+h3{font-size:17px;margin:24px 0 12px}
+button,input,select{font:inherit}
+.layout{display:grid;grid-template-columns:1.25fr 1fr;gap:16px;align-items:start}
+.card{border:1px solid var(--line);background:var(--panel);border-radius:18px;padding:24px;min-width:0}
+.results{background:linear-gradient(145deg,#35234d,#211a30)}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+label{display:grid;gap:6px;color:var(--muted);font-size:14px}
+input:not([type=checkbox]),select{width:100%;border:1px solid var(--line);border-radius:8px;background:#171222;color:var(--ink);padding:10px;min-width:0}
+.subtle-field{opacity:.2;transition:opacity .15s ease}
+.subtle-field:focus-within,.subtle-field:hover{opacity:1}
+.result-line{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:17px 0;border-top:1px solid var(--line);color:var(--ink);font-size:17px;font-weight:600}
+.result-line .pill{font-size:15px;padding:5px 14px}
+.metric{padding:14px 0;border-top:1px solid var(--line);color:var(--muted)}
+.metric strong{display:block;color:var(--accent);font-size:clamp(21px,3vw,32px);overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+p,summary{color:var(--muted);line-height:1.55}
+summary{cursor:pointer}details{margin-top:16px}a{color:var(--accent)}
+[hidden]{display:none!important}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+td,th{text-align:left;padding:10px 7px;border-bottom:1px solid var(--line)}
+th{color:#e2d3f5;font-weight:600}
+.table-wrap{width:100%;overflow-x:auto}
+.table-wrap table{min-width:600px}
+.full{grid-column:1/-1}
+.pill{display:inline-block;font-size:12px;white-space:nowrap;border-radius:100px;padding:3px 9px;font-weight:700}
+.ok{color:#9df0c2;background:rgba(68,193,125,.14)}
+.no{color:#f5b1b8;background:rgba(237,99,111,.12)}
+.small{font-size:13px;color:var(--muted)}
+.note{font-size:13px;color:var(--muted);margin:10px 0 0}
+.controls{display:flex;flex-wrap:wrap;gap:14px;margin:14px 0}
+.check{display:flex;align-items:center;gap:8px}
+.check input{accent-color:#cfb4ff;width:17px;height:17px}
+.btn{border:1px solid var(--line);border-radius:9px;background:#35264d;color:#f3eaff;padding:9px 13px;cursor:pointer}
+.btn:hover{background:#483260}
+.right{text-align:right;font-variant-numeric:tabular-nums}
+@media(max-width:720px){.layout{grid-template-columns:1fr}.card{padding:18px}header,main,footer{padding-left:16px;padding-right:16px}}
+@media(max-width:360px){.fields{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main>
+<header><p>삐약 · 테일즈위버</p><h1>크리티컬 계산기</h1></header>
+<section class="layout" id="calculator">
+  <div class="card">
+    <h2>크리티컬 설정</h2>
+    <div class="fields">
+      <label>장비 크리티컬<input id="crit" type="number" value="900" min="0" step="1"></label>
+      <label>내 AGI(도핑후)<input id="agi" type="number" value="900" min="0" step="1"></label>
+      <label>캐릭터<select id="character"></select></label>
+      <label>스킬<select id="skill"></select></label>
+      <label class="subtle-field">스킬 크리티컬 계수<input id="skillCrit" type="number" value="6" min="0" step="any"></label>
+      <label class="subtle-field">크리티컬 고정치<input id="fixed" type="number" value="45" step="any"></label>
+      <label class="subtle-field">약포 보정<input id="potion" type="number" value="55" step="any"></label>
+      <label class="subtle-field">회심 배율<input id="criticalBonus" type="number" value="1.1" min="0" step="0.01"></label>
+      <label class="subtle-field">판정 기준값<input id="threshold" type="number" value="100" step="any"></label>
+    </div>
+    <div class="controls">
+      <label class="check"><input type="checkbox" id="usePotion" checked> 약포 사용</label>
+      <label class="check"><input type="checkbox" id="useBonus"> 회심 적용</label>
+    </div>
+    <button class="btn" id="reset" type="button">기본값으로 초기화</button>
+  </div>
+  <div class="card results">
+    <h2>크리티컬 판정</h2>
+    <div id="summary" aria-live="polite"></div>
+  </div>
+  <div class="card full">
+    <h2>콘텐츠별 크리티컬 계산 결과</h2>
+    <p class="small">판정값이 기준값 이상이면 ‘가능’으로 표시됩니다. 아래 결과는 선택한 약포·회심 설정을 적용합니다.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>콘텐츠</th><th class="right">대상 AGI</th><th class="right">크리 저항</th><th class="right">판정값</th><th>판정</th><th class="right">필요 장비 크리</th><th class="right">추가 필요</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <section class="always-visible">
+      <h3>약포·회심 조합별 전체 결과 보기</h3>
+      <div class="table-wrap">
+        <table><thead><tr><th>콘텐츠</th><th class="right">약포 O</th><th class="right">약포 O + 회심</th><th class="right">약포 X</th><th class="right">약포 X + 회심</th></tr></thead><tbody id="matrix"></tbody></table>
+      </div>
+    </section>
+    <section class="always-visible">
+      <h3>몬스터 AGI 및 크리티컬 저항값 수정</h3>
+      <div class="table-wrap">
+        <table><thead><tr><th>콘텐츠</th><th>몬스터 AGI</th><th>크리 저항</th></tr></thead><tbody id="enemySettings"></tbody></table>
+      </div>
+    </section>
+  </div>
+</section>
+</main>
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+const fmt=(n,d=2)=>Number.isFinite(n)?n.toLocaleString('ko-KR',{minimumFractionDigits:0,maximumFractionDigits:d}):'계산 불가';
+const skills={
+'루시안':[['소용돌이',6],['원무',6],['연',6]],
+'보리스':[['연',6],['잔영참',13],['빙격참',13]],
+'티치엘':[['파이어애로우',5],['홀리볼트',4],['난타',12],['스파클링카이트',5]],
+'밀라':[['댄싱바이퍼',10],['매드바이트바이퍼',10]],
+'이스핀':[['연',5],['그랜드크로스',10]],
+'막시민':[['연',6],['폭풍의 눈',5],['오화월광참',10]],
+'나야트레이':[['심',5],['연',6],['백스텝',null]],
+'시벨린':[['연',8],['비연',6]],
+'조슈아':[['스타카르트',9],['고스트버스트',13],['섀도우비전',3]],
+'클로에':[['아이스미사일',5]],
+'란지에':[['크레이지샷',5],['아이스샷',5],['아이스피어스샷',12]],
+'이자크':[['슬램뱅',5],['멸신난무',5],['크리스크로스',10]],
+'아나이스':[['데스모먼트',10],['체인라이트닝',9],['크리스탈 스플린터',8],['디소넌스',10]],
+'이솔렛':[['글로리아',6],['윈드커터',6]],
+'벤야':[['샤프헬파이어',4],['사이드댄싱',5],['미티어소울',4]],
+'로아미니':[['커스버스트',10]],
+'녹턴':[['버스터런처',5],['플레임런처',9]],
+'리체':[['알레그로',6],['교살',6],['알레그로 디몰토',6]]
+};
+const defaults=[
+{name:'이클립스 6보스',agi:1420,resist:350},
+{name:'오방 반다렉스',agi:1950,resist:450},
+{name:'이클립스 토벌전',agi:2050,resist:500},
+{name:'아페테리아 어려움',agi:2100,resist:535},
+{name:'환슬 어려움',agi:2750,resist:930}
+];
+let monsters=defaults.map(x=>({...x}));
+function number(id){const n=Number($(id).value);return Number.isFinite(n)?n:0}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function populateCharacters(){
+ $('character').innerHTML=Object.keys(skills).map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join('');
+ $('character').value='루시안';populateSkills();
+}
+function populateSkills(){
+ const options=skills[$('character').value]||[];
+ $('skill').innerHTML=options.map((x,i)=>`<option value="${i}">${esc(x[0])}${x[1]===null?' (미확인)':''}</option>`).join('');
+ syncSkill();
+}
+function syncSkill(){
+ const item=skills[$('character').value]?.[Number($('skill').value)];
+ if(item&&item[1]!==null)$('skillCrit').value=item[1];
+ $('skillCrit').disabled=!!item&&item[1]===null;
+ render();
+}
+function calc(m,potion,bonus){
+ const own=number('agi'), gear=number('crit'), b=bonus?number('criticalBonus'):1;
+ const factor=own+m.agi>0?own/(own+m.agi):0;
+ return gear*2*factor*b+number('skillCrit')+number('fixed')+(potion?number('potion'):0)-m.resist;
+}
+function needed(m,potion,bonus){
+ const own=number('agi'),factor=own+m.agi>0?own/(own+m.agi):0;
+ const coef=2*factor*(bonus?number('criticalBonus'):1);
+ const base=number('skillCrit')+number('fixed')+(potion?number('potion'):0)-m.resist;
+ if(coef<=0)return base>=number('threshold')?0:Infinity;
+ return Math.max(0,Math.ceil((number('threshold')-base)/coef-1e-10));
+}
+function metric(label,value){return `<div class="metric">${esc(label)}<strong>${value}</strong></div>`}
+function verdict(v){return `<span class="pill ${v>=number('threshold')?'ok':'no'}">${v>=number('threshold')?'가능':'불가능'}</span>`}
+function render(){
+ const potion=$('usePotion').checked,bonus=$('useBonus').checked,threshold=number('threshold');
+ let rows=monsters.map((m,i)=>({...m,i,value:calc(m,potion,bonus),needed:needed(m,potion,bonus)}));
+ $('summary').innerHTML=rows.map(m=>`<div class="result-line"><span>${esc(m.name)}</span>${verdict(m.value)}</div>`).join('');
+ $('rows').innerHTML=rows.map(m=>`<tr><td>${esc(m.name)}</td><td class="right">${fmt(m.agi,0)}</td><td class="right">${fmt(m.resist,0)}</td><td class="right">${fmt(m.value)}</td><td>${verdict(m.value)}</td><td class="right">${fmt(m.needed,0)}</td><td class="right">${Number.isFinite(m.needed)?'+'+fmt(Math.max(0,m.needed-number('crit')),0):'-'}</td></tr>`).join('');
+ $('matrix').innerHTML=monsters.map(m=>`<tr><td>${esc(m.name)}</td>${[[true,false],[true,true],[false,false],[false,true]].map(([p,b])=>`<td class="right">${fmt(calc(m,p,b))} ${verdict(calc(m,p,b))}</td>`).join('')}</tr>`).join('');
+}
+function drawEnemySettings(){
+ $('enemySettings').innerHTML=monsters.map((m,i)=>`<tr><td>${esc(m.name)}</td><td><input type="number" data-index="${i}" data-key="agi" min="0" step="1" value="${m.agi}" aria-label="${esc(m.name)} AGI"></td><td><input type="number" data-index="${i}" data-key="resist" step="any" value="${m.resist}" aria-label="${esc(m.name)} 크리 저항"></td></tr>`).join('');
+}
+$('character').addEventListener('change',populateSkills);
+$('skill').addEventListener('change',syncSkill);
+$('calculator').addEventListener('input',e=>{
+ const t=e.target;
+ if(t.dataset.index!==undefined){
+  const i=Number(t.dataset.index),v=Number(t.value);
+  monsters[i][t.dataset.key]=Number.isFinite(v)?(t.dataset.key==='agi'?Math.max(0,v):v):0;
+ }
+ render();
+});
+$('calculator').addEventListener('change',render);
+$('reset').addEventListener('click',()=>{
+ const values={crit:900,agi:900,skillCrit:6,fixed:45,potion:55,criticalBonus:1.1,threshold:100};
+ Object.entries(values).forEach(([k,v])=>$(k).value=v);
+ $('usePotion').checked=true;$('useBonus').checked=false;
+ monsters=defaults.map(x=>({...x}));
+ $('character').value='루시안';populateSkills();drawEnemySettings();render();
+});
+populateCharacters();drawEnemySettings();render();
+</script>
+</body>
+</html>

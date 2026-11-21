@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="테일즈위버 콘텐츠별 명중률 안내서 · 삐약 클럽">
+  <title>명중률 안내서 · 삐약</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #f3f1ff;
+      --muted: #c0b9d6;
+      --line: #383049;
+      --accent: #d6baff;
+      --panel: #201b2d;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: radial-gradient(ellipse at 80% 0, #302145, transparent 50%), #14101e;
+      color: var(--ink);
+      font: 16px system-ui, sans-serif;
+      min-height: 100vh;
+    }
+    header, main, footer {
+      max-width: 1100px;
+      margin: auto;
+      padding: 0 24px;
+    }
+    header, footer {
+      padding-top: 25px;
+      padding-bottom: 25px;
+      color: var(--muted);
+    }
+    header strong { color: var(--accent); }
+    header p { margin: 0; color: #e2c5ff; font: 16px/1.5 system-ui, sans-serif; }
+    h1 { margin: 5px 0 22px; font-size: clamp(29px, 5vw, 52px); letter-spacing: -.05em; color: #f8efff; line-height: 1.5; }
+    h2 { margin: 0 0 20px; font-size: 23px; }
+    .layout { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start; }
+    .card { border: 1px solid var(--line); background: var(--panel); border-radius: 18px; padding: 24px; min-width: 0; scroll-margin-top: 24px; }
+    .card h2 { color: #f8efff; }
+    .card h2::before { content: ""; display: inline-block; width: 5px; height: 20px; vertical-align: -3px; margin-right: 11px; background: var(--accent); border-radius: 8px; opacity: .9; }
+    .list { margin: 0; padding: 0; list-style: none; }
+    .list li { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding: 12px 0; border-top: 1px solid var(--line); line-height: 1.5; }
+    .name { min-width: 0; color: var(--ink); }
+    .value { color: var(--accent); font-weight: 700; font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+    .value.long { white-space: normal; }
+    .nav { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+    .nav a { color: #e4d7f7; text-decoration: none; font-size: 14px; padding: 8px 13px; border: 1px solid var(--line); border-radius: 999px; background: #211a30; }
+    .nav a:hover, .nav a:focus-visible { background: #35234d; border-color: #9279bd; }
+    a { color: var(--accent); }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+    @media (max-width: 720px) {
+      .layout { grid-template-columns: 1fr; }
+      .card { padding: 18px; }
+      header, main, footer { padding-left: 16px; padding-right: 16px; }
+    }
+    @media (max-width: 420px) {
+      .list li { flex-direction: column; gap: 3px; }
+      .value { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header><p>삐약 · 테일즈위버</p><h1>명중률 안내서</h1></header>
+    <nav class="nav" aria-label="지역 바로가기">
+      <a href="#nest">신조의 둥지</a>
+      <a href="#abyss">어비스</a>
+      <a href="#peacock">팔색조</a>
+      <a href="#eclipse">이클립스</a>
+      <a href="#obe">오베</a>
+      <a href="#siokan">시오칸</a>
+      <a href="#rubicona">루비코나</a>
+      <a href="#relic">고대 렐릭</a>
+    </nav>
+    <section class="layout" aria-label="콘텐츠별 필요 명중률">
+      <article class="card" id="nest">
+        <h2>신조의 둥지</h2>
+        <ul class="list"><li><span class="name">신조의 둥지 - 어려움</span><span class="value">1300~1350</span></li></ul>
+      </article>
+      <article class="card" id="abyss">
+        <h2>어비스</h2>
+        <ul class="list">
+          <li><span class="name">어비스 - 지옥</span><span class="value">1350~1400</span></li>
+          <li><span class="name">어비스 EX</span><span class="value">1500~1550</span></li>
+          <li><span class="name">어비스 코어 마스터 던전</span><span class="value">1450~1500</span></li>
+        </ul>
+      </article>
+      <article class="card" id="peacock">
+        <h2>팔색조</h2>
+        <ul class="list">
+          <li><span class="name">팔색조 - 번뜩이는 분노</span><span class="value">1000</span></li>
+          <li><span class="name">팔색조 - 분노하는 갈망</span><span class="value">1450~1500</span></li>
+          <li><span class="name">팔색조 - 꿈, 그람존</span><span class="value">1550</span></li>
+        </ul>
+      </article>
+      <article class="card" id="eclipse">
+        <h2>이클립스</h2>
+        <ul class="list">
+          <li><span class="name">별동대 토벌</span><span class="value long">잡몹 1550 / 보스 1700</span></li>
+          <li><span class="name">이클립스 6보스</span><span class="value">1600~1650</span></li>
+          <li><span class="name">보급품 탈환</span><span class="value">2100~2150</span></li>
+          <li><span class="name">아페타리아 일반</span><span class="value">2150~2200</span></li>
+          <li><span class="name">아페타리아 어려움</span><span class="value">2400~2450</span></li>
+          <li><span class="name">아페타리아 EX</span><span class="value">2450~2500</span></li>
+          <li><span class="name">달여왕 군대 훈련소</span><span class="value">1700~1750</span></li>
+          <li><span class="name">이클립스 토벌전</span><span class="value">2300~2350</span></li>
+          <li><span class="name">골고다 협곡 방어전 잡몹</span><span class="value">2400~2450</span></li>
+          <li><span class="name">최후의 결전</span><span class="value">2450~2500</span></li>
+        </ul>
+      </article>
+      <article class="card" id="obe">
+        <h2>오베</h2>
+        <ul class="list">
+          <li><span class="name">베스티지</span><span class="value">1800~1850</span></li>
+          <li><span class="name">오를리 방어전</span><span class="value">2150~2200</span></li>
+        </ul>
+      </article>
+      <article class="card" id="siokan">
+        <h2>시오칸</h2>
+        <ul class="list">
+          <li><span class="name">시오칸하임 중간보스</span><span class="value">1650~1680</span></li>
+          <li><span class="name">시오칸하임 오딘</span><span class="value">1650~1680</span></li>
+        </ul>
+      </article>
+      <article class="card" id="rubicona">
+        <h2>루비코나</h2>
+        <ul class="list">
+          <li><span class="name">혼란의 대지</span><span class="value">2150</span></li>
+          <li><span class="name">색을 잃은 땅</span><span class="value long">명중 필요 없음</span></li>
+          <li><span class="name">공허의 영역</span><span class="value">2500~2550</span></li>
+          <li><span class="name">설계자의 채굴장</span><span class="value">2150~2200</span></li>
+          <li><span class="name">추종하는 환희 일반</span><span class="value">2650~2700</span></li>
+          <li><span class="name">추종하는 환희 어려움</span><span class="value">2950~3000</span></li>
+          <li><span class="name">응시하는 슬픔 일반</span><span class="value">2650~2700</span></li>
+          <li><span class="name">응시하는 슬픔 어려움</span><span class="value">2950~3000</span></li>
+          <li><span class="name">환희의 잔상</span><span class="value">2800~2850</span></li>
+        </ul>
+      </article>
+      <article class="card" id="relic">
+        <h2>고대 렐릭</h2>
+        <ul class="list">
+          <li><span class="name">고대 렐릭의 성소 1~3단계</span><span class="value">1480</span></li>
+          <li><span class="name">고대 렐릭의 성소 4~6단계</span><span class="value">1550</span></li>
+          <li><span class="name">고대 렐릭의 성소 7~10단계</span><span class="value">1700</span></li>
+          <li><span class="name">고대 렐릭의 성소 11~13단계</span><span class="value">2400~2450</span></li>
+          <li><span class="name">고대 렐릭의 성소 14~16단계</span><span class="value">2450~2500</span></li>
+          <li><span class="name">고대 렐릭의 성소 17~20단계</span><span class="value">2450~2500</span></li>
+        </ul>
+      </article>
+    </section>
+  </main>
+</body>
+</html>
