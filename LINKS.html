@@ -1,6 +1,5 @@
 <!doctype html>
-<html lang="ko">
-<head>
+<html lang="ko"><head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>링크모음 · 삐약</title>
@@ -141,11 +140,11 @@
       <h1>링크모음</h1>
     </header>
 
-    <details id="manager" class="panel" hidden>
+    <details id="manager" class="panel" hidden="">
       <summary>링크 관리</summary>
       <form id="link-form">
         <label>링크 주소
-          <input name="url" type="url" placeholder="https://…" required>
+          <input name="url" type="url" placeholder="https://…" required="">
         </label>
         <label>카드 제목 (선택)
           <input name="title" type="text" maxlength="100" placeholder="예: 신어헬 공략">
@@ -159,15 +158,79 @@
       <p class="note" id="status" role="status">수정한 파일을 GitHub에 올려주세요.</p>
     </details>
 
-    <p id="empty" class="note" hidden>등록된 링크가 없습니다.</p>
+    <p id="empty" class="note" hidden="">등록된 링크가 없습니다.</p>
     <section id="link-grid" class="grid" aria-label="등록된 링크"></section>
   </main>
 
   <script id="link-data" type="application/json">
 [
   {
-    "title": "테일즈위버 공식 홈페이지",
-    "url": "https://tales.nexon.com/"
+    "title": "테일즈위버(공홈)",
+    "url": "https://tales.nexon.com/Home/Main"
+  },
+  {
+    "title": "매직위버",
+    "url": "https://cafe.daum.net/MagicWeaver"
+  },
+  {
+    "title": "테일즈위버(인벤)",
+    "url": "https://party.inven.co.kr/tw"
+  },
+  {
+    "title": "테일즈위버(디시)",
+    "url": "https://gall.dcinside.com/mini/board/lists/?id=talesweaver"
+  },
+  {
+    "title": "육성 가이드(노버닝)",
+    "url": "https://youtu.be/CwWEm023Z1A?si=UiKYGId2E9fOY4Nw"
+  },
+  {
+    "title": "육성 가이드(버닝)",
+    "url": "https://youtu.be/_PK9Ht4i1nw?si=1EcoG-8LTq4Czbtx"
+  },
+  {
+    "title": "가이드(성장미션)",
+    "url": "https://youtu.be/AKeZs9ZpqiM?si=n-zhOeI9rZqkOdTZ"
+  },
+  {
+    "title": "가이드(몬스터 카드)",
+    "url": "https://youtu.be/RDFiJCgRLnI?si=nYQdSO73sCfVoF2g"
+  },
+  {
+    "title": "가이드(부위별 옵션)",
+    "url": "https://youtu.be/5uMX_X7xwqo?si=IVO6R26KHi7rS-3-"
+  },
+  {
+    "title": "가이드(과금)",
+    "url": "https://youtu.be/9HPoCkyTr4Y?si=hd5h00VLndn1nlDW"
+  },
+  {
+    "title": "가이드(경험치 도핑)",
+    "url": "https://youtu.be/1fIEnBrgU7E"
+  },
+  {
+    "title": "장비 정보",
+    "url": "https://docs.google.com/spreadsheets/d/1wFgw0yn6mCsaTLCRtHTjEWqPGX_0ESSvUenesC4z8Xk/edit?gid=2061033145#gid=2061033145"
+  },
+  {
+    "title": "아바타 정보",
+    "url": "https://docs.google.com/spreadsheets/d/145MNFMbSFt6VhMsVcUCK7Qc850weHN_McwNOeD9OJio/edit?gid=972922093#gid=972922093"
+  },
+  {
+    "title": "삐약(디스코드)",
+    "url": "https://discord.com/invite/ybkBWkJjFS"
+  },
+  {
+    "title": "삐약(자유톡방)",
+    "url": "https://open.kakao.com/o/gaxtsvTg"
+  },
+  {
+    "title": "삐약(공지숙제톡방)",
+    "url": "https://open.kakao.com/o/gZG3VZ5g"
+  },
+  {
+    "title": "삐약(가입문의톡방)",
+    "url": "https://open.kakao.com/o/g5no8wKg"
   }
 ]
   </script>
@@ -386,6 +449,4 @@
     }
 
     render();
-  </script>
-</body>
-</html>
+  </script></body></html>
