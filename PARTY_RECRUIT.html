@@ -65,7 +65,7 @@
     overflow-wrap: anywhere;
   }
 
-  .toolbar, .card-heading, .group, .actions {
+  .card-heading, .group, .actions {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -77,7 +77,6 @@
   .hint { margin-top: 8px; }
   #notice:empty, #ranking-status:empty { display: none; }
   #notice, #edit-error { color: #f6d891; }
-  #notice.code-required, #edit-error.code-required { color: #ff8080; }
 
   #parties {
     display: grid;
@@ -114,7 +113,6 @@
     margin-top: 10px;
   }
 
-  .shared-controls label { font-size: .875rem; }
   .group-actions { display: flex; gap: 5px; }
   .group-info { display: flex; gap: 6px 12px; align-items: center; flex-wrap: wrap; }
   .count, .eta { color: #f6d891; font-variant-numeric: tabular-nums; }
@@ -179,22 +177,14 @@
       <a href="https://docs.google.com/forms/d/e/1FAIpQLScANX8oDu7O9AABsu7Rbxs8U1ifPwDKarE6hwYD6i37621BRw/viewform"
        target="_blank" rel="noopener">클럽원등록 ↗</a>
     </div>
-    <h1>숙제 모집</h1>
+    <h1 id="recruit-title">숙제 모집</h1>
   </header>
 
   <section aria-labelledby="recruit-title">
-    <div class="toolbar">
-      <h2 id="recruit-title">숙제 모집</h2>
-      <button class="primary" id="open-form" type="button">숙제 추가</button>
-    </div>
     <div class="shared-controls">
-      <label>
-        클럽 공용 코드
-        <input id="club-code" type="password" autocomplete="off" maxlength="128">
-      </label>
+      <button class="primary" id="open-form" type="button">숙제 추가</button>
       <button id="reload-parties" type="button">모집 새로고침</button>
     </div>
-    <p class="hint">조회는 누구나 가능합니다. 변경하려면 공용 코드를 입력해 주세요.(코드는 톡방 입장코드)</p>
     <p class="hint" id="ranking-status" role="status">에타 랭킹을 불러오는 중…</p>
     <p class="hint" id="notice" role="status"></p>
     <div id="parties"></div>
@@ -321,25 +311,10 @@ let loaded = false;
 let draft = null;
 let editingIndex = null;
 
-function showCodeRequired(target) {
-  target.textContent = '클럽 공용 코드를 먼저 입력해 주세요.';
-  target.classList.add('code-required');
-  target.hidden = false;
-}
-
 async function requestParties(change) {
   if (busy) return false;
 
   const error = dialog.open ? editError : notice;
-  const code = $('club-code').value.trim();
-
-  if (change && !code) {
-    showCodeRequired(error);
-    return false;
-  }
-
-  notice.classList.remove('code-required');
-  editError.classList.remove('code-required');
   busy = true;
   $('reload-parties').disabled = true;
   $('next').disabled = true;
@@ -353,7 +328,7 @@ async function requestParties(change) {
 
     const options = change ? {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-Club-Code': code },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(change)
     } : {};
 
@@ -361,6 +336,10 @@ async function requestParties(change) {
       ...options,
       signal: AbortSignal.timeout(change ? 90000 : 15000)
     });
+    if (change && (response.status === 401 || response.status === 403)) {
+      throw new Error('모집 서버가 코드 없는 변경 요청을 거부했습니다.');
+    }
+
     const data = await response.json();
 
     if (!response.ok || !Array.isArray(data.parties)) {
@@ -555,7 +534,6 @@ function showDetails() {
   draft = null;
   $('details').hidden = false;
   editError.hidden = true;
-  editError.classList.remove('code-required');
   $('summary').hidden = true;
   $('previous').hidden = true;
   $('next').textContent = '내용 확인';
@@ -563,12 +541,6 @@ function showDetails() {
 
 function openPartyForm(index = null) {
   if (busy) return;
-
-  if (!$('club-code').value.trim()) {
-    showCodeRequired(notice);
-    $('club-code').focus();
-    return;
-  }
 
   editingIndex = index;
   const party = parties[index];
@@ -621,7 +593,6 @@ form.addEventListener('submit', async event => {
   const participants = (party?.names ?? []).filter(name => name.trim());
 
   if (capacity < participants.length) {
-    editError.classList.remove('code-required');
     editError.textContent = `현재 참가자가 ${participants.length}명입니다. 모집인원을 ${participants.length}명 이상으로 선택해 주세요.`;
     editError.hidden = false;
     form.elements.capacity.focus();
