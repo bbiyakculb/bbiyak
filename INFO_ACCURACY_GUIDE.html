@@ -37,8 +37,8 @@
     header p { margin: 0; color: #e2c5ff; font: 16px/1.5 system-ui, sans-serif; }
     h1 { margin: 5px 0 22px; font-size: clamp(29px, 5vw, 52px); letter-spacing: -.05em; color: #f8efff; line-height: 1.5; }
     h2 { margin: 0 0 20px; font-size: 23px; }
-    .layout { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start; }
-    .card { border: 1px solid var(--line); background: var(--panel); border-radius: 18px; padding: 24px; min-width: 0; scroll-margin-top: 24px; }
+    .layout { columns: 2; column-gap: 12px; }
+    .card { border: 1px solid var(--line); background: var(--panel); border-radius: 18px; padding: 24px; min-width: 0; margin: 0 0 12px; break-inside: avoid; display: inline-block; width: 100%; vertical-align: top; }
     .card h2 { color: #f8efff; }
     .card h2::before { content: ""; display: inline-block; width: 5px; height: 20px; vertical-align: -3px; margin-right: 11px; background: var(--accent); border-radius: 8px; opacity: .9; }
     .list { margin: 0; padding: 0; list-style: none; }
@@ -46,13 +46,10 @@
     .name { min-width: 0; color: var(--ink); }
     .value { color: var(--accent); font-weight: 700; font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
     .value.long { white-space: normal; }
-    .nav { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
-    .nav a { color: #e4d7f7; text-decoration: none; font-size: 14px; padding: 8px 13px; border: 1px solid var(--line); border-radius: 999px; background: #211a30; }
-    .nav a:hover, .nav a:focus-visible { background: #35234d; border-color: #9279bd; }
     a { color: var(--accent); }
     :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
     @media (max-width: 720px) {
-      .layout { grid-template-columns: 1fr; }
+      .layout { columns: 1; }
       .card { padding: 18px; }
       header, main, footer { padding-left: 16px; padding-right: 16px; }
     }
@@ -65,16 +62,6 @@
 <body>
   <main>
     <header><p>삐약 · 테일즈위버</p><h1>명중률 안내서</h1></header>
-    <nav class="nav" aria-label="지역 바로가기">
-      <a href="#nest">신조의 둥지</a>
-      <a href="#abyss">어비스</a>
-      <a href="#peacock">팔색조</a>
-      <a href="#eclipse">이클립스</a>
-      <a href="#obe">오베</a>
-      <a href="#siokan">시오칸</a>
-      <a href="#rubicona">루비코나</a>
-      <a href="#relic">고대 렐릭</a>
-    </nav>
     <section class="layout" aria-label="콘텐츠별 필요 명중률">
       <article class="card" id="nest">
         <h2>신조의 둥지</h2>
