@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko"> 
+<html lang="ko">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,17 +8,25 @@
   :root { color-scheme: dark; font: 16px system-ui, sans-serif; color: #f5f0ff; background: #14101e; }
   * { box-sizing: border-box; }
   body { margin: 0; height: 100vh; height: 100dvh; display: grid; grid-template-rows: auto minmax(0, 1fr); }
-  header { background: linear-gradient(115deg, #1c1728, #2f2143); border-bottom: 1px solid #544060; }
+  header { background: linear-gradient(115deg, #1c1728, #2f2143); border-bottom: 1px solid #544060; position: relative; z-index: 2; }
   .wrap { width: min(1100px, 100%); margin: auto; padding: clamp(14px, 3vw, 30px) clamp(12px, 4vw, 24px) 12px; }
   .server { margin: 0 0 4px; color: #f6d891; font-size: .82rem; font-weight: 700; }
   h1 { display: flex; align-items: center; gap: .3em; margin: 0 0 14px; font-size: clamp(25px, 5vw, 40px); letter-spacing: -.055em; }
   .club-mark { display: block; width: auto; height: 1em; border-radius: 4px; }
-  nav { display: flex; flex-wrap: wrap; gap: 6px; }
-  nav a { color: #e3d8f4; background: #21192f; border: 1px solid #5b486e; text-decoration: none; border-radius: 8px; padding: 8px clamp(8px, 1.5vw, 16px); font-size: .88rem; font-weight: 650; }
-  nav a:hover { background: #403052; }
-  nav a[aria-current="true"] { background: #d6baff; border-color: #d6baff; color: #231731; }
-  nav a:focus-visible { outline: 2px solid #f6d891; outline-offset: 2px; }
+  nav { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  nav a, .game-toggle { color: #e3d8f4; background: #21192f; border: 1px solid #5b486e; text-decoration: none; border-radius: 8px; padding: 8px clamp(8px, 1.5vw, 16px); font: 650 .88rem system-ui, sans-serif; cursor: pointer; }
+  nav a:hover, .game-toggle:hover { background: #403052; }
+  nav a[aria-current="true"], .game-toggle[aria-current="true"] { background: #d6baff; border-color: #d6baff; color: #231731; }
+  nav a:focus-visible, .game-toggle:focus-visible { outline: 2px solid #f6d891; outline-offset: 2px; }
+  .game-menu { position: relative; }
+  .game-toggle { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+  .game-toggle::after { content: '▾'; font-size: .8em; }
+  .game-toggle[aria-expanded="true"]::after { content: '▴'; }
+  .game-options { display: none; position: absolute; top: calc(100% + 6px); left: 0; min-width: 175px; padding: 6px; background: #251a35; border: 1px solid #6e5486; border-radius: 10px; box-shadow: 0 12px 28px #07030d99; z-index: 10; }
+  .game-options.open { display: grid; gap: 4px; }
+  nav .game-options a { display: block; padding: 10px 12px; white-space: nowrap; }
   iframe { border: 0; display: block; width: 100%; height: 100%; }
+  @media (max-width: 600px) { .game-options { left: auto; right: 0; } }
 </style>
 </head>
 <body>
@@ -36,9 +44,14 @@
       <a href="./CALC_EXP.html" target="club-content">경험치</a>
       <a href="./CALC_ETA_REQUIRED_DAYS.html" target="club-content">에타 소요일</a>
       <a href="./LINKS.html" target="club-content">링크 모음</a>
-      <a href="./GAME_MINESWEEPER.html" target="club-content">테스트1</a>
-      <a href="./GAME_SUDOKU.html" target="club-content">테스트2</a>
-      <a href="./OMOK_ONLINE.html" target="club-content">테스트3</a>
+      <div class="game-menu" id="game-menu">
+        <button type="button" class="game-toggle" id="game-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="game-options">미니게임</button>
+        <div class="game-options" id="game-options">
+          <a href="./GAME_SUDOKU.html" target="club-content">스도쿠 (중급)</a>
+          <a href="./GAME_MINESWEEPER.html" target="club-content">지뢰찾기 (15×15)</a>
+          <a href="./OMOK_ONLINE.html" target="club-content">온라인 오목</a>
+        </div>
+      </div>
       <a href="./PARTY_RECRUIT.html" target="club-content" aria-current="true">숙제 모집</a>
     </nav>
   </div>
@@ -49,16 +62,33 @@
 <script>
   const frame = document.getElementById('club-content');
   const links = [...document.querySelectorAll('nav a')];
+  const gameMenu = document.getElementById('game-menu');
+  const gameToggle = document.getElementById('game-toggle');
+  const gameOptions = document.getElementById('game-options');
+  function setGameOpen(open) {
+    gameToggle.setAttribute('aria-expanded', String(open));
+    gameOptions.classList.toggle('open', open);
+  }
+  gameToggle.addEventListener('click', () => setGameOpen(gameToggle.getAttribute('aria-expanded') !== 'true'));
+  document.addEventListener('click', event => { if (!gameMenu.contains(event.target)) setGameOpen(false); });
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape') { setGameOpen(false); gameToggle.focus(); }
+  });
   for (const link of links) {
-    link.addEventListener('click', (event) => {
+    link.addEventListener('click', event => {
       if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
-      if (link.hasAttribute('aria-current')) {
+      if (link.getAttribute('aria-current') === 'true') {
         event.preventDefault();
+        setGameOpen(false);
         return;
       }
-      document.querySelector('nav a[aria-current]').removeAttribute('aria-current');
+      const previous = document.querySelector('nav a[aria-current="true"]');
+      if (previous) previous.removeAttribute('aria-current');
+      gameToggle.removeAttribute('aria-current');
       link.setAttribute('aria-current', 'true');
-      frame.title = link.textContent;
+      if (gameMenu.contains(link)) gameToggle.setAttribute('aria-current', 'true');
+      frame.title = link.textContent.trim();
+      setGameOpen(false);
     });
   }
 </script>
