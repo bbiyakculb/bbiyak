@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#14101e">
+<title>미니게임 랭킹 · 삐약</title>
+<style>
+:root{color-scheme:dark;--ink:#f3f1ff;--muted:#c0b9d6;--line:#433651;--accent:#d6baff;--panel:#201b2d;--bg:#14101e}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 80% 0,#302145,transparent 52%),var(--bg);color:var(--ink);font:15px/1.55 system-ui,sans-serif}
+main{width:min(1100px,100%);margin:auto;padding:26px 22px 56px}
+header p{margin:0;color:#e2c5ff;font-size:16px}
+h1{font-size:clamp(29px,5vw,50px);letter-spacing:-.05em;line-height:1.3;margin:5px 0 8px}
+.lead{color:var(--muted);margin:0 0 20px}
+.toolbar{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:16px}
+.status{font-size:13px;color:var(--muted);min-height:21px}
+button{font:inherit;color:var(--ink);background:#322740;border:1px solid #69547e;border-radius:10px;padding:9px 16px;cursor:pointer}
+button:hover:not(:disabled){background:#493457}button:disabled{cursor:wait;opacity:.6}button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.card{min-width:0;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px}
+.head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:13px}
+h2{font-size:20px;margin:0;color:#f8efff;letter-spacing:-.025em}
+h2::before{content:"";display:inline-block;vertical-align:-3px;width:5px;height:20px;margin-right:10px;background:var(--accent);border-radius:6px}
+.tag{white-space:nowrap;font-size:12px;color:var(--accent);border:1px solid #69547e;border-radius:20px;padding:4px 10px;background:#2d233d}
+.rank-head,.rank-row{display:grid;grid-template-columns:56px minmax(0,1fr) 105px;align-items:center;column-gap:10px}
+.rank-head{color:var(--muted);font-size:12px;padding:8px 5px;border-bottom:1px solid #675379}
+.rank-row{min-height:43px;padding:8px 5px;border-bottom:1px solid var(--line)}
+.rank-row:last-child{border-bottom:0}
+.place{color:#e6d2ff;font-weight:750;font-variant-numeric:tabular-nums}
+.rank-row:nth-child(2) .place,.rank-row:nth-child(3) .place,.rank-row:nth-child(4) .place{color:#f6d891}
+.nick{overflow-wrap:anywhere;min-width:0}
+.time{color:var(--accent);text-align:right;font-weight:750;font-variant-numeric:tabular-nums;white-space:nowrap}
+.muted{color:var(--muted)}.empty{opacity:.7}.right{text-align:right}
+.error{color:#ffb6bd;font-size:12px;padding:10px 5px 2px;overflow-wrap:anywhere}
+footer{border-top:1px solid var(--line);margin-top:22px;padding-top:16px;color:var(--muted);font-size:12px}
+@media(max-width:700px){.grid{grid-template-columns:1fr}main{padding:20px 14px 45px}.card{padding:16px}.rank-head,.rank-row{grid-template-columns:48px minmax(0,1fr) 95px}}
+@media(max-width:370px){main{padding:15px 10px}.card{padding:13px}.rank-head,.rank-row{grid-template-columns:44px minmax(0,1fr) 82px;gap:5px}.time{font-size:13px}}
+</style>
+</head>
+<body>
+<main>
+<header><p>삐약 · 테일즈위버</p><h1>미니게임 랭킹</h1><p class="lead">스도쿠 · 지뢰찾기 난이도별 TOP 5</p></header>
+<div class="toolbar"><div class="status" id="status" role="status" aria-live="polite">클럽 랭킹을 불러오는 중입니다.</div><button id="refresh" type="button">↻ 랭킹 새로고침</button></div>
+<div class="grid" id="rankings">
+  <section class="card" data-game="sudoku_easy"><div class="head"><h2>스도쿠 · 초급</h2><span class="tag">TOP 5</span></div><div class="entries" aria-label="스도쿠 초급 순위"></div></section>
+  <section class="card" data-game="mines_easy"><div class="head"><h2>지뢰찾기 · 초급</h2><span class="tag">TOP 5</span></div><div class="entries" aria-label="지뢰찾기 초급 순위"></div></section>
+  <section class="card" data-game="sudoku_medium"><div class="head"><h2>스도쿠 · 중급</h2><span class="tag">TOP 5</span></div><div class="entries" aria-label="스도쿠 중급 순위"></div></section>
+  <section class="card" data-game="mines_medium"><div class="head"><h2>지뢰찾기 · 중급</h2><span class="tag">TOP 5</span></div><div class="entries" aria-label="지뢰찾기 중급 순위"></div></section>
+  <section class="card" data-game="sudoku_hard"><div class="head"><h2>스도쿠 · 고급</h2><span class="tag">TOP 5</span></div><div class="entries" aria-label="스도쿠 고급 순위"></div></section>
+  <section class="card" data-game="mines_hard"><div class="head"><h2>지뢰찾기 · 고급</h2><span class="tag">TOP 5</span></div><div class="entries" aria-label="지뢰찾기 고급 순위"></div></section>
+</div>
+<footer>삐약 클럽 · GitHub에 저장된 각 난이도별 최고 기록을 표시합니다.</footer>
+</main>
+<script>
+(()=>{'use strict';
+const SERVER='https://decisive-del-91primula-916f7c42.apps.mistral.run';
+const cards=[...document.querySelectorAll('[data-game]')];
+const status=document.getElementById('status');
+const refresh=document.getElementById('refresh');
+const format=seconds=>{const s=Math.max(0,Math.floor(Number(seconds)));return [Math.floor(s/3600),Math.floor(s%3600/60),s%60].map(x=>String(x).padStart(2,'0')).join(':')};
+const el=(type,cls,text)=>{const node=document.createElement(type);if(cls)node.className=cls;if(text!==undefined)node.textContent=text;return node};
+function render(card,items,error=''){
+ const target=card.querySelector('.entries');target.replaceChildren();
+ const headers=el('div','rank-head');headers.append(el('span','','순위'),el('span','','닉네임'),el('span','right','완료 시간'));target.append(headers);
+ for(let i=0;i<5;i++){
+  const item=items[i],row=el('div','rank-row'+(item?'':' empty'));
+  row.append(el('span','place',(i+1)+'위'),el('span','nick'+(item?'':' muted'),item?item.name:'—'),el('span','time'+(item?'':' muted'),item?format(item.seconds):'—'));
+  target.append(row);
+ }
+ if(error)target.append(el('p','error',error));
+}
+let generation=0;
+async function load(){const seq=++generation;refresh.disabled=true;status.textContent='6개 랭킹을 불러오는 중입니다…';
+ const results=await Promise.all(cards.map(async card=>{
+  const game=card.dataset.game;
+  try{
+   const res=await fetch(SERVER+'/api/leaderboard?game='+encodeURIComponent(game),{cache:'no-store'});
+   const data=await res.json();
+   if(!res.ok)throw Error(data.error||'HTTP '+res.status);
+   if(!Array.isArray(data.ranking))throw Error('랭킹 응답 형식이 올바르지 않습니다.');
+   return {card,items:data.ranking.filter(x=>x&&typeof x.name==='string'&&Number.isFinite(Number(x.seconds))).sort((a,b)=>a.seconds-b.seconds).slice(0,5)};
+  }catch(e){return {card,items:[],error:e.message||'통신 실패'}};
+ }));
+ if(seq!==generation)return;
+ let failures=0;for(const r of results){if(r.error)failures++;render(r.card,r.items,r.error||'')}
+ refresh.disabled=false;
+ status.textContent=failures?`조회 완료 · ${6-failures}개 성공, ${failures}개 실패`:'6개 랭킹 갱신 완료 · '+new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});
+}
+refresh.addEventListener('click',load);
+for(const card of cards)render(card,[]);
+load();
+})();
+</script>
+</body>
+</html>
