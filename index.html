@@ -26,7 +26,16 @@
   .game-options.open { display: grid; gap: 4px; }
   nav .game-options a { display: block; padding: 10px 12px; white-space: nowrap; }
   iframe { border: 0; display: block; width: 100%; height: 100%; }
-  @media (max-width: 600px) { .game-options { left: auto; right: 0; } }
+  /* 모바일: 오른쪽 정렬을 해제해 드롭다운이 화면 왼쪽으로 잘리지 않도록 함 */
+  @media (max-width: 600px) {
+    .game-options {
+      left: 0;
+      right: auto;
+      min-width: 175px;
+      max-width: calc(100vw - 24px);
+    }
+    nav .game-options a { white-space: normal; }
+  }
 </style>
 </head>
 <body>
