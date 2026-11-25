@@ -14,27 +14,21 @@
   h1 { display: flex; align-items: center; gap: .3em; margin: 0 0 14px; font-size: clamp(25px, 5vw, 40px); letter-spacing: -.055em; }
   .club-mark { display: block; width: auto; height: 1em; border-radius: 4px; }
   nav { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-  nav a, .game-toggle { color: #e3d8f4; background: #21192f; border: 1px solid #5b486e; text-decoration: none; border-radius: 8px; padding: 8px clamp(8px, 1.5vw, 16px); font: 650 .88rem system-ui, sans-serif; cursor: pointer; }
-  nav a:hover, .game-toggle:hover { background: #403052; }
-  nav a[aria-current="true"], .game-toggle[aria-current="true"] { background: #d6baff; border-color: #d6baff; color: #231731; }
-  nav a:focus-visible, .game-toggle:focus-visible { outline: 2px solid #f6d891; outline-offset: 2px; }
-  .game-menu { position: relative; }
-  .game-toggle { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
-  .game-toggle::after { content: '▾'; font-size: .8em; }
-  .game-toggle[aria-expanded="true"]::after { content: '▴'; }
-  .game-options { display: none; position: absolute; top: calc(100% + 6px); left: 0; min-width: 175px; padding: 6px; background: #251a35; border: 1px solid #6e5486; border-radius: 10px; box-shadow: 0 12px 28px #07030d99; z-index: 10; }
-  .game-options.open { display: grid; gap: 4px; }
-  nav .game-options a { display: block; padding: 10px 12px; white-space: nowrap; }
+  nav a, .menu-toggle { color: #e3d8f4; background: #21192f; border: 1px solid #5b486e; text-decoration: none; border-radius: 8px; padding: 8px clamp(8px, 1.5vw, 16px); font: 650 .88rem system-ui, sans-serif; cursor: pointer; }
+  nav a:hover, .menu-toggle:hover { background: #403052; }
+  nav a[aria-current="true"], .menu-toggle[aria-current="true"] { background: #d6baff; border-color: #d6baff; color: #231731; }
+  nav a:focus-visible, .menu-toggle:focus-visible { outline: 2px solid #f6d891; outline-offset: 2px; }
+  .menu-group { position: relative; }
+  .menu-toggle { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+  .menu-toggle::after { content: '▾'; font-size: .8em; }
+  .menu-toggle[aria-expanded="true"]::after { content: '▴'; }
+  .menu-options { display: none; position: absolute; top: calc(100% + 6px); left: 0; min-width: 205px; padding: 6px; background: #251a35; border: 1px solid #6e5486; border-radius: 10px; box-shadow: 0 12px 28px #07030d99; z-index: 10; }
+  .menu-options.open { display: grid; gap: 4px; }
+  nav .menu-options a { display: block; padding: 10px 12px; white-space: nowrap; }
   iframe { border: 0; display: block; width: 100%; height: 100%; }
-  /* 모바일: 오른쪽 정렬을 해제해 드롭다운이 화면 왼쪽으로 잘리지 않도록 함 */
   @media (max-width: 600px) {
-    .game-options {
-      left: 0;
-      right: auto;
-      min-width: 175px;
-      max-width: calc(100vw - 24px);
-    }
-    nav .game-options a { white-space: normal; }
+    .menu-options { max-width: calc(100vw - 24px); }
+    nav .menu-options a { white-space: normal; }
   }
 </style>
 </head>
@@ -45,59 +39,96 @@
     <h1>삐약 클럽<img class="club-mark" src="./mark.jpg" width="81" height="85" alt=""></h1>
     <nav aria-label="삐약 클럽 메뉴">
       <a href="./INFO_ETA_RANKING.html" target="club-content">에타 랭킹</a>
-      <a href="./INFO_EQUIPMENT" target="club-content">장비</a>
-      <a href="./CALC_CORE.html" target="club-content">코어</a>
-      <a href="./INFO_ACCURACY_GUIDE" target="club-content">명중률</a>
-      <a href="./CALC_CRITICAL" target="club-content">크리티컬</a>
-      <a href="./CALC_COEFFICIENT.html" target="club-content">계수</a>
-      <a href="./CALC_EXP.html" target="club-content">경험치</a>
-      <a href="./CALC_ETA_REQUIRED_DAYS.html" target="club-content">에타 소요일</a>
-      <a href="./LINKS.html" target="club-content">링크 모음</a>
-      <div class="game-menu" id="game-menu">
-        <button type="button" class="game-toggle" id="game-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="game-options">미니게임</button>
-        <div class="game-options" id="game-options">
+      <a href="./INFO_EQUIPMENT" target="club-content">장비 정보</a>
+      <a href="./LINKS.html" target="club-content">링크모음</a>
+      <div class="menu-group" id="calculator-menu">
+        <button type="button" class="menu-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="calculator-options">계산기</button>
+        <div class="menu-options" id="calculator-options">
+          <a href="./CALC_CORE.html" target="club-content">테시스 코어 계산기</a>
+          <a href="./INFO_ACCURACY_GUIDE" target="club-content">명중률 안내서</a>
+          <a href="./CALC_CRITICAL" target="club-content">크리티컬 계산기</a>
+          <a href="./CALC_COEFFICIENT.html" target="club-content">계수 계산기</a>
+          <a href="./CALC_EXP.html" target="club-content">사냥 경험치 계산기</a>
+          <a href="./CALC_ETA_REQUIRED_DAYS.html" target="club-content">에타 소요일 계산기</a>
+        </div>
+      </div>
+      <div class="menu-group" id="game-menu">
+        <button type="button" class="menu-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="game-options">미니게임</button>
+        <div class="menu-options" id="game-options">
           <a href="./GAME_SUDOKU.html" target="club-content">스도쿠 (중급)</a>
           <a href="./GAME_MINESWEEPER.html" target="club-content">지뢰찾기 (15×15)</a>
           <a href="./OMOK_ONLINE.html" target="club-content">온라인 오목</a>
         </div>
       </div>
-      <a href="./PARTY_RECRUIT.html" target="club-content" aria-current="true">숙제 모집</a>
+      <a href="./PARTY_RECRUIT.html" target="club-content" aria-current="true">숙제모집</a>
     </nav>
   </div>
 </header>
 <main>
-  <iframe name="club-content" id="club-content" src="./PARTY_RECRUIT.html" title="숙제 모집"></iframe>
+  <iframe name="club-content" id="club-content" src="./PARTY_RECRUIT.html" title="숙제모집"></iframe>
 </main>
 <script>
   const frame = document.getElementById('club-content');
   const links = [...document.querySelectorAll('nav a')];
-  const gameMenu = document.getElementById('game-menu');
-  const gameToggle = document.getElementById('game-toggle');
-  const gameOptions = document.getElementById('game-options');
-  function setGameOpen(open) {
-    gameToggle.setAttribute('aria-expanded', String(open));
-    gameOptions.classList.toggle('open', open);
+  const menus = [...document.querySelectorAll('.menu-group')];
+
+  function closeMenus(except = null) {
+    for (const menu of menus) {
+      if (menu === except) continue;
+      const button = menu.querySelector('.menu-toggle');
+      const options = menu.querySelector('.menu-options');
+      button.setAttribute('aria-expanded', 'false');
+      options.classList.remove('open');
+      options.style.left = '';
+      options.style.right = '';
+    }
   }
-  gameToggle.addEventListener('click', () => setGameOpen(gameToggle.getAttribute('aria-expanded') !== 'true'));
-  document.addEventListener('click', event => { if (!gameMenu.contains(event.target)) setGameOpen(false); });
-  document.addEventListener('keydown', event => {
-    if (event.key === 'Escape') { setGameOpen(false); gameToggle.focus(); }
+
+  for (const menu of menus) {
+    const button = menu.querySelector('.menu-toggle');
+    const options = menu.querySelector('.menu-options');
+    button.addEventListener('click', () => {
+      const open = button.getAttribute('aria-expanded') !== 'true';
+      closeMenus();
+      if (!open) return;
+      button.setAttribute('aria-expanded', 'true');
+      options.classList.add('open');
+      // 화면 바깥으로 튀어나가지 않도록 모바일/PC 모두 자동 위치 보정
+      const box = options.getBoundingClientRect();
+      if (box.right > window.innerWidth - 12) {
+        options.style.left = 'auto';
+        options.style.right = '0';
+      }
+      const adjusted = options.getBoundingClientRect();
+      if (adjusted.left < 12) {
+        options.style.right = 'auto';
+        options.style.left = `${12 - menu.getBoundingClientRect().left}px`;
+      }
+    });
+  }
+
+  document.addEventListener('click', event => {
+    if (!event.target.closest('.menu-group')) closeMenus();
   });
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape') {
+      const opened = menus.find(menu => menu.querySelector('.menu-toggle').getAttribute('aria-expanded') === 'true');
+      closeMenus();
+      if (opened) opened.querySelector('.menu-toggle').focus();
+    }
+  });
+
   for (const link of links) {
     link.addEventListener('click', event => {
       if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
-      if (link.getAttribute('aria-current') === 'true') {
-        event.preventDefault();
-        setGameOpen(false);
-        return;
-      }
       const previous = document.querySelector('nav a[aria-current="true"]');
       if (previous) previous.removeAttribute('aria-current');
-      gameToggle.removeAttribute('aria-current');
+      for (const menu of menus) menu.querySelector('.menu-toggle').removeAttribute('aria-current');
       link.setAttribute('aria-current', 'true');
-      if (gameMenu.contains(link)) gameToggle.setAttribute('aria-current', 'true');
+      const parent = link.closest('.menu-group');
+      if (parent) parent.querySelector('.menu-toggle').setAttribute('aria-current', 'true');
       frame.title = link.textContent.trim();
-      setGameOpen(false);
+      closeMenus();
     });
   }
 </script>
