@@ -118,6 +118,7 @@ input.nick-required-glow::placeholder { color: #ffe071 !important; opacity: 1 !i
 .alk-piece-layer{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:visible}
 .alk-slot{position:absolute;display:grid;place-items:center;width:11.111111%;height:10%;pointer-events:none;
  font-family:serif;font-size:clamp(15px,2.9vw,33px);line-height:1;box-shadow:none!important;background:none!important}
+.alk-slot[hidden]{display:none!important}
 .alk-slot:after,.alk-slot:before{display:none!important}
 .alk-slot .piece{transition:none;will-change:transform}
 .alk-board>canvas.alk-aim{position:absolute;inset:0;display:block;z-index:3;width:100%;height:100%;
@@ -250,7 +251,7 @@ const sizePower=(p.type==='king'?1.20:(p.type==='soldier'||p.type==='guard')?0.9
 const speed=base*Math.pow(10/p.m,.08)*.60*sizePower; // 기본 강도 60%에 기물 크기별 배율 적용
 p.chain=0;p.vx=nx*speed;p.vy=ny*speed;effect('janggiMove');rolling=true;simCount=0;stopped=0;update();stamp=performance.now();anim=requestAnimationFrame(frame);}
 function frame(now){const dt=Math.min(2.4,Math.max(.4,(now-stamp)/16.67))*1.4; /* 물리 진행 속도 1.4배 (발사 강도·충돌 감쇠 유지) */ stamp=now;simCount+=dt;for(let n=0;n<Math.max(1,Math.round(dt*2));n++)tick(dt/Math.max(1,Math.round(dt*2)));render();let moving=pieces.some(p=>p.alive&&Math.hypot(p.vx,p.vy)>.18);if(!moving)stopped+=dt;else stopped=0;if(stopped>12||simCount>750){for(const p of pieces){p.vx=0;p.vy=0;}rolling=false;anim=null;const a=remain('red'),b=remain('blue');if(a===0||b===0){playing=false;won=true;$('toast').textContent=a===0?'초 진영 승리!':'한 진영 승리!';effect(remain(human)>0?'janggiWin':'lose');update();return;}turn=turn==='red'?'blue':'red';update();if(turn===ai)queueAI();return;}anim=requestAnimationFrame(frame);}
-function tick(dt){const active=pieces.filter(p=>p.alive);for(const p of active){p.x+=p.vx*dt;p.y+=p.vy*dt;let resist=Math.pow(.980,dt);p.vx*=resist;p.vy*=resist;if(Math.hypot(p.vx,p.vy)<.08){p.vx=0;p.vy=0;}if(p.x<BOUND.l-p.r||p.x>BOUND.r+p.r||p.y<BOUND.t-p.r||p.y>BOUND.b+p.r){p.alive=false;p.vx=p.vy=0;const sfxTime=performance.now();if(sfxTime-lastCollisionSfx>110){lastCollisionSfx=sfxTime;effect('boom');}}}const balls=pieces.filter(p=>p.alive);for(let i=0;i<balls.length;i++)for(let j=i+1;j<balls.length;j++){const a=balls[i],b=balls[j],dx=b.x-a.x,dy=b.y-a.y,dis=Math.hypot(dx,dy)||.0001,min=a.r+b.r;if(dis>=min)continue;const nx=dx/dis,ny=dy/dis,invA=1/a.m,invB=1/b.m,invSum=invA+invB,overlap=min-dis+0.04;
+function tick(dt){const active=pieces.filter(p=>p.alive);for(const p of active){p.x+=p.vx*dt;p.y+=p.vy*dt;let resist=Math.pow(.980,dt);p.vx*=resist;p.vy*=resist;if(Math.hypot(p.vx,p.vy)<.08){p.vx=0;p.vy=0;}if(p.x<=BOUND.l||p.x>=BOUND.r||p.y<=BOUND.t||p.y>=BOUND.b){p.alive=false;p.vx=p.vy=0;const sfxTime=performance.now();if(sfxTime-lastCollisionSfx>110){lastCollisionSfx=sfxTime;effect('boom');}}}const balls=pieces.filter(p=>p.alive);for(let i=0;i<balls.length;i++)for(let j=i+1;j<balls.length;j++){const a=balls[i],b=balls[j],dx=b.x-a.x,dy=b.y-a.y,dis=Math.hypot(dx,dy)||.0001,min=a.r+b.r;if(dis>=min)continue;const nx=dx/dis,ny=dy/dis,invA=1/a.m,invB=1/b.m,invSum=invA+invB,overlap=min-dis+0.04;
 a.x-=nx*overlap*invA/invSum;a.y-=ny*overlap*invA/invSum;
 b.x+=nx*overlap*invB/invSum;b.y+=ny*overlap*invB/invSum;
 const rel=(b.vx-a.vx)*nx+(b.vy-a.vy)*ny;
@@ -265,7 +266,10 @@ a.vx-=impulse*invA*nx;a.vy-=impulse*invA*ny;
 b.vx+=impulse*invB*nx;b.vy+=impulse*invB*ny;
 // 충돌 후 움직이게 된 돌은 다음 충돌에서 추가 감쇠 대상이 됩니다.
 if(mover===a)b.chain=Math.max(b.chain, a.chain+1);
-else a.chain=Math.max(a.chain, b.chain+1);}}}
+else a.chain=Math.max(a.chain, b.chain+1);}}
+// 다른 말과의 충돌 보정으로 경계를 넘긴 기물 역시 다음 프레임을 기다리지 않고 제거
+for(const p of pieces){if(p.alive&&(p.x<=BOUND.l||p.x>=BOUND.r||p.y<=BOUND.t||p.y>=BOUND.b)){p.alive=false;p.vx=p.vy=0;effect('boom');}}
+}
 function queueAI(){if(!playing||turn!==ai||rolling)return;thinking=setTimeout(()=>{thinking=null;if(!playing||turn!==ai||rolling)return;const own=pieces.filter(p=>p.alive&&p.team===ai),foes=pieces.filter(p=>p.alive&&p.team===human);if(!own.length||!foes.length)return;let options=[];for(const p of own)for(const q of foes){let dx=q.x-p.x,dy=q.y-p.y,d=Math.hypot(dx,dy);let edge=Math.min(q.x-BOUND.l,BOUND.r-q.x,q.y-BOUND.t,BOUND.b-q.y);options.push({p,q,d,score:d+(level==='hard'?edge*.6+q.m*18:0)});}options.sort((a,b)=>a.score-b.score);let chosen=level==='easy'?options[Math.floor(Math.random()*options.length)]:level==='hard'?options[0]:options[Math.floor(Math.random()*Math.min(5,options.length))];const deviation=level==='easy'?.30:level==='medium'?.13:.045;const angle=Math.atan2(chosen.q.y-chosen.p.y,chosen.q.x-chosen.p.x)+(Math.random()-.5)*deviation*2;const power=(level==='easy'?19:level==='medium'?24:28)+(Math.random()-.5)*7;$('toast').textContent='컴퓨터가 알을 튕겼습니다.';fire(chosen.p,Math.cos(angle),Math.sin(angle),power);},650);}
 $('aiStart').addEventListener('click',()=>{setMode('ai');reset();});
 $('reset').addEventListener('click',()=>{if(!onlineMode)reset();});
