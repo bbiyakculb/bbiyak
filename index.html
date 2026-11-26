@@ -1,9 +1,8 @@
-<!DOCTYPE html>
-
+<!doctype html>
 <html lang="ko">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>삐약 클럽 · 테일즈위버</title>
 <style>
   :root { color-scheme: dark; font: 16px system-ui, sans-serif; color: #f5f0ff; background: #14101e; }
@@ -27,11 +26,6 @@
   .menu-options.open { display: grid; gap: 4px; }
   nav .menu-options a { display: block; padding: 10px 12px; white-space: nowrap; }
   iframe { border: 0; display: block; width: 100%; height: 100%; }
-  @media(max-width:850px){
-    body.galaga-focus{grid-template-rows:minmax(0,1fr)}
-    body.galaga-focus>header{display:none}
-    body.galaga-focus>main{min-height:0}
-  }
   @media (max-width: 600px) {
     .menu-options { max-width: calc(100vw - 24px); }
     nav .menu-options a { white-space: normal; }
@@ -40,61 +34,47 @@
 </head>
 <body>
 <header>
-<div class="wrap">
-<p class="server">테일즈위버 · 하이아칸</p>
-<h1>삐약 클럽<img alt="" class="club-mark" height="85" src="./mark.jpg" width="81"/></h1>
-<nav aria-label="삐약 클럽 메뉴">
-<a href="./INFO_ETA_RANKING.html" target="club-content">에타 랭킹</a>
-<a href="./INFO_EQUIPMENT" target="club-content">장비 정보</a>
-<a href="./LINKS.html" target="club-content">링크모음</a>
-<div class="menu-group" id="calculator-menu">
-<button aria-controls="calculator-options" aria-expanded="false" aria-haspopup="true" class="menu-toggle" type="button">계산기</button>
-<div class="menu-options" id="calculator-options">
-<a href="./CALC_CORE.html" target="club-content">테시스 코어 계산기</a>
-<a href="./INFO_ACCURACY_GUIDE" target="club-content">명중률 안내서</a>
-<a href="./CALC_CRITICAL" target="club-content">크리티컬 계산기</a>
-<a href="./CALC_COEFFICIENT.html" target="club-content">계수 계산기</a>
-<a href="./CALC_EXP.html" target="club-content">사냥 경험치 계산기</a>
-<a href="./CALC_ETA_REQUIRED_DAYS.html" target="club-content">에타 소요일 계산기</a>
-</div>
-</div>
-<div class="menu-group" id="game-menu">
-<button aria-controls="game-options" aria-expanded="false" aria-haspopup="true" class="menu-toggle" type="button">미니게임</button>
-<div class="menu-options" id="game-options">
-
-
-
-
-
-
-
-<a href="./GAME_GALAGA.html" target="club-content">삐약 갤러그</a><a href="./GAME_SUDOKU.html" target="club-content">스도쿠</a><a href="./GAME_MINESWEEPER.html" target="club-content">지뢰찾기</a><a href="./OMOK_ONLINE.html" target="club-content">온라인 오목</a><a href="./GAME_CHESS.html" target="club-content">온라인 체스</a><a href="./GAME_JANGGI.html" target="club-content">온라인 장기</a><a href="./GAME_RANKING.html" target="club-content">미니게임 랭킹</a></div>
-</div>
-<a aria-current="true" href="./PARTY_RECRUIT.html" target="club-content">숙제모집</a>
-</nav>
-</div>
+  <div class="wrap">
+    <p class="server">테일즈위버 · 하이아칸</p>
+    <h1>삐약 클럽<img class="club-mark" src="./mark.jpg" width="81" height="85" alt=""></h1>
+    <nav aria-label="삐약 클럽 메뉴">
+      <a href="./INFO_ETA_RANKING.html" target="club-content">에타 랭킹</a>
+      <a href="./INFO_EQUIPMENT" target="club-content">장비 정보</a>
+      <a href="./LINKS.html" target="club-content">링크모음</a>
+      <div class="menu-group" id="calculator-menu">
+        <button type="button" class="menu-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="calculator-options">계산기</button>
+        <div class="menu-options" id="calculator-options">
+          <a href="./CALC_CORE.html" target="club-content">테시스 코어 계산기</a>
+          <a href="./INFO_ACCURACY_GUIDE" target="club-content">명중률 안내서</a>
+          <a href="./CALC_CRITICAL" target="club-content">크리티컬 계산기</a>
+          <a href="./CALC_COEFFICIENT.html" target="club-content">계수 계산기</a>
+          <a href="./CALC_EXP.html" target="club-content">사냥 경험치 계산기</a>
+          <a href="./CALC_ETA_REQUIRED_DAYS.html" target="club-content">에타 소요일 계산기</a>
+        </div>
+      </div>
+      <div class="menu-group" id="game-menu">
+        <button type="button" class="menu-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="game-options">미니게임</button>
+        <div class="menu-options" id="game-options">
+          <a href="./GAME_SUDOKU.html" target="club-content">스도쿠</a>
+          <a href="./GAME_MINESWEEPER.html" target="club-content">지뢰찾기</a>
+          <a href="./OMOK_ONLINE.html" target="club-content">온라인 오목</a>
+          <a href="./GAME_CHESS.html" target="club-content">온라인 체스</a>
+          <a href="./GAME_JANGGI.html" target="club-content">온라인 장기</a>
+          <a href="./GAME_ALKKAGI.html" target="club-content">온라인 알까기</a>
+          <a href="./GAME_RANKING.html" target="club-content">미니게임 랭킹</a>
+        </div>
+      </div>
+      <a href="./PARTY_RECRUIT.html" target="club-content" aria-current="true">숙제모집</a>
+    </nav>
+  </div>
 </header>
 <main>
-<iframe id="club-content" name="club-content" src="./PARTY_RECRUIT.html" title="숙제모집"></iframe>
+  <iframe name="club-content" id="club-content" src="./PARTY_RECRUIT.html" title="숙제모집"></iframe>
 </main>
 <script>
   const frame = document.getElementById('club-content');
   const links = [...document.querySelectorAll('nav a')];
   const menus = [...document.querySelectorAll('.menu-group')];
-
-  // The Galaga game requests temporary header hiding only while a mobile round is active.
-  // Ignore messages from other frames and preserve the normal navigation otherwise.
-  window.addEventListener('message', event => {
-    if (event.source !== frame.contentWindow || event.origin !== window.location.origin) return;
-    const data = event.data;
-    if (!data || data.source !== 'bbiyak-galaga' || data.type !== 'game-focus') return;
-    document.body.classList.toggle('galaga-focus', Boolean(data.active) && window.innerWidth <= 850);
-  });
-  frame.addEventListener('load', () => document.body.classList.remove('galaga-focus'));
-  window.addEventListener('resize', () => {
-    if (window.innerWidth > 850) document.body.classList.remove('galaga-focus');
-  });
-
 
   function closeMenus(except = null) {
     for (const menu of menus) {
