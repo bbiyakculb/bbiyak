@@ -105,8 +105,22 @@ function inside(x,y){return x>=0&&x<15&&y>=0&&y<15}
 function at(b,x,y){return inside(x,y)?b[y*15+x]:-1}
 function countRay(b,x,y,dx,dy,side){let n=0;for(let a=x+dx,c=y+dy;inside(a,c)&&at(b,a,c)===side;a+=dx,c+=dy)n++;return n}
 function isWin(b,pos,side){const x=pos%15,y=Math.floor(pos/15);return LINES.some(([dx,dy])=>1+countRay(b,x,y,dx,dy,side)+countRay(b,x,y,-dx,-dy,side)===5)}
+// A broken or straight four must not also be counted as a three on the same axis.
+function blackFourAxis(b,index,dx,dy,black=1){
+ const x=index%15,y=Math.floor(index/15);
+ for(let t=-4;t<=4;t++){
+  if(t===0)continue;
+  const xx=x+t*dx,yy=y+t*dy;
+  if(!inside(xx,yy)||b[yy*15+xx]!==0)continue;
+  b[yy*15+xx]=black;
+  const before=countRay(b,xx,yy,-dx,-dy,black),after=countRay(b,xx,yy,dx,dy,black);
+  b[yy*15+xx]=0;
+  if(before+after+1===5 && -before<=-t && -t<=after)return true;
+ }
+ return false;
+}
 function blackDoubleThree(b,index,black=1){const x=index%15,y=Math.floor(index/15);let axes=0;
-for(const [dx,dy] of LINES){let found=false;
+for(const [dx,dy] of LINES){if(blackFourAxis(b,index,dx,dy,black))continue;let found=false;
 for(let t=-4;t<=4&&!found;t++){
  const ex=x+t*dx,ey=y+t*dy;if(!inside(ex,ey)||b[ey*15+ex]!==0)continue;
  b[ey*15+ex]=black;
