@@ -1,0 +1,340 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>삐약 온라인 알까기 · 삐약</title><style>
+:root{color-scheme:dark;--bg:#14101e;--panel:#201b2d;--panel2:#2a223b;--ink:#f3f1ff;--muted:#c0b9d6;--line:#433651;--accent:#d6baff;--gold:#e5cc91}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 80% 0,#302145,transparent 52%),var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,sans-serif}main{max-width:1150px;margin:auto;padding:24px 18px 65px}header p{margin:0;color:#e2c5ff}h1{font-size:clamp(30px,5vw,50px);letter-spacing:-.045em;margin:2px 0 20px}h2{font-size:19px;margin:0 0 12px}.card{border:1px solid var(--line);background:var(--panel);border-radius:17px;padding:19px;min-width:0}.layout{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(270px,.85fr);gap:14px}.side{display:grid;gap:14px;align-content:start}.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}button,input,select{font:inherit}input,select{background:#15111d;border:1px solid #57456b;border-radius:9px;padding:10px;color:var(--ink);min-width:0}button{border:1px solid #69547e;border-radius:10px;padding:10px 13px;color:var(--ink);background:#322740;cursor:pointer}button:hover:not(:disabled){background:#433255}button:disabled{opacity:.45;cursor:not-allowed}.primary{background:#75528f;border-color:#9d76bb}.primary:hover:not(:disabled){background:#875eaa}label{font-size:13px;color:var(--muted);display:grid;gap:5px}.muted{color:var(--muted)}.tiny{font-size:12px}.pill{display:inline-block;border:1px solid #725b8d;border-radius:30px;padding:4px 12px;color:var(--accent)}.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.boardwrap{width:min(100%,620px);margin:auto}.board{width:100%;display:grid;grid-template-columns:repeat(9,minmax(0,1fr));border:8px solid #98724e;border-radius:4px;background:#ddbd87;overflow:hidden}.cell{position:relative;aspect-ratio:1;min-width:0;padding:0;border-radius:0;border:0;background:transparent;touch-action:manipulation;display:grid;place-items:center;font-family:Segoe UI Symbol,Apple Symbols,serif;font-size:clamp(18px,3.5vw,43px);line-height:1}.cell:focus-visible{outline:2px solid #e5c982;outline-offset:-2px;z-index:2}.cell.selected{box-shadow:inset 0 0 0 3px #d64b8f}.cell.target:before{content:"";position:absolute;z-index:1;width:23%;height:23%;border-radius:50%;background:#299b60b0;pointer-events:none}.cell.last{box-shadow:inset 0 0 0 3px #a87d30}.chess .cell.light{background:#f0d9b5}.chess .cell.dark{background:#b58863}.chess .cell .piece{position:relative;z-index:2;text-shadow:0 1px 2px #15111dbb}.chess .cell .piece{width:87%;height:87%;display:grid;place-items:center;border-radius:50%;font-family:DejaVu Sans,Segoe UI Symbol,serif;font-size:clamp(22px,4.6vw,50px);line-height:1;text-shadow:none;box-shadow:0 2px 3px #261c2188}.chess .whitePiece{background:#fffdf4;color:#26222d;-webkit-text-stroke:0;border:2px solid #eee2c7}.chess .blackPiece{background:#20212b;color:#fffdf4;-webkit-text-stroke:0;border:2px solid #46434e}.janggi{background:#e2c18e;border-color:#996b45}.janggi .cell{font-family:serif;font-size:clamp(15px,2.9vw,33px)}.janggi .cell:after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,transparent calc(50% - .6px),#835f39 calc(50% - .6px),#835f39 calc(50% + .6px),transparent calc(50% + .6px)),linear-gradient(to right,transparent calc(50% - .6px),#835f39 calc(50% - .6px),#835f39 calc(50% + .6px),transparent calc(50% + .6px));pointer-events:none;opacity:.85}/* 실제 한국 장기알 느낌: 흰 팔각판, 입체적인 푸른 하단면, 붓글씨 한자 */
+.janggi .piece{
+  position:relative;z-index:2;display:grid;place-items:center;
+  width:88%;height:88%;padding:0;isolation:isolate;
+  clip-path:polygon(27% 1%,73% 1%,99% 27%,99% 73%,73% 99%,27% 99%,1% 73%,1% 27%);
+  background:linear-gradient(to bottom,#c6c5d3 0%,#f7f8fc 11%,#eef2ff 72%,#729fe1 83%,#4778bd 93%,#315994 100%);
+  filter:drop-shadow(0 2px 1px #563e3077);
+  font-family:'Noto Serif CJK KR','Nanum Myeongjo','Batang','Songti SC',serif;
+  font-weight:900;line-height:1;letter-spacing:-.08em;
+}
+.janggi .piece::before{
+  content:'';position:absolute;inset:2px 2px 7px;
+  clip-path:polygon(27% 0%,73% 0%,100% 27%,100% 73%,73% 100%,27% 100%,0% 73%,0% 27%);
+  background:linear-gradient(160deg,#ffffff 0%,#fdfdff 52%,#e9eaf0 100%);
+  box-shadow:inset 0 1px 1px white;
+  pointer-events:none;
+}
+.janggi .piece::after{
+  content:'';position:absolute;inset:3px 3px 8px;
+  clip-path:polygon(27% 0%,73% 0%,100% 27%,100% 73%,73% 100%,27% 100%,0% 73%,0% 27%);
+  background:transparent;
+  border:1px solid #bbc0cf;
+  pointer-events:none;
+}
+.janggi .piece span{
+  position:relative;z-index:3;display:block;transform:translateY(-2%);
+  font-size:1em;font-weight:900;
+  text-shadow:0 .4px 0 currentColor,0 0 1px currentColor;
+}
+.janggi .han{color:#d51c53}
+.janggi .cho{color:#1355c8}
+/* 장군은 크고 사·졸·병은 작게: 실제 장기말 비율 */
+.janggi .piece.king{width:99%;height:99%}
+.janggi .piece.major{width:89%;height:89%}
+.janggi .piece.minor{width:72%;height:72%}
+.janggi .piece.king span{font-size:1.10em}
+.janggi .piece.major span{font-size:1.04em}
+.janggi .piece.minor span{font-size:.96em}
+@media(max-width:420px){
+  .janggi .piece::before{inset:1px 1px 4px}
+  .janggi .piece::after{inset:2px 2px 5px}
+  .janggi .piece span{text-shadow:0 0 .5px currentColor}
+}
+.status{font-size:17px;font-weight:700}.players{display:grid;gap:9px}.player{display:flex;align-items:center;gap:9px;padding:12px;border-radius:10px;border:1px solid var(--line)}.player.on{background:#352644;border-color:#b596d5}.score{margin-left:auto;color:var(--gold);font-weight:bold}.joinline{display:flex;gap:8px;flex-wrap:wrap}.joinline input{flex:1;min-width:95px}#logs{height:160px;overflow:auto;padding:8px;background:#17121f;border:1px solid var(--line);border-radius:9px;overflow-wrap:anywhere}#logs div{padding:3px 0;font-size:13px}#msg{flex:1;min-width:100px}#toast{min-height:22px;color:var(--gold)}#rematchPanel[hidden],#undoBox[hidden]{display:none}.rematch{display:flex;flex-wrap:wrap;gap:10px;align-items:end;border:1px solid #665078;background:#292035;padding:10px;border-radius:12px;margin-top:12px}footer{margin-top:25px;border-top:1px solid var(--line);padding:15px 0;color:var(--muted);font-size:12px}@media(max-width:850px){.layout{grid-template-columns:1fr}.card{padding:14px}}@media(max-width:420px){.board{border-width:4px}}
+
+
+/* 상단 대전 방식 선택 */
+.toolbar.game-mode-top{display:flex;align-items:center;flex-wrap:wrap;gap:10px;padding:14px 18px}
+.game-mode-top .mode-switch{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+.game-mode-top .mode-switch b{margin-right:4px}
+.game-mode-top .mode-switch button{padding:9px 14px}
+.game-mode-top .mode-switch button.active{background:#75528f;border-color:#b18ed5;color:#fff;box-shadow:0 0 0 1px #9e7fbc55 inset}
+.game-mode-top .mode-selections{width:100%;display:flex;gap:11px;flex-wrap:wrap;align-items:end;padding-top:8px;border-top:1px solid var(--line)}
+.game-mode-top .mode-selections label{flex:1;min-width:125px;max-width:220px}
+.game-mode-top .mode-selections .tiny{width:100%;margin:0}
+.game-mode-top .mode-selections[hidden],.online-mode-section[hidden]{display:none!important}
+.game-mode-top .mode-subtitle{margin-left:auto}
+@media(max-width:600px){.game-mode-top .mode-subtitle{width:100%;margin-left:0}.game-mode-top .mode-selections label{max-width:none}}
+
+/* 방 생성 시 닉네임 필수 안내: 오목·체스·장기 공통 */
+input.nick-required-glow {
+  border-color: #ffd45e !important;
+  box-shadow: 0 0 0 2px rgba(255,209,74,.38), 0 0 14px 3px rgba(255,210,78,.5), inset 0 0 6px rgba(255,208,70,.12) !important;
+  outline: 1px solid #ffe185 !important;
+  animation: nick-required-pulse 1.3s ease-in-out infinite alternate;
+}
+input.nick-required-glow::placeholder { color: #ffe071 !important; opacity: 1 !important; font-weight: 700; }
+@keyframes nick-required-pulse {
+  from {box-shadow: 0 0 0 1px rgba(255,209,74,.38),0 0 8px 1px rgba(255,210,78,.42)}
+  to {box-shadow: 0 0 0 2px rgba(255,209,74,.55),0 0 16px 4px rgba(255,210,78,.62)}
+}
+@media (prefers-reduced-motion: reduce) { input.nick-required-glow {animation:none} }
+
+/* 장기판 위 마·상 배치 선택 팝업 */
+.boardwrap{position:relative}
+.setup-overlay{position:absolute;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;padding:12px;background:rgba(15,10,25,.76);backdrop-filter:blur(3px);border-radius:5px}
+.setup-overlay[hidden]{display:none!important}
+.setup-card{width:min(100%,470px);display:grid;gap:12px;padding:clamp(12px,3vw,22px);border-radius:16px;background:#281f38;border:1px solid #b9a1d4;box-shadow:0 12px 34px #07030dc9,0 0 0 2px #a27dc244;max-height:98%;overflow:auto}
+.setup-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.setup-choice{padding:10px 6px;border-radius:10px;border:1px solid #68567d;background:#211a2c;text-align:center;font-size:clamp(12px,2.8vw,15px);white-space:nowrap}
+.setup-choice.active{background:#624580;border-color:#ffdb99;box-shadow:0 0 0 1px #e5c38f inset}
+.setup-choice:disabled{opacity:.65}
+.setup-time{color:#f4db96;font-weight:800;font-size:20px;font-variant-numeric:tabular-nums}
+.setup-confirm{width:100%;font-weight:800}
+.setup-confirm[disabled]{opacity:.55}
+@media(max-width:440px){.setup-overlay{padding:5px}.setup-card{gap:7px;padding:9px}.setup-choice{padding:8px 3px}.setup-card .tiny{font-size:11px}}
+
+
+/* 삐약 미니게임 사운드 설정 */
+.bb-sound{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:0 0 14px;padding:8px 11px;border:1px solid #493956;border-radius:12px;background:#241b30;color:#eadef9;font-size:12px}
+.bb-sound button{display:inline-flex;align-items:center;gap:5px;border-radius:8px;border:1px solid #725b87;background:#382844;color:#fff0ff;padding:5px 9px;font:inherit;cursor:pointer}
+.bb-sound button[aria-pressed="false"]{opacity:.67}
+.bb-sound label{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:#d8c6e4}
+.bb-sound input[type="range"]{width:100px;max-width:22vw;accent-color:#c89cf2;padding:0;border:0;background:transparent}
+.bb-sound .bb-vol-text{min-width:36px;text-align:right;font-variant-numeric:tabular-nums}
+@media(max-width:500px){.bb-sound{padding:7px 9px;gap:8px}.bb-sound input[type="range"]{width:80px}}
+@media(max-width:850px){body.mobile-playing .bb-sound{display:none}}
+
+.boardwrap canvas{display:block;width:100%;height:auto;aspect-ratio:9/10;touch-action:none;user-select:none;-webkit-user-select:none;background:#ddbd87;border:8px solid #98724e;border-radius:4px}
+.boardwrap{touch-action:none;user-select:none;-webkit-user-select:none}
+#power{height:100%;background:linear-gradient(90deg,#9d78c9,#f4d595);width:0;transition:width .08s}
+.meter{height:7px;background:#483952;border-radius:99px;overflow:hidden;margin:8px 0 0}
+.stone{display:inline-grid;place-items:center;width:35px;height:35px;background:linear-gradient(#fff,#e5e9f2);clip-path:polygon(27% 1%,73% 1%,99% 27%,99% 73%,73% 99%,27% 99%,1% 73%,1% 27%);font-family:serif;font-size:23px;font-weight:900}
+.stone.red{color:#d51c53}.stone.blue{color:#1355c8}
+#nick.nick-warn{border-color:#eacc62;box-shadow:0 0 0 2px #f1c64668,0 0 10px #e8c44e88}
+#nick.nick-warn::placeholder{color:#ffe07e;opacity:1}
+#hint{margin:8px 0;color:var(--muted);font-size:12px}
+#remaining{font-size:12px;color:var(--muted)}
+.online-mode-section[hidden],.mode-selections[hidden]{display:none!important}
+@media(max-width:420px){.boardwrap canvas{border-width:4px}}
+
+/* 장기 원본 GAME_JANGGI.html의 .board/.cell/.janggi .piece 규칙을 동일하게 사용한다.
+   기존 CSS 그리드 90개 교차점과 장기알 DOM을 그대로 그리며, 물리 입력만 투명 캔버스에 둔다. */
+.alk-board{position:relative;isolation:isolate}
+.alk-board>.cell{pointer-events:none}
+.alk-palace{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+.alk-piece-layer{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:visible}
+.alk-slot{position:absolute;display:grid;place-items:center;width:11.111111%;height:10%;pointer-events:none;
+ font-family:serif;font-size:clamp(15px,2.9vw,33px);line-height:1;box-shadow:none!important;background:none!important}
+.alk-slot:after,.alk-slot:before{display:none!important}
+.alk-slot .piece{transition:none;will-change:transform}
+.alk-board>canvas.alk-aim{position:absolute;inset:0;display:block;z-index:3;width:100%;height:100%;
+ aspect-ratio:auto;background:transparent;border:0;border-radius:0;touch-action:none;user-select:none;-webkit-user-select:none}
+
+/* 사진 기준 장기판: 9×10 교차점, 궁성 대각선, 위치 표식 */
+.board.janggi.alk-board {display:block;position:relative;width:100%;aspect-ratio:9/10;min-width:0;overflow:hidden;
+  border:0;border-radius:2px;background:#e4ad59;isolation:isolate;}
+.alk-board-lines {position:absolute;inset:0;display:block;width:100%;height:100%;z-index:0;pointer-events:none;}
+.alk-board>.alk-piece-layer {position:absolute;inset:0;z-index:2;pointer-events:none;}
+.alk-board>canvas.alk-aim {position:absolute;inset:0;z-index:3;display:block;width:100%;height:100%;border:0;background:transparent;}
+.bb-sound{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:0 0 14px;padding:8px 11px;border:1px solid #493956;border-radius:12px;background:#241b30;color:#eadef9;font-size:12px}
+.bb-sound button{display:inline-flex;align-items:center;gap:5px;border-radius:8px;border:1px solid #725b87;background:#382844;color:#fff0ff;padding:5px 9px;font:inherit;cursor:pointer}
+.bb-sound button[aria-pressed="false"]{opacity:.67}
+.bb-sound label{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:#d8c6e4}
+.bb-sound input[type="range"]{width:100px;max-width:22vw;accent-color:#c89cf2;padding:0;border:0;background:transparent}
+.bb-sound .bb-vol-text{min-width:36px;text-align:right;font-variant-numeric:tabular-nums}
+@media(max-width:500px){.bb-sound{padding:7px 9px;gap:8px}.bb-sound input[type="range"]{width:80px}}
+@media(max-width:850px){body.mobile-playing .bb-sound{display:none}}
+</style></head><body><main>
+<header><p>삐약 · 테일즈위버</p><h1>알까기</h1></header><div class="bb-sound" role="group" aria-label="게임 효과음 설정"><button id="bbSoundToggle" type="button" aria-pressed="true">🔊 효과음 켜짐</button><label for="bbSoundVolume">음량 <input id="bbSoundVolume" type="range" min="0" max="100" value="45" step="5"><span class="bb-vol-text" id="bbSoundVolumeText">45%</span></label></div>
+<div class="toolbar card game-mode-top">
+ <div class="mode-switch"><b>대전 방식</b><button id="modeOnline" class="active" type="button">온라인 대전</button><button id="modeAi" type="button">컴퓨터 대전</button></div>
+ <span id="connection" class="pill">서버 연결 중</span><span class="tiny muted mode-subtitle">장기알 튕기기 · 온라인 / 컴퓨터 대전</span>
+ <div id="aiPanel" class="mode-selections" hidden><div class="row" style="margin-bottom:12px"><label>난이도<select id="aiLevel"><option value="easy">초급</option><option value="medium" selected>중급</option><option value="hard">고급</option></select></label><label>내 진영<select id="aiSide"><option value="red">한 · 선공</option><option value="blue">초 · 후공</option></select></label></div><button class="primary" id="aiStart">컴퓨터 대전 시작</button><button id="reset">배치 다시 시작</button><p class="tiny muted" style="margin:8px 0 0">당겼다가 놓으면 알이 튕겨 나갑니다.</p></div>
+</div>
+<div class="layout"><section class="card"><div class="row" style="justify-content:space-between;margin-bottom:10px"><h2>장기판</h2><span id="roomLabel" class="pill">방에 입장하세요</span></div>
+<div class="boardwrap"><div class="board janggi alk-board" id="boardGrid" role="img" aria-label="장기판 알까기 9×10"><svg class="alk-board-lines" viewBox="0 0 900 1000" preserveAspectRatio="none" aria-hidden="true">
+  <rect width="900" height="1000" fill="#e4ad59"/>
+  <g fill="none" stroke="#68421e" stroke-width="1.65" stroke-linecap="square"><path d="M50 50 V950"/><path d="M150 50 V950"/><path d="M250 50 V950"/><path d="M350 50 V950"/><path d="M450 50 V950"/><path d="M550 50 V950"/><path d="M650 50 V950"/><path d="M750 50 V950"/><path d="M850 50 V950"/><path d="M50 50 H850"/><path d="M50 150 H850"/><path d="M50 250 H850"/><path d="M50 350 H850"/><path d="M50 450 H850"/><path d="M50 550 H850"/><path d="M50 650 H850"/><path d="M50 750 H850"/><path d="M50 850 H850"/><path d="M50 950 H850"/><path d="M350 50 L550 250 M550 50 L350 250"/><path d="M350 750 L550 950 M550 750 L350 950"/></g>
+  <rect x="50" y="50" width="800" height="900" fill="none" stroke="#68421e" stroke-width="3"/>
+  <g fill="none" stroke="#68421e" stroke-width="2.8" stroke-linecap="round"><path d="M141 241 l7 7 M159 241 l-7 7 M141 259 l7 -7 M159 259 l-7 -7"/><path d="M741 241 l7 7 M759 241 l-7 7 M741 259 l7 -7 M759 259 l-7 -7"/><path d="M53 341 l7 7 M53 359 l7 -7"/><path d="M241 341 l7 7 M259 341 l-7 7 M241 359 l7 -7 M259 359 l-7 -7"/><path d="M441 341 l7 7 M459 341 l-7 7 M441 359 l7 -7 M459 359 l-7 -7"/><path d="M641 341 l7 7 M659 341 l-7 7 M641 359 l7 -7 M659 359 l-7 -7"/><path d="M847 341 l-7 7 M847 359 l-7 -7"/><path d="M53 641 l7 7 M53 659 l7 -7"/><path d="M241 641 l7 7 M259 641 l-7 7 M241 659 l7 -7 M259 659 l-7 -7"/><path d="M441 641 l7 7 M459 641 l-7 7 M441 659 l7 -7 M459 659 l-7 -7"/><path d="M641 641 l7 7 M659 641 l-7 7 M641 659 l7 -7 M659 659 l-7 -7"/><path d="M847 641 l-7 7 M847 659 l-7 -7"/><path d="M141 741 l7 7 M159 741 l-7 7 M141 759 l7 -7 M159 759 l-7 -7"/><path d="M741 741 l7 7 M759 741 l-7 7 M741 759 l7 -7 M759 759 l-7 -7"/></g>
+</svg><div id="pieceLayer" class="alk-piece-layer"></div><canvas id="board" class="alk-aim" width="900" height="1000" aria-label="알까기 장기판. 장기말을 뒤로 당겼다가 놓으면 발사합니다."></canvas></div></div>
+<p id="status" class="status">온라인 방을 만들거나 참가해 주세요.</p><p class="tiny muted" id="hint">방에 입장하면 실시간 대전을 할 수 있습니다.</p><div class="meter"><div id="power"></div></div><p class="tiny muted">9×10 장기판 · 한/초 각 16개 · 기물별 크기와 무게 차이 적용</p></section>
+<div class="side">
+<section class="card online-mode-section" id="onlineEntry"><h2>대국 입장</h2><label>닉네임<input id="nick" maxlength="16" placeholder="닉네임" autocomplete="off"></label><p class="tiny muted">방 코드를 공유하면 실시간으로 대전하거나 관전할 수 있습니다.</p>
+<div class="row" style="margin:12px 0"><label style="min-width:135px">방 생성 시 내 진영<select id="onlineColor"><option value="1">한 · 선공</option><option value="2">초 · 후공</option></select></label><button class="primary" id="create">새 방 만들기</button><button id="copy">초대 링크 복사</button></div>
+<div class="joinline"><input id="roomInput" maxlength="6" placeholder="6자리 방 코드"><button class="primary" id="join">참가</button><button id="watch">관전</button></div><p class="tiny muted">방 만들기는 닉네임 필수 · 참가·관전은 닉네임 없이도 입장 가능</p><div class="row"><button id="leave">방 나가기</button><span class="tiny muted" id="role"></span></div></section>
+<section class="card"><h2>대국 현황</h2><div class="players" id="players"></div><p id="remaining" class="tiny muted"></p><div class="row"><button id="undo" disabled>무르기 요청</button><button id="passTurn" disabled>한 수 쉼</button></div><div class="rematch" id="rematchPanel" hidden><label>재대결 내 진영<select id="rematchSide"><option value="1">한 · 선공</option><option value="2">초 · 후공</option></select></label><button id="rematchButton" class="primary">재대결 신청</button></div><p id="toast" role="status"></p></section>
+<section class="card online-mode-section" id="onlineChat"><h2>대국 채팅</h2><div id="logs" aria-live="polite"></div><form id="chat" class="joinline" style="margin-top:8px"><input id="msg" maxlength="120" placeholder="메시지 입력"><button type="submit">보내기</button></form><p class="tiny muted">같은 방에 있는 선수와 관전자가 채팅할 수 있습니다.</p></section>
+</div></div><footer>삐약 클럽</footer></main><script>
+/* 미리듣기 샘플과 동일한 Web Audio 효과음 · 별도 음원 불필요 */
+(()=>{'use strict';let ctx,master,enabled=true,volume=45,lastShoot=0;
+try{const a=JSON.parse(localStorage.getItem('bbiyak_sfx')||'{}');enabled=a.enabled!==false;volume=Number.isFinite(+a.volume)?Math.max(0,Math.min(100,+a.volume)):45;}catch{}
+const toggle=document.getElementById('bbSoundToggle'),slider=document.getElementById('bbSoundVolume'),label=document.getElementById('bbSoundVolumeText');
+function update(){toggle.textContent=enabled?'🔊 효과음 켜짐':'🔇 효과음 꺼짐';toggle.setAttribute('aria-pressed',String(enabled));slider.value=volume;label.textContent=volume+'%';if(master&&ctx)master.gain.setTargetAtTime(enabled?(volume/100)*.65:0,ctx.currentTime,.015);}
+function save(){try{localStorage.setItem('bbiyak_sfx',JSON.stringify({enabled,volume}));}catch{}update();}
+toggle.addEventListener('click',()=>{enabled=!enabled;save();if(enabled)play('digit');});slider.addEventListener('input',()=>{volume=Number(slider.value);save();});
+function context(){if(!enabled||volume===0)return null;if(!ctx){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return null;ctx=new AC;master=ctx.createGain();master.connect(ctx.destination)}if(ctx.state==='suspended')ctx.resume().catch(()=>{});master.gain.setTargetAtTime(volume/100*.65,ctx.currentTime,.015);return ctx.currentTime+.02;}
+function env(g,t,a,d,att=.005){g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(Math.max(.001,a),t+att);g.gain.exponentialRampToValueAtTime(.0001,t+d)}
+function tone(t,f,d,o={}){const c=ctx,s=c.createOscillator(),g=c.createGain(),fil=c.createBiquadFilter();s.type=o.type||'sine';s.frequency.setValueAtTime(Math.max(1,f),t);if(o.end)s.frequency.exponentialRampToValueAtTime(Math.max(1,o.end),t+d);fil.type='lowpass';fil.frequency.value=o.cutoff||11000;s.connect(fil);fil.connect(g);g.connect(master);env(g,t,o.vol??.20,d,o.attack??.005);s.start(t);s.stop(t+d+.02)}
+function noise(t,d,o={}){const c=ctx,len=Math.ceil(c.sampleRate*(d+.02)),buf=c.createBuffer(1,len,c.sampleRate),a=buf.getChannelData(0);let last=0;for(let i=0;i<len;i++){const white=Math.random()*2-1;last=(last+.065*white)/1.065;a[i]=o.smooth?last*5:white}const s=c.createBufferSource(),fil=c.createBiquadFilter(),g=c.createGain();s.buffer=buf;fil.type=o.hp?'highpass':'lowpass';fil.frequency.value=o.freq||2200;fil.Q.value=o.q||.6;s.connect(fil);fil.connect(g);g.connect(master);env(g,t,o.vol??.23,d,o.attack??.003);s.start(t);s.stop(t+d+.02)}
+function wood(t,{low=175,high=900,loud=.22}={}){noise(t,.056,{freq:high,vol:loud});tone(t,low,.077,{type:'triangle',vol:loud*.7,end:low*.52});tone(t,low*1.9,.035,{type:'sine',vol:loud*.25,end:low});}
+function melody(t,notes,step=.115,vol=.17){notes.forEach(([f,k=1],i)=>tone(t+i*step,f,step*k,{type:'sine',vol}))}
+const recipes={
+shoot:t=>{tone(t,1250,.115,{end:360,type:'sawtooth',vol:.12});tone(t,690,.07,{end:240,type:'square',vol:.065})},
+hit:t=>{tone(t,740,.10,{end:130,type:'square',vol:.13});noise(t,.085,{freq:3200,vol:.12})},
+hurt:t=>{tone(t,190,.28,{end:55,type:'sawtooth',vol:.15});noise(t,.20,{freq:1100,vol:.13})},
+boom:t=>{noise(t,.44,{freq:1000,vol:.33,smooth:true});tone(t,100,.37,{end:35,type:'sawtooth',vol:.19})},
+stage:t=>melody(t,[[523],[659],[784],[1047,2]],.115,.16),
+open:t=>{wood(t,{low:360,high:2500,loud:.13})},flag:t=>{tone(t,690,.08,{end:970,type:'sine',vol:.13})},unflag:t=>{tone(t,780,.08,{end:450,type:'sine',vol:.12})},
+mine:t=>{noise(t,.40,{freq:660,vol:.29,smooth:true});tone(t,130,.35,{end:37,type:'triangle',vol:.23})},clear:t=>melody(t,[[523],[659],[784],[1047],[1318,2]],.12,.13),
+digit:t=>{tone(t,615,.07,{end:475,type:'sine',vol:.095});noise(t,.018,{freq:1900,vol:.045})},erase:t=>{tone(t,470,.085,{end:270,type:'sine',vol:.095})},wrong:t=>{tone(t,280,.15,{type:'triangle',vol:.12});tone(t+.16,220,.18,{type:'triangle',vol:.12})},puzzle:t=>melody(t,[[523],[659],[784],[1047,1.5]],.135,.15),
+stone:t=>wood(t,{low:220,high:1700,loud:.26}),stone2:t=>{wood(t,{low:150,high:1100,loud:.3});noise(t+.024,.06,{freq:800,vol:.065})},win:t=>melody(t,[[523],[659],[784],[1047]],.12,.16),lose:t=>melody(t,[[392],[330],[262]],.16,.12),
+chessMove:t=>wood(t,{low:245,high:2000,loud:.17}),capture:t=>{wood(t,{low:240,high:2000,loud:.17});wood(t+.09,{low:160,high:1250,loud:.27})},check:t=>{tone(t,640,.11,{vol:.17});tone(t+.12,830,.22,{vol:.16})},mate:t=>{melody(t,[[440],[659],[880,2]],.18,.17)},
+janggiMove:t=>{wood(t,{low:138,high:1300,loud:.3})},janggiCapture:t=>{wood(t,{low:220,high:1900,loud:.25});wood(t+.075,{low:118,high:800,loud:.28})},general:t=>{tone(t,605,.14,{type:'triangle',vol:.16});tone(t+.16,820,.23,{type:'triangle',vol:.18})},janggiWin:t=>melody(t,[[440],[554],[659],[880,2]],.145,.14)
+};
+
+function play(key){if(key==='shoot'){let now=performance.now();if(now-lastShoot<125)return;lastShoot=now;}try{const t=context();if(t!==null&&typeof recipes[key]==='function')recipes[key](t);}catch(e){/* 음향 지원 불가 시 게임 진행 유지 */}}
+window.BbiyakSound={play};update();
+})();
+</script>
+<script>
+(()=>{'use strict';
+const cv=document.getElementById('board'),ctx=cv.getContext('2d'),$=id=>document.getElementById(id);const W=900,H=1000,BOUND={l:0,r:900,t:0,b:1000};
+const grid=document.getElementById('boardGrid'),layer=document.getElementById('pieceLayer');
+// 장기판의 교차선과 궁성, 표시점은 배경 SVG로 정확하게 렌더링합니다.
+let pieceNodes=new Map();
+// 장기 한 벌: 왕1·차2·마2·상2·사2·포2·졸/병5 (진영별 16개)
+const TYPES={king:{name:'왕',label:{red:'漢',blue:'楚'},r:49.5,m:30},rook:{name:'차',label:{red:'車',blue:'車'},r:44.5,m:20},horse:{name:'마',label:{red:'馬',blue:'馬'},r:44.5,m:20},elephant:{name:'상',label:{red:'象',blue:'象'},r:44.5,m:20},guard:{name:'사',label:{red:'士',blue:'士'},r:36,m:20},cannon:{name:'포',label:{red:'包',blue:'包'},r:44.5,m:20},soldier:{name:'졸·병',label:{red:'兵',blue:'卒'},r:36,m:10}};
+// 기존 삐약 장기 GAME_JANGGI.html의 초기 배치와 일치시킴.
+// 상단 초(파랑), 하단 한(빨강), 상마마상 기본 배치.
+const X=i=>50+i*100, Y=j=>50+j*100;
+const initPieces=[];
+for(const [team,backRow,kingRow,cannonRow,soldierRow] of [
+  ['blue',0,1,2,3],['red',9,8,7,6]
+]){
+  const back=[['rook',0],['elephant',1],['horse',2],['guard',3],['guard',5],['horse',6],['elephant',7],['rook',8]];
+  for(const [type,col] of back)initPieces.push({team,type,x:X(col),y:Y(backRow)});
+  initPieces.push({team,type:'king',x:X(4),y:Y(kingRow)});
+  for(const col of [1,7])initPieces.push({team,type:'cannon',x:X(col),y:Y(cannonRow)});
+  for(const col of [0,2,4,6,8])initPieces.push({team,type:'soldier',x:X(col),y:Y(soldierRow)});
+}
+let onlineMode=false,alkSocket=null,alkState=null,alkRole=null,alkCode='',alkToken='',alkConnected=false,alkIntentional=false,alkRetry=null,alkWatch=false,alkLastWon=0;
+let pieces=[],turn='red',human='red',ai='blue',level='medium',playing=false,rolling=false,drag=null,round=1,thinking=null,anim=null,simCount=0,stamp=0,stopped=0,won=false;
+let lastCollisionSfx=0;const effect=key=>window.BbiyakSound?.play(key);
+
+function reset(){if(thinking)clearTimeout(thinking);thinking=null;if(anim)cancelAnimationFrame(anim);anim=null;human=$('aiSide').value;ai=human==='red'?'blue':'red';level=$('aiLevel').value;pieces=[];initPieces.forEach((p,i)=>{const spec=TYPES[p.type];pieces.push({id:p.team+i,team:p.team,type:p.type,x:p.x,y:p.y,vx:0,vy:0,r:spec.r,m:spec.m,label:spec.label[p.team],alive:true,chain:0});});turn='red';rolling=false;drag=null;playing=true;won=false;simCount=0;stopped=0;rebuildPieceNodes();round++;$('roomLabel').textContent='컴퓨터 대전 · '+(round-1);$('toast').textContent='새 대국을 시작했습니다.';effect('janggiMove');update();render();if(turn===ai)queueAI();}
+function remain(team){return pieces.filter(p=>p.team===team&&p.alive).length;}
+function update(){const a=remain('red'),b=remain('blue');$('players').innerHTML=`<div class="player ${turn==='red'&&playing?'on':''}"><span class="stone red">漢</span><span>한 · 빨강<br><small class="muted">${human==='red'?'나':'컴퓨터'}</small></span><span class="score">${a}개</span></div><div class="player ${turn==='blue'&&playing?'on':''}"><span class="stone blue">楚</span><span>초 · 파랑<br><small class="muted">${human==='blue'?'나':'컴퓨터'}</small></span><span class="score">${b}개</span></div>`;$('remaining').textContent=`빨강 ${a}개 · 파랑 ${b}개`;if(!playing){$('status').textContent=won?(remain(human)?'승리! 모든 상대 알을 떨어뜨렸습니다.':'패배! 내 알이 모두 떨어졌습니다.'):'대국 종료';$('hint').textContent='새 게임을 눌러 다시 플레이하세요.';}else if(rolling){$('status').textContent='장기알이 움직이는 중…';$('hint').textContent='말이 멈추면 다음 차례가 시작됩니다.';}else{$('status').textContent=turn===human?'내 차례 · 알을 선택해서 튕기세요':'컴퓨터 차례 · 생각하는 중…';$('hint').textContent=turn===human?'장기말을 누르고 발사할 방향의 반대로 당겼다가 놓으세요.':'컴퓨터가 다음 수를 고르고 있습니다.';}}
+function rebuildPieceNodes(){
+ layer.replaceChildren();pieceNodes=new Map();
+ for(const p of pieces){
+  const slot=document.createElement('div');slot.className='alk-slot';
+  const stone=document.createElement('span');stone.className='piece '+(p.team==='red'?'han':'cho')+' '+(p.type==='king'?'king':p.type==='soldier'||p.type==='guard'?'minor':'major');
+  const label=document.createElement('span');label.textContent=p.label;stone.appendChild(label);slot.appendChild(stone);layer.appendChild(slot);pieceNodes.set(p.id,slot);
+ }
+}
+function render(){
+ ctx.clearRect(0,0,W,H);
+ for(const p of pieces){const slot=pieceNodes.get(p.id);if(!slot)continue;slot.hidden=!p.alive;if(!p.alive)continue;
+  slot.style.left=((p.x-50)/W*100)+'%';slot.style.top=((p.y-50)/H*100)+'%';
+ }
+ if(drag)cAim(drag.p,drag.x,drag.y);
+}
+function cAim(p,x,y){const dx=x-p.x,dy=y-p.y,len=Math.hypot(dx,dy),distance=Math.min(180,len);const c=ctx;c.save();c.strokeStyle='#e8d3ff';c.lineWidth=7;c.lineCap='round';c.setLineDash([14,9]);c.beginPath();c.moveTo(p.x,p.y);c.lineTo(p.x+dx/Math.max(1,len)*Math.min(246,distance*1.2+46),p.y+dy/Math.max(1,len)*Math.min(246,distance*1.2+46));c.stroke();c.setLineDash([]);c.fillStyle='#e8d3ff';c.beginPath();c.arc(p.x+dx/Math.max(1,len)*Math.min(246,distance*1.2+46),p.y+dy/Math.max(1,len)*Math.min(246,distance*1.2+46),8,0,Math.PI*2);c.fill();c.restore();}
+function coords(e){const b=cv.getBoundingClientRect();return {x:(e.clientX-b.left-cv.clientLeft)*(W/b.width),y:(e.clientY-b.top-cv.clientTop)*(H/b.height)};}
+cv.addEventListener('pointerdown',e=>{if(!playing||rolling||turn!==human||onlineMode&&(!alkState||alkRole!==(turn==='red'?1:2)||!alkState.players?.every(p=>p?.online)))return;const q=coords(e);let pick=pieces.filter(p=>p.alive&&p.team===human).sort((a,b)=>Math.hypot(a.x-q.x,a.y-q.y)-Math.hypot(b.x-q.x,b.y-q.y))[0];if(!pick||Math.hypot(pick.x-q.x,pick.y-q.y)>pick.r*1.7)return;drag={p:pick,x:q.x,y:q.y,id:e.pointerId};try{cv.setPointerCapture(e.pointerId)}catch{}render();e.preventDefault();});
+cv.addEventListener('pointermove',e=>{if(!drag||e.pointerId!==drag.id)return;Object.assign(drag,coords(e));$('power').style.width=Math.min(100,Math.hypot(drag.p.x-drag.x,drag.p.y-drag.y)/1.65)+'%';render();e.preventDefault();});
+// 화살표는 당기는 방향, 발사 방향은 그 반대입니다.
+function release(e){if(!drag||e.pointerId!==drag.id)return;const d=drag;drag=null;$('power').style.width='0';const len=Math.hypot(d.p.x-d.x,d.p.y-d.y);if(len>13){fire(d.p,(d.p.x-d.x)/len,(d.p.y-d.y)/len,Math.min(36,Math.max(7,len*.18)));}else render();e.preventDefault();}
+cv.addEventListener('pointerup',release);cv.addEventListener('pointercancel',()=>{drag=null;$('power').style.width='0';render();});
+function fire(p,nx,ny,power){if(!playing||rolling||!p.alive||p.team!==turn)return;
+if(onlineMode){alkSend({type:'shot',pieceId:String(p.id),dx:nx,dy:ny,power});drag=null;return;}
+// 같은 힘으로 때렸을 때 동급 장기알은 잘 밀리고,
+// 1단계(10→20), 2단계(10→30) 무거운 알은 상대적으로 덜 밀립니다.
+// 기물별 차이는 실제 질량(m=10/20/30)과 충돌 운동량으로 계산합니다.
+const base=Math.min(29,5+power*.78);
+const sizePower=(p.type==='king'?1.20:(p.type==='soldier'||p.type==='guard')?0.90:1.10); // 작은 말 90%, 중간 말 110%, 왕 120%
+const speed=base*Math.pow(10/p.m,.08)*.60*sizePower; // 기본 강도 60%에 기물 크기별 배율 적용
+p.chain=0;p.vx=nx*speed;p.vy=ny*speed;effect('janggiMove');rolling=true;simCount=0;stopped=0;update();stamp=performance.now();anim=requestAnimationFrame(frame);}
+function frame(now){const dt=Math.min(2.4,Math.max(.4,(now-stamp)/16.67))*1.4; /* 물리 진행 속도 1.4배 (발사 강도·충돌 감쇠 유지) */ stamp=now;simCount+=dt;for(let n=0;n<Math.max(1,Math.round(dt*2));n++)tick(dt/Math.max(1,Math.round(dt*2)));render();let moving=pieces.some(p=>p.alive&&Math.hypot(p.vx,p.vy)>.18);if(!moving)stopped+=dt;else stopped=0;if(stopped>12||simCount>750){for(const p of pieces){p.vx=0;p.vy=0;}rolling=false;anim=null;const a=remain('red'),b=remain('blue');if(a===0||b===0){playing=false;won=true;$('toast').textContent=a===0?'초 진영 승리!':'한 진영 승리!';effect(remain(human)>0?'janggiWin':'lose');update();return;}turn=turn==='red'?'blue':'red';update();if(turn===ai)queueAI();return;}anim=requestAnimationFrame(frame);}
+function tick(dt){const active=pieces.filter(p=>p.alive);for(const p of active){p.x+=p.vx*dt;p.y+=p.vy*dt;let resist=Math.pow(.980,dt);p.vx*=resist;p.vy*=resist;if(Math.hypot(p.vx,p.vy)<.08){p.vx=0;p.vy=0;}if(p.x<BOUND.l-p.r||p.x>BOUND.r+p.r||p.y<BOUND.t-p.r||p.y>BOUND.b+p.r){p.alive=false;p.vx=p.vy=0;const sfxTime=performance.now();if(sfxTime-lastCollisionSfx>110){lastCollisionSfx=sfxTime;effect('boom');}}}const balls=pieces.filter(p=>p.alive);for(let i=0;i<balls.length;i++)for(let j=i+1;j<balls.length;j++){const a=balls[i],b=balls[j],dx=b.x-a.x,dy=b.y-a.y,dis=Math.hypot(dx,dy)||.0001,min=a.r+b.r;if(dis>=min)continue;const nx=dx/dis,ny=dy/dis,invA=1/a.m,invB=1/b.m,invSum=invA+invB,overlap=min-dis+0.04;
+a.x-=nx*overlap*invA/invSum;a.y-=ny*overlap*invA/invSum;
+b.x+=nx*overlap*invB/invSum;b.y+=ny*overlap*invB/invSum;
+const rel=(b.vx-a.vx)*nx+(b.vy-a.vy)*ny;
+if(rel<0){if(rel< -1.5 && performance.now()-lastCollisionSfx>115){lastCollisionSfx=performance.now();effect('janggiCapture');}// 최초 발사돌이 직접 부딪히는 충돌은 유지합니다.
+// 이미 한 번 밀려난 돌이 다른 돌에 부딪히는 2차 충돌은 전달력을 낮춥니다.
+const aApproaches=a.vx*nx+a.vy*ny;
+const bApproaches=-(b.vx*nx+b.vy*ny);
+const mover=(aApproaches>=bApproaches)?a:b;
+const secondary=mover.chain>=1;
+const impulse=-(1+(secondary?.48:.87))*rel/invSum*(secondary?.62:1);
+a.vx-=impulse*invA*nx;a.vy-=impulse*invA*ny;
+b.vx+=impulse*invB*nx;b.vy+=impulse*invB*ny;
+// 충돌 후 움직이게 된 돌은 다음 충돌에서 추가 감쇠 대상이 됩니다.
+if(mover===a)b.chain=Math.max(b.chain, a.chain+1);
+else a.chain=Math.max(a.chain, b.chain+1);}}}
+function queueAI(){if(!playing||turn!==ai||rolling)return;thinking=setTimeout(()=>{thinking=null;if(!playing||turn!==ai||rolling)return;const own=pieces.filter(p=>p.alive&&p.team===ai),foes=pieces.filter(p=>p.alive&&p.team===human);if(!own.length||!foes.length)return;let options=[];for(const p of own)for(const q of foes){let dx=q.x-p.x,dy=q.y-p.y,d=Math.hypot(dx,dy);let edge=Math.min(q.x-BOUND.l,BOUND.r-q.x,q.y-BOUND.t,BOUND.b-q.y);options.push({p,q,d,score:d+(level==='hard'?edge*.6+q.m*18:0)});}options.sort((a,b)=>a.score-b.score);let chosen=level==='easy'?options[Math.floor(Math.random()*options.length)]:level==='hard'?options[0]:options[Math.floor(Math.random()*Math.min(5,options.length))];const deviation=level==='easy'?.30:level==='medium'?.13:.045;const angle=Math.atan2(chosen.q.y-chosen.p.y,chosen.q.x-chosen.p.x)+(Math.random()-.5)*deviation*2;const power=(level==='easy'?19:level==='medium'?24:28)+(Math.random()-.5)*7;$('toast').textContent='컴퓨터가 알을 튕겼습니다.';fire(chosen.p,Math.cos(angle),Math.sin(angle),power);},650);}
+$('aiStart').addEventListener('click',()=>{setMode('ai');reset();});
+$('reset').addEventListener('click',()=>{if(!onlineMode)reset();});
+const online = $('onlineEntry'), chat = $('onlineChat'), aiPanel = $('aiPanel');
+const SERVER='https://decisive-del-91primula-916f7c42.apps.mistral.run';
+const query=new URLSearchParams(location.search);
+let requestedRoom=(query.get('room')||'').trim().toUpperCase();
+const alkSend=data=>{if(alkSocket?.readyState===WebSocket.OPEN){alkSocket.send(JSON.stringify(data));return true;}$('toast').textContent='서버 연결을 확인하고 다시 시도해 주세요.';return false;};
+const alkLog=text=>{const el=document.createElement('div');el.textContent=text;$('logs').append(el);$('logs').scrollTop=$('logs').scrollHeight;};
+function alkConnection(){if(alkSocket&&(alkSocket.readyState===WebSocket.OPEN||alkSocket.readyState===WebSocket.CONNECTING))return;
+ alkIntentional=false;alkSocket=new WebSocket(SERVER.replace(/^http/,'ws'));$('connection').textContent='연결 중';
+ alkSocket.onopen=()=>{alkConnected=true;$('connection').textContent='연결됨';if(alkCode||requestedRoom){const room=alkCode||requestedRoom,token=sessionStorage.getItem('bbiyak_alkkagi_token_'+room)||'';alkSend({type:'join',game:'alkkagi',room,token,name:$('nick').value.trim(),spectator:alkWatch&&!token});}};
+ alkSocket.onmessage=e=>{let d;try{d=JSON.parse(e.data)}catch{return;}
+ if(d.type==='error'){alkLog('⚠ '+d.message);$('toast').textContent=d.message;return;}
+ if(d.type==='alk_joined'){alkCode=d.room;requestedRoom=d.room;alkRole=d.role;alkToken=d.token||'';if(alkToken)sessionStorage.setItem('bbiyak_alkkagi_token_'+alkCode,alkToken);$('roomInput').value=alkCode;history.replaceState({},'',location.pathname+'?room='+encodeURIComponent(alkCode));alkLog('방 '+alkCode+' 입장 · '+(alkRole==='spectator'?'관전':alkRole===1?'한 진영':'초 진영'));return;}
+ if(d.type==='alk_left'){alkCode='';requestedRoom='';alkRole=null;alkState=null;alkToken='';alkWatch=false;history.replaceState({},'',location.pathname);pieces=[];rebuildPieceNodes();render();alkView();return;}
+ if(d.type==='alk_state'){if(!onlineMode)return;const prev=alkState;alkState=d;alkCode=d.room;
+ const previousIds=pieces.map(p=>p.id).join(',');pieces=d.pieces.map(p=>({...p,r:TYPES[p.type].r,m:TYPES[p.type].m,label:TYPES[p.type].label[p.team],chain:0}));
+ if(pieces.map(p=>p.id).join(',')!==previousIds)rebuildPieceNodes();
+ turn=d.turn===1?'red':'blue';human=alkRole===2?'blue':'red';rolling=d.rolling;playing=!d.winner;won=!!d.winner;drag=null;const lastWon=prev?.winner||0;
+ if(d.winner&&d.winner!==lastWon)effect(d.winner===alkRole?'janggiWin':'lose');
+ if(d.rolling&&!prev?.rolling)effect('janggiMove');
+ alkView();render();return;}
+ if(d.type==='alk_chat'){alkLog(d.name+': '+d.message);return;}
+ if(d.type==='alk_sfx'){if(d.kind==='hit'&&performance.now()-lastCollisionSfx>110){lastCollisionSfx=performance.now();effect('janggiCapture');}if(d.kind==='fall')effect('boom');return;}
+ if(d.type==='notice'){alkLog('📢 '+d.message);$('toast').textContent=d.message;}
+ };
+ alkSocket.onclose=()=>{alkConnected=false;$('connection').textContent='연결 끊김';if(onlineMode){playing=false;alkView();}clearTimeout(alkRetry);if(!alkIntentional)alkRetry=setTimeout(alkConnection,2200);};
+ alkSocket.onerror=()=>{};
+}
+function alkView(){if(!onlineMode)return;const d=alkState;
+ $('roomLabel').textContent=d?'온라인 대전 · '+d.room:'방에 입장하세요';$('role').textContent=alkRole==='spectator'?'관전자':alkRole===1?'한 · 빨강':alkRole===2?'초 · 파랑':'';
+ if(!d){$('players').replaceChildren();$('remaining').textContent='';$('status').textContent='온라인 방을 만들거나 참가해 주세요.';$('hint').textContent='한·초 두 선수가 입장하면 시작합니다.';$('rematchPanel').hidden=true;$('undo').disabled=true;return;}
+ const red=d.pieces.filter(p=>p.alive&&p.team==='red').length,blue=d.pieces.filter(p=>p.alive&&p.team==='blue').length;
+ $('players').replaceChildren();
+ for(let i=1;i<=2;i++){
+ const box=document.createElement('div');box.className='player'+(d.turn===i&&!d.winner&&!d.rolling?' on':'');
+ const mark=document.createElement('span');mark.className='stone '+(i===1?'red':'blue');mark.textContent=i===1?'漢':'楚';
+ const label=document.createElement('span');label.textContent=(i===1?'한 · 빨강':'초 · 파랑')+' · '+(d.players[i-1]?.name||'입장 대기');
+ const online=document.createElement('small');online.className='muted';online.textContent=d.players[i-1]?.online?' · 접속 중':' · 대기 중';label.appendChild(online);
+ const score=document.createElement('span');score.className='score';score.textContent=(i===1?red:blue)+'개';box.append(mark,label,score);$('players').append(box);
+ }
+ $('remaining').textContent='빨강 '+red+'개 · 파랑 '+blue+'개 · 관전 '+d.spectators+'명 · '+d.round+'국';
+ const ready=d.players.every(p=>p?.online);
+ if(d.winner){$('status').textContent=(d.winner===1?'한':'초')+' 진영 승리!';$('hint').textContent='재대결을 신청할 수 있습니다.';}
+ else if(!ready){$('status').textContent='상대방 입장 대기 중…';$('hint').textContent='방 코드 '+d.room+'를 상대에게 알려 주세요.';}
+ else if(d.rolling){$('status').textContent='장기알이 움직이는 중…';$('hint').textContent='장기알이 멈출 때까지 기다려 주세요.';}
+ else {$('status').textContent=(d.turn===alkRole?'내 차례':'상대방 차례')+' · '+(d.turn===1?'한':'초')+' 진영';$('hint').textContent='장기말을 선택하고 화살표 반대 방향으로 튕겨 주세요.';}
+ $('undo').disabled=alkRole==='spectator'||!d.shots||d.rolling||!!d.winner||!ready||!!d.undoSeat;
+ $('rematchPanel').hidden=!d.winner||alkRole==='spectator';
+ if(d.undoSeat){if(alkRole===3-d.undoSeat&&!d.rolling){const key=d.room+'-'+d.shots+'-'+d.undoSeat;if(alkView.lastPrompt!==key){alkView.lastPrompt=key;queueMicrotask(()=>{if(confirm('상대방이 무르기를 요청했습니다. 승인하시겠습니까?'))alkSend({type:'undo_answer',accept:true});else alkSend({type:'undo_answer',accept:false});});}}$('toast').textContent='무르기 요청 대기 중';}
+}
+function setMode(mode){const isAI=mode==='ai';onlineMode=!isAI;$('modeOnline').classList.toggle('active',!isAI);$('modeAi').classList.toggle('active',isAI);aiPanel.hidden=!isAI;online.hidden=isAI;chat.hidden=isAI;
+ if(thinking)clearTimeout(thinking);if(anim)cancelAnimationFrame(anim);thinking=null;anim=null;drag=null;rolling=false;playing=false;pieces=[];rebuildPieceNodes();render();
+ if(isAI){$('connection').textContent='컴퓨터 대전';$('roomLabel').textContent='컴퓨터 대전';$('players').replaceChildren();$('remaining').textContent='';$('status').textContent='컴퓨터 대전 시작 버튼을 눌러 주세요.';$('hint').textContent='발사할 방향의 반대로 당겼다가 놓으면 됩니다.';}
+ else{alkConnection();if(alkState){pieces=alkState.pieces.map(p=>({...p,r:TYPES[p.type].r,m:TYPES[p.type].m,label:TYPES[p.type].label[p.team]}));rebuildPieceNodes();turn=alkState.turn===1?'red':'blue';human=alkRole===2?'blue':'red';rolling=alkState.rolling;playing=!alkState.winner;}alkView();render();}
+}
+$('modeOnline').addEventListener('click',()=>setMode('online'));
+$('modeAi').addEventListener('click',()=>setMode('ai'));
+const nick=$('nick');function create(){if(!nick.value.trim()){nick.placeholder='닉네임은 필수입니다';nick.classList.add('nick-warn');nick.focus();return;}alkSend({type:'create',game:'alkkagi',name:nick.value.trim(),color:Number($('onlineColor').value)});}
+$('create').addEventListener('click',create);
+function enter(watch){const room=$('roomInput').value.trim().toUpperCase();if(!/^[A-Z2-9]{6}$/.test(room)){$('toast').textContent='6자리 방 코드를 입력해 주세요.';return;}alkWatch=watch;alkSend({type:'join',game:'alkkagi',room,name:nick.value.trim(),spectator:watch});}
+$('join').addEventListener('click',()=>enter(false));$('watch').addEventListener('click',()=>enter(true));
+$('copy').addEventListener('click',async()=>{if(!alkCode){$('toast').textContent='먼저 방을 만들어 주세요.';return;}const link=location.origin+location.pathname+'?room='+encodeURIComponent(alkCode);try{await navigator.clipboard.writeText(link);$('toast').textContent='초대 링크 복사 완료';}catch{$('toast').textContent='초대 링크: '+link;}});
+$('leave').addEventListener('click',()=>{alkSend({type:'leave'});alkCode='';requestedRoom='';alkRole=null;alkState=null;pieces=[];rebuildPieceNodes();render();alkView();history.replaceState({},'',location.pathname);});
+$('chat').addEventListener('submit',e=>{e.preventDefault();const value=$('msg').value.trim();if(value&&alkSend({type:'chat',message:value}))$('msg').value='';});
+$('undo').addEventListener('click',()=>{if(onlineMode)alkSend({type:'undo_request'});});
+$('rematchButton').addEventListener('click',()=>alkSend({type:'rematch',color:Number($('rematchSide').value)}));
+nick.addEventListener('input',()=>{nick.placeholder='닉네임';nick.classList.remove('nick-warn');if(alkCode)alkSend({type:'rename',name:nick.value.trim()});});
+$('passTurn').disabled=true;
+setMode('online');})();
+</script></body></html>
