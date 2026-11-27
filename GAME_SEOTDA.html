@@ -316,6 +316,71 @@ body.online-preview.seotda-online-live .game-actions{display:flex!important}body
  outline:1px solid #ffe185!important;
  animation:nick-required-pulse 1.3s ease-in-out infinite alternate;
 }
+
+/* 모바일 섯다 반응형 보정: 좌석/카드/컨트롤이 보드 밖으로 잘리지 않도록 */
+@media (max-width:850px){
+ html,body{max-width:100%;overflow-x:hidden}
+ main{width:100%;max-width:100%;min-width:0;padding:15px 10px 35px}
+ .layout{display:grid;grid-template-columns:minmax(0,1fr);gap:11px;width:100%;min-width:0}
+ .layout > .card,.layout > section,.side,.side > .card{min-width:0;max-width:100%}
+ .boardwrap,#seotdaBoard{width:100%;max-width:100%;min-width:0;overflow:hidden}
+ .side{grid-template-columns:minmax(0,1fr)}
+ .game-mode-top{max-width:100%;min-width:0}
+ .joinline{min-width:0}
+ .joinline input{min-width:0;width:0;flex:1 1 120px}
+ .bottom-actions{gap:5px}
+ .bottom-actions button{padding:9px 8px;font-size:13px;min-width:0}
+}
+@media (max-width:600px){
+ main{padding:10px 6px 32px}
+ main > header h1{font-size:27px}
+ .layout > .card{padding:8px 5px 11px}
+ .boardwrap,#seotdaBoard{border-radius:9px}
+ #seotdaBoard .felt-wrap{height:clamp(490px,153vw,600px);min-height:0;max-width:100%;border-width:5px;padding:2px;overflow:hidden}
+ .seat{width:106px;max-width:106px}
+ .seat.s0{left:50%;top:83%}
+ .seat.s1{left:22%;top:63%}
+ .seat.s2{left:22%;top:20%}
+ .seat.s3{left:78%;top:20%}
+ .seat.s4{left:78%;top:63%}
+ .seat .nameplate{font-size:10px;padding:3px 5px;max-width:102px;overflow:hidden;text-overflow:ellipsis}
+ .cards{gap:3px;min-height:0;margin-top:5px}
+ .hwatu,.hwatu-slot.empty{width:45px;height:65px;border-radius:5px}
+ .seat .cards .card-slot{flex:0 0 45px;width:45px;height:65px}
+ .hwatu .card-photo{border-radius:5px}
+ .hwatu .month-mini{font-size:7px;left:1px;bottom:1px;padding:0 2px}
+ .hwatu.back:after{inset:13px 5px;font-size:17px}
+ .scoretag{font-size:10px;padding:1px 4px;margin-top:2px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ .table-center{top:44%;min-width:98px;max-width:112px}
+ .table-deck{width:46px;height:62px;margin-bottom:5px}
+ .table-deck .stack-card{width:40px;height:54px;font-size:17px}
+ .table-center .pot{font-size:18px;margin-top:3px}
+ .table-center .round{font-size:10px}
+ .table-center .sidepot{font-size:10px;line-height:1.25}
+ .seat .bubble{font-size:11px;padding:4px 7px;max-width:104px;bottom:calc(100% + 3px)}
+ .seat .bubble.raise{font-size:12px}
+ .seat .winner-label,.seat .draw-label{font-size:10px;top:-32px;padding:2px 6px}
+ .seat.winner:before,.seat.draw-tie:before{inset:-7px -3px -6px;border-width:2px}
+ .deal-flying{width:40px;height:58px;font-size:18px}
+ .steps{gap:3px;margin-top:8px}
+ .steps span{font-size:10px;padding:3px 4px}
+ .game-mode-top{padding:10px 9px}
+ .game-mode-top .mode-switch button{padding:7px 8px;font-size:12px}
+ .hands-board-tools{flex-wrap:wrap;justify-content:flex-end}
+ .club-policy,.side .card{padding:12px}
+}
+@media (max-width:360px){
+ main{padding-left:3px;padding-right:3px}
+ .layout > .card{padding-left:3px;padding-right:3px}
+ .seat{width:98px;max-width:98px}
+ .seat.s1,.seat.s2{left:22%}
+ .seat.s3,.seat.s4{left:78%}
+ .seat .cards .card-slot{width:41px;height:60px;flex-basis:41px}
+ .hwatu,.hwatu-slot.empty{width:41px;height:60px}
+ .nameplate{max-width:96px}
+ .bottom-actions button{font-size:12px;padding:7px 6px}
+}
+
 </style></head>
 <body class="online-preview"><main>
 <header><p>삐약 · 테일즈위버</p><h1>섯다</h1></header>
