@@ -316,63 +316,6 @@ body.online-preview.seotda-online-live .game-actions{display:flex!important}body
  outline:1px solid #ffe185!important;
  animation:nick-required-pulse 1.3s ease-in-out infinite alternate;
 }
-
-/* Mobile: compact table, all five hands and controls in the viewport. */
-@media(max-width:850px){
- main{padding:8px 6px 25px}
- main>header h1{font-size:27px;margin:0 0 7px}
- .layout{gap:9px;grid-template-columns:minmax(0,1fr)}
- .layout>section.card{padding:5px;border-radius:12px;scroll-margin-top:0}
- .layout>section.card>.row:first-child{gap:3px;margin-bottom:5px!important}
- .layout>section.card>.row:first-child h2{font-size:14px;margin:0}
- .hands-board-tools{gap:4px}.hands-open{font-size:11px;padding:4px 6px}#gameRoomLabel{font-size:10px;padding:2px 6px}
- #seotdaBoard{width:min(100%,540px);min-height:0;height:auto}
- #seotdaBoard .felt-wrap{--hand-w:clamp(28px,10vw,45px);--hand-h:calc(var(--hand-w)*1.455);height:clamp(310px,calc(100dvh - 165px),435px);min-height:0;padding:0;border-width:4px;border-radius:10px;box-shadow:inset 0 0 0 1px #9a7851,inset 0 0 0 4px #1b4039}
- #seotdaBoard .felt-wrap:before{inset:10px}
- #seotdaBoard .seat{width:36%;max-width:150px;line-height:1.2}
- #seotdaBoard .seat.s0{left:50%;top:82%}
- #seotdaBoard .seat.s1{left:20%;top:50%}
- #seotdaBoard .seat.s2{left:26%;top:19%}
- #seotdaBoard .seat.s3{left:74%;top:19%}
- #seotdaBoard .seat.s4{left:80%;top:50%}
- #seotdaBoard .cards{gap:3px;min-height:var(--hand-h);margin:3px auto 0}
- #seotdaBoard .hwatu,#seotdaBoard .hwatu-slot.empty,#seotdaBoard .seat .cards .card-slot{width:var(--hand-w);height:var(--hand-h);flex:0 0 var(--hand-w);border-radius:5px}
- #seotdaBoard .hwatu.back{border-width:2px}
- #seotdaBoard .hwatu.back:after{inset:8px 4px;font-size:15px}
- #seotdaBoard .hwatu .card-photo{border-radius:5px}
- #seotdaBoard .nameplate{display:block;width:max-content;max-width:100%;padding:2px 4px;font-size:10px;line-height:1.2;white-space:normal;overflow-wrap:anywhere;margin:auto}
- #seotdaBoard .scoretag{font-size:9px;line-height:1.15;padding:2px 3px;margin-top:2px;max-width:100%;overflow-wrap:anywhere}
- #seotdaBoard .table-center{min-width:0;width:24%;top:50%}
- #seotdaBoard .table-deck{width:30px;height:39px;margin:0 auto 4px}
- #seotdaBoard .table-deck .stack-card{width:26px;height:36px;left:1px;border-width:2px;font-size:14px}
- #seotdaBoard .pot{font-size:13px;margin:3px 0 0;overflow-wrap:anywhere}
- #seotdaBoard .round,#seotdaBoard .sidepot{font-size:9px;line-height:1.2;min-height:0;overflow-wrap:anywhere}
- #seotdaBoard .board-preview-flag{top:3px;right:5px;font-size:9px;padding:1px 4px}
- #seotdaBoard .seat .bubble{font-size:10px;padding:2px 5px;bottom:calc(100% + 1px);max-width:100%;box-shadow:0 0 0 1px #a67b3b}
- #seotdaBoard .seat .bubble:after{display:none}
- #seotdaBoard .seat .winner-label,#seotdaBoard .seat .draw-label{font-size:10px;top:-15px;padding:1px 4px;letter-spacing:0}
- #seotdaBoard .seat.winner:before,#seotdaBoard .seat.draw-tie:before{inset:-3px;border-width:2px;border-radius:8px}
- #seotdaBoard .deal-flying{width:var(--hand-w);height:var(--hand-h);font-size:14px}
- #steps{margin:4px 0 3px;gap:2px;flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;scrollbar-width:none}
- #steps span{flex:1 0 auto;text-align:center;font-size:9px;padding:2px 3px}
- .game-actions{margin:4px 0 0;gap:3px;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))}
- body.online-preview:not(.seotda-online-live) .game-actions{display:none!important}
- body.online-preview.seotda-online-live .game-actions{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))}
- body.online-preview.seotda-online-live #deal,body.online-preview.seotda-online-live #reveal{display:none}
- .game-actions button{font-size:11px;line-height:1.2;padding:4px 2px;min-height:34px;white-space:normal;overflow-wrap:anywhere;touch-action:manipulation}
- #status{font-size:11px;line-height:1.3;min-height:0;margin:5px 0 2px;overflow-wrap:anywhere}
- #seotdaTableHelp{font-size:10px;line-height:1.3;margin:4px 0}
- body.seotda-mobile-active #seotdaTableHelp{display:none}
- .toolbar.game-mode-top{padding:7px;gap:5px;margin-bottom:7px}
- .game-mode-top .mode-switch button{padding:5px 8px;font-size:12px}
- .bb-sound{margin-bottom:7px}
-}
-@media(max-width:850px) and (max-height:620px){
- #seotdaBoard .felt-wrap{height:clamp(255px,calc(100dvh - 145px),365px);--hand-w:clamp(24px,min(9vw,6.3dvh),39px)}
- #seotdaBoard .nameplate{font-size:9px;padding:1px 3px}
- #seotdaBoard .scoretag{font-size:8px;padding:1px 2px}
-}
-
 </style></head>
 <body class="online-preview"><main>
 <header><p>삐약 · 테일즈위버</p><h1>섯다</h1></header>
@@ -416,13 +359,6 @@ body.online-preview.seotda-online-live .game-actions{display:flex!important}body
  </div>
 </div>
 <script>
-window.seotdaMobileFocus=function(active){
- const body=document.body,was=body.classList.contains('seotda-mobile-active');
- body.classList.toggle('seotda-mobile-active',active);
- if(active&&!was&&matchMedia('(max-width:850px)').matches){
-   requestAnimationFrame(()=>document.querySelector('.layout>section.card').scrollIntoView({block:'start',behavior:'instant'}));
- }
-};
 (()=>{
 const $=s=>document.querySelector(s), history=$('#history');
 let names=['나','선수2','선수3','선수4','선수5'];
@@ -524,7 +460,6 @@ function halfInfo(i){let p=players[i],call=due(i);let free=Math.min(p.chips-call
 function hiddenCard(i,j){if(phase==='ready')return true;if(['tieannounce','tiebet','tiecomplete','revealed'].includes(phase))return false;if(j===0)return false;return !(i===0&&['bet2','waitresult'].includes(phase));}
 function visibleCardCount(){return ['dealing1','ready'].includes(phase)?0:['bet1','bet1done','dealing2'].includes(phase)?1:2;}
 function render(){
- if(!document.body.classList.contains('online-preview')) window.seotdaMobileFocus?.(phase!=='ready');
  const turn=nextActor(),aPhase=['bet1','bet2','tiebet'].includes(phase);
  $('#seats').innerHTML=players.map((p,i)=>`<div class="seat s${i} ${i===0?'me':''} ${p.folded?'folded':''} ${p.eliminated?'eliminated':''} ${p.winner?'winner':''} ${aPhase&&turn===i?'active':''} ${['tieannounce','tiebet','tiecomplete'].includes(phase)&&tiePlayers.includes(i)?'tied draw-tie':''}">
  ${p.winner?'<div class="winner-label">🏆 WINNER!</div>':''}${['tieannounce','tiebet','tiecomplete'].includes(phase)&&tiePlayers.includes(i)?'<div class="draw-label">🤝 DRAW!</div>':''}<div class="bubble ${p.message?'visible':''} ${p.message&&p.messageSerial<actionSerial?'older':''} ${p.betType||''}">${p.message||''}</div>
@@ -755,13 +690,66 @@ $('#volume').oninput=e=>{SFX.master=+e.target.value/100;};reset();
  function url(){return SEOTDA_SERVER_URL;}
  function send(o){if(!socket||socket.readyState!==WebSocket.OPEN){note('서버에 연결되지 않았습니다. 연결 상태를 확인하세요.');return false;}socket.send(JSON.stringify(o));return true;}
  function websocketAvailable(){if(url().includes('YOUR-EXISTING-KOYEB-SERVER')){note('배포 전에 HTML의 SEOTDA_SERVER_URL을 기존 Koyeb 서버 주소로 바꿔주세요.');return false;}return true;}
+ let connectionAttempt=0;
+ async function diagnoseConnection(){
+   const healthUrl=url().replace(/^wss:/,'https:').replace(/^ws:/,'http:').replace(/\/$/,'')+'/health';
+   try{
+     const controller=new AbortController();
+     const timeout=setTimeout(()=>controller.abort(),6500);
+     let response;
+     try{response=await fetch(healthUrl,{cache:'no-store',signal:controller.signal});}
+     finally{clearTimeout(timeout);}
+     if(!response.ok)return `서버 상태 확인 실패 (HTTP ${response.status}). 기존 Koyeb 서비스의 실행 로그를 확인하세요.`;
+     let data=await response.json();
+     if(typeof data.seotdaRooms!=='number')return '기존 서버는 응답하지만 섯다 모듈이 아직 반영되지 않았습니다. server.mjs / seotda_online.mjs / Dockerfile을 기존 서버 저장소에 배포하세요.';
+     return `섯다 서버 모듈은 응답합니다 (서버 방 ${data.seotdaRooms}개). WebSocket 연결 또는 허용 출처(ALLOWED_ORIGIN) 설정을 확인하세요.`;
+   }catch(e){
+     return '기존 Koyeb 서버의 /health에도 접속할 수 없습니다. 서비스 배포 상태·서버 주소 또는 브라우저 네트워크를 확인하세요.';
+   }
+ }
  function connectThen(payload){if(!websocketAvailable())return;
-  if(socket){manualExit=true;socket.close();}
-  manualExit=false;socket=new WebSocket(url());$('connection').textContent='서버 연결 중…';
-  socket.onopen=()=>{send(payload);$('connection').textContent='온라인 서버 연결됨';};
-  socket.onmessage=e=>{let msg;try{msg=JSON.parse(e.data);}catch{return;}handle(msg);};
-  socket.onclose=()=>{if(mode!=='online')return;$('connection').textContent='연결 끊김';if(!manualExit){note('서버 연결이 끊겼습니다. 다시 접속하려면 기존 방 코드로 참가하세요.');} };
-  socket.onerror=()=>{note('온라인 서버에 연결하지 못했습니다. Koyeb URL / 환경설정 / 서버 상태를 확인하세요.');};
+   const attempt=++connectionAttempt;
+   if(socket){manualExit=true;socket.close();}
+   manualExit=false;
+   $('connection').textContent='섯다 서버 연결 중…';
+   note('온라인 서버에 연결 중입니다…');
+   let ws;
+   try{ws=new WebSocket(url());}catch(e){note('서버 주소가 올바르지 않습니다: '+e.message);return;}
+   socket=ws;
+   let opened=false,responded=false,failed=false;
+   const startupTimeout=setTimeout(()=>{
+     if(socket!==ws||opened||responded||attempt!==connectionAttempt)return;
+     failed=true;
+     note('서버 연결 시간이 초과되었습니다. Koyeb 배포 및 서비스 상태를 확인하세요.');
+     try{ws.close();}catch{}
+   },9000);
+   ws.onopen=()=>{
+     if(socket!==ws)return;
+     opened=true;clearTimeout(startupTimeout);
+     $('connection').textContent='서버 연결됨 · 방 생성 요청 중…';
+     note('방 만들기 요청을 서버로 전송했습니다…');
+     ws.send(JSON.stringify(payload));
+   };
+   ws.onmessage=e=>{
+     if(socket!==ws)return;
+     let msg;try{msg=JSON.parse(e.data);}catch{return;}
+     responded=true;
+     handle(msg);
+   };
+   ws.onclose=async e=>{
+     clearTimeout(startupTimeout);
+     if(socket!==ws||mode!=='online')return;
+     $('connection').textContent='서버 연결 끊김';
+     if(manualExit||room)return;
+     if(opened&&responded){note('서버 연결이 종료되었습니다. 다시 참가해 주세요.');return;}
+     if(failed){return;}
+     note(`연결 실패 (코드 ${e.code}). 서버 상태 확인 중…`);
+     const msg=await diagnoseConnection();
+     if(socket===ws&&attempt===connectionAttempt)note(msg);
+   };
+   ws.onerror=()=>{
+     if(socket===ws&&!opened)note('온라인 서버 WebSocket 연결 실패. 서버 상태를 확인 중입니다…');
+   };
  }
  const tokenKey=r=>'bbiyak-seotda-token-'+r;
  function showAgreementWarning(show){
@@ -863,11 +851,11 @@ $('#volume').oninput=e=>{SFX.master=+e.target.value/100;};reset();
     },ms);
   }
  }
- function render(){if(mode!=='online'||!state)return;document.body.classList.toggle('seotda-online-live',!!state.started);window.seotdaMobileFocus?.(!!state.started);const oldPhase=currentPhase;renderSeats();flyCards(state);
+ function render(){if(mode!=='online'||!state)return;document.body.classList.toggle('seotda-online-live',!!state.started);const oldPhase=currentPhase;renderSeats();flyCards(state);
   if(state.phase!==oldPhase&&['result','tieannounce'].includes(state.phase))window.BBIYAK_SEOTDA_SOUND?.play(state.phase==='result'?'win':'flip');currentPhase=state.phase;
  }
  function handle(msg){
-  if(msg.type==='seotda_error'){note('⚠ '+msg.message);return;}
+  if(msg.type==='seotda_error'){ $('connection').textContent='서버 응답: 요청 오류';note('⚠ '+msg.message);return;}
   if(msg.type==='seotda_notice'){note(msg.message);return;}
   if(msg.type==='seotda_joined'){room=msg.room;role=msg.role;myIndex=msg.index;token=msg.token||'';if(token)sessionStorage.setItem(tokenKey(room),token);
     $('roomInput').value=room;note(`방 ${room}에 입장했습니다. ${role==='spectator'?'관전 중입니다.':'베팅은 본인 차례에만 가능합니다.'}`);$('connection').textContent='온라인 대전 · 연결됨';return;}
@@ -875,7 +863,7 @@ $('#volume').oninput=e=>{SFX.master=+e.target.value/100;};reset();
   if(msg.type==='seotda_chat'){const el=document.createElement('div');el.className='msg';el.textContent=`${msg.name}: ${msg.message}`;$('chatLogs').appendChild(el);$('chatLogs').scrollTop=$('chatLogs').scrollHeight;if(++chatCount>100){$('chatLogs').firstElementChild?.remove();chatCount--;}return;}
   if(msg.type==='seotda_state'){state=msg;render();}
  }
- function switchMode(next){window.seotdaMobileFocus?.(false);mode=next;document.body.classList.toggle('online-preview',next==='online');if(next!=='online')document.body.classList.remove('seotda-online-live');
+ function switchMode(next){mode=next;document.body.classList.toggle('online-preview',next==='online');if(next!=='online')document.body.classList.remove('seotda-online-live');
   aiPanel.hidden=next!=='ai';onlineNodes.forEach(n=>n.hidden=next!=='online');$('modeOnline').classList.toggle('active',next==='online');$('modeAi').classList.toggle('active',next==='ai');
   $('connection').textContent=next==='online'?'온라인 대전 · 서버 연결 필요':'컴퓨터 대전 · 로컬';
   $('gameRoomLabel').textContent=next==='online'?'온라인 대기 중':'컴퓨터 대전';
