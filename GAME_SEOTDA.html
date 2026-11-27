@@ -299,6 +299,15 @@ body.online-preview .game-actions,body.online-preview #steps,body.online-preview
 @media(max-width:520px){.club-policy-grid{grid-template-columns:1fr}}
 body.online-preview.seotda-online-live .game-actions{display:flex!important}body.online-preview.seotda-online-live #steps{display:flex!important}
 .hwatu-slot.empty{width:66px;height:96px;flex-shrink:0;border:1px dashed #d6d7c752;border-radius:8px;background:#ffffff08}@media(max-width:570px){.hwatu-slot.empty{width:49px;height:72px}}
+
+/* 장기처럼 닉네임 미입력 안내를 노란색으로 표시 */
+.nick-guide{margin:4px 0 8px;color:#ffe18b;font-size:12px;font-weight:700}
+.nick-guide.ready{display:none!important}
+/* 실제 참가자가 없는 자리에는 선수2~5 기본 이름 표시 */
+.seat.waiting{opacity:.52;pointer-events:none}
+.seat.waiting .nameplate{border-style:dashed;color:#d4c9df}
+.seat.waiting .card-slot,.seat.waiting .hwatu-slot{visibility:hidden}
+.seat.waiting .scoretag{visibility:hidden}
 </style></head>
 <body class="online-preview"><main>
 <header><p>삐약 · 테일즈위버</p><h1>섯다</h1></header>
@@ -308,7 +317,7 @@ body.online-preview.seotda-online-live .game-actions{display:flex!important}body
 <div class="steps" id="steps"><span>첫 패 공개</span><span>1차 베팅</span><span>두 번째 패 확인</span><span>2차 베팅</span><span>승부 공개</span><span>무승부 재승부</span></div>
 <div class="bottom-actions game-actions"><button id="deal" type="button" class="primary">🀄 패 돌리기</button><button id="fold" type="button">다이</button><button id="call" type="button">체크 / 콜</button><button id="raise" type="button" class="gold">하프</button><button id="allin" type="button" class="gold">🔥 올인</button><button id="reveal" type="button">다음 단계</button></div>
 <p id="status" class="status">컴퓨터 대전을 선택하면 게임을 시작할 수 있습니다.</p><p id="seotdaTableHelp" class="tiny muted">첫 패 → 1차 베팅 → 다음 패 자동 배분 → 2차 베팅 → 결과 공개 · 무승부 자동 재승부 · 사구/멍구사 조건부 재경기 · 암행어사 13·18광땡 제압 · 칩 0이면 탈락</p></section>
-<div class="side"><section class="card online-mode-section" id="entryPanel"><h2>게임 입장 <span class="club-badge">🔒 클럽원 전용</span></h2><p class="club-gate-lead">삐약 클럽원끼리 무료로 즐기는 친목용 게임입니다. 이용 약속을 확인하면 입장할 수 있습니다.</p><label>닉네임<input id="nick" maxlength="16" autocomplete="off" placeholder="닉네임"></label><p class="tiny muted">새 방 만들기는 닉네임 필수 · 온라인 방 정원은 5명 고정 · 방장 시작 시 현재 입장자만 참여</p><label class="club-agreement"><input type="checkbox" id="clubAgreement"><span>삐약 클럽원이며, <b>현금 거래, 환전, 가상 칩의 양도 및 금전·상품권·현물 경품을 건 내기(게임시드 포함)를 하지 않겠습니다.</b></span></label><p class="club-gate-foot">클럽원 확인은 이용 약속 체크 방식입니다. 별도의 계정 인증은 하지 않습니다.</p><div class="row"><button class="primary" type="button" id="createRoom">새 방 만들기</button><button type="button" id="copyInvite">초대 링크 복사</button></div><div class="joinline"><input id="roomInput" maxlength="6" placeholder="6자리 방 코드" autocomplete="off"><button class="primary" type="button" id="joinRoom">참가</button><button type="button" id="watchRoom">관전</button></div><p class="online-entry-advice">온라인 방 정원은 항상 <b>5명</b>입니다. 방장이 시작을 누르면 그 순간 입장한 인원(2~5명)만으로 게임을 시작합니다. 방장이 시작하면 입장 중인 2~5명으로 실제 온라인 게임이 진행됩니다.</p><div class="row"><button class="primary" type="button" id="hostStart" disabled>🎮 방장 게임 시작</button></div><p class="tiny muted" id="hostRoomNotice">방장만 시작할 수 있습니다. 2명 이상이면 5명이 다 차지 않아도 시작 가능합니다.</p><div class="row"><button type="button" id="leaveRoom">방 나가기</button><span class="tiny muted" id="role">미입장</span></div><p id="onlinePreviewNote" role="status">서버 연결 상태를 확인하고 방을 생성하거나 초대 링크로 참가하세요.</p></section>
+<div class="side"><section class="card online-mode-section" id="entryPanel"><h2>게임 입장 <span class="club-badge">🔒 클럽원 전용</span></h2><p class="club-gate-lead">삐약 클럽원끼리 무료로 즐기는 친목용 게임입니다. 이용 약속을 확인하면 입장할 수 있습니다.</p><label>닉네임<input id="nick" maxlength="16" autocomplete="off" placeholder="닉네임을 입력해 주세요" aria-describedby="nickGuide" aria-required="true"></label><p class="nick-guide ready" id="nickGuide" role="status" aria-live="polite">닉네임을 입력해 주세요. (필수)</p><p class="tiny muted">새 방 만들기는 닉네임 필수 · 온라인 방 정원은 5명 고정 · 방장 시작 시 현재 입장자만 참여</p><label class="club-agreement"><input type="checkbox" id="clubAgreement"><span>삐약 클럽원이며, <b>현금 거래, 환전, 가상 칩의 양도 및 금전·상품권·현물 경품을 건 내기(게임시드 포함)를 하지 않겠습니다.</b></span></label><p class="club-gate-foot">클럽원 확인은 이용 약속 체크 방식입니다. 별도의 계정 인증은 하지 않습니다.</p><div class="row"><button class="primary" type="button" id="createRoom">새 방 만들기</button><button type="button" id="copyInvite">초대 링크 복사</button></div><div class="joinline"><input id="roomInput" maxlength="6" placeholder="6자리 방 코드" autocomplete="off"><button class="primary" type="button" id="joinRoom">참가</button><button type="button" id="watchRoom">관전</button></div><p class="online-entry-advice">온라인 방 정원은 항상 <b>5명</b>입니다. 방장이 시작을 누르면 그 순간 입장한 인원(2~5명)만으로 게임을 시작합니다. 방장이 시작하면 입장 중인 2~5명으로 실제 온라인 게임이 진행됩니다.</p><div class="row"><button class="primary" type="button" id="hostStart" disabled>🎮 방장 게임 시작</button></div><p class="tiny muted" id="hostRoomNotice">방장만 시작할 수 있습니다. 2명 이상이면 5명이 다 차지 않아도 시작 가능합니다.</p><div class="row"><button type="button" id="leaveRoom">방 나가기</button><span class="tiny muted" id="role">미입장</span></div><p id="onlinePreviewNote" role="status">서버 연결 상태를 확인하고 방을 생성하거나 초대 링크로 참가하세요.</p></section>
 <section class="card club-policy" id="clubPolicy"><div class="club-policy-head"><h2>🐥 클럽원 무료 이용 안내</h2><span class="club-badge">무료 오락</span></div><p class="club-policy-intro">삐약 섯다는 클럽원 간 친목을 위한 무료 오락용 게임입니다.</p><div class="club-policy-grid"><div><b>🪙 시작 칩</b><span>모든 선수 1,000칩 무료 지급</span></div><div><b>🔁 재시작</b><span>최종 우승 후 전체 칩 초기화</span></div><div><b>🏆 순위</b><span>게임 화면에만 표시 · 저장 안 함</span></div><div><b>🚫 유료 요소</b><span>칩 구매·판매·양도·환전 없음</span></div></div><p class="club-prohibition">현금 거래, 환전, 가상 칩의 양도 및 금전·상품권·현물 경품을 건 내기는 금지합니다.(게임시드 포함)</p><p class="club-policy-note">온라인 방 정원은 5명이며, 방장이 시작할 때 입장해 있는 2~5명만 해당 게임에 참가합니다.</p></section>
 <section class="card" id="gameStatusCard"><h2>게임 현황</h2><div id="seatList"><div class="player"><strong>참가자 정보</strong><small>방 입장 대기 중</small></div></div><p class="tiny muted" id="roundInfo">게임 대기 · 참가 0/5 · 관전자 0명</p><div id="history" class="history" hidden>패를 돌리면 이곳에 진행 내역이 표시됩니다.</div><p id="toast" role="status" style="color:#e5cc91;min-height:22px"></p></section>
 <section class="card" id="finalStandings" hidden><h2>🏆 최종 순위</h2><p class="tiny muted">모든 참가자의 순위는 이 화면에서만 표시되며 서버나 브라우저에 저장되지 않습니다. 같은 판에 탈락한 선수는 공동 순위입니다.</p><div id="finalStandingsList"></div><div class="row" style="margin-top:16px;justify-content:center"><button type="button" id="restartAllPlayers" class="primary">🔄 전체 참가자 새 게임 시작</button></div><p class="tiny muted" style="text-align:center;margin-top:8px">모든 탈락자 복귀 · 칩 1,000개씩 재지급 · 최종 순위 초기화</p></section>
@@ -344,8 +353,8 @@ body.online-preview.seotda-online-live .game-actions{display:flex!important}body
 <script>
 (()=>{
 const $=s=>document.querySelector(s), history=$('#history');
-let names=['나','채치수','뱉이','숑이','구톤'];
-window.setSeotdaPreviewNames=list=>{names=Array.isArray(list)&&list.length?list.slice(0,5):['나','채치수','뱉이','숑이','구톤'];};
+let names=['나','선수2','선수3','선수4','선수5'];
+window.setSeotdaPreviewNames=list=>{names=Array.isArray(list)&&list.length?list.slice(0,5):['나','선수2','선수3','선수4','선수5'];};
 let count=5,round=1,base=20,players=[],pot=0,phase='ready',tiePlayers=[],tieCount=0,highest=0,pending=[],hasAction=false,generation=0,hasAIHalfFirstRound=false,hasAITieHalf=false,lastRaiser=-1,nextStageStarter=0,nextRoundStarter=0;
 let autoTransitionTimer=null;
 let eliminationGroups=[];
@@ -683,7 +692,26 @@ $('#volume').oninput=e=>{SFX.master=+e.target.value/100;};reset();
  }
  const tokenKey=r=>'bbiyak-seotda-token-'+r;
  function requireAgreement(){if(!$('clubAgreement').checked){note('클럽원 이용 약속을 먼저 체크해 주세요.');$('clubAgreement').focus();return false;}return true;}
- function requireName(){const nick=$('nick').value.trim();if(!nick){note('닉네임을 입력해 주세요.');$('nick').focus();return null;}return nick;}
+ function showNicknameWarning(show){
+  const input=$('nick'),guide=$('nickGuide');
+  input.classList.toggle('nick-required-glow',show);
+  input.setAttribute('aria-invalid',String(show));
+  guide.classList.toggle('ready',!show);
+ }
+ function requireName(){
+  const nick=$('nick').value.trim();
+  if(!nick){
+   showNicknameWarning(true);
+   note('닉네임을 입력해 주세요. 노란색 입력칸을 확인하세요.');
+   $('nick').focus();
+   return null;
+  }
+  showNicknameWarning(false);
+  return nick;
+ }
+ // 첫 화면은 평소처럼 표시. 버튼을 눌러 미입력 오류가 난 경우에만 안내.
+ $('nick').addEventListener('input',()=>showNicknameWarning(false));
+ showNicknameWarning(false);
  function toRoom(){return $('roomInput').value.trim().toUpperCase();}
  function inviteUrl(){const u=new URL(location.href);u.searchParams.set('seotda',room);return u.toString();}
  function actionsDisabled(flag){for(const id of ['fold','call','raise','allin'])$(id).disabled=flag;}
@@ -702,7 +730,10 @@ $('#volume').oninput=e=>{SFX.master=+e.target.value/100;};reset();
      <div class="nameplate">${isMe?'★ ':''}${escape(p.name)}${p.eliminated?' · 탈락':p.folded?' · 다이':''}${p.allin?' · 올인':''}${active&&s.turn===i?' · 차례':''}</div>
      <div class="cards">${cardNode(p.cards[0])}${cardNode(p.cards[1])}</div>
      <div class="scoretag">🪙 ${p.chips.toLocaleString()}${p.stagePaid?' · 베팅 '+p.stagePaid.toLocaleString():''}${p.hand?' · '+escape(p.hand):''}</div></div>`;
-  }).join('');
+  }).join('') + (s.started?'':Array.from({length:Math.max(0,5-s.players.length)},(_,offset)=>{
+    const i=s.players.length+offset;
+    return `<div class="seat s${i} waiting"><div class="nameplate">선수${i+1} · 대기</div><div class="cards"><div class="hwatu-slot empty"></div><div class="hwatu-slot empty"></div></div></div>`;
+  }).join(''));
   $('pot').textContent='🪙 '+s.pot.toLocaleString();$('round').textContent='ROUND '+(s.round||1);
   $('sidepot').textContent=s.tiePlayers.length?`무승부 ${s.tieCount}차 · ${s.tiePlayers.map(i=>s.players[i].name).join(', ')}`:'';
   const stepIdx={lobby:-1,deal1:0,bet1:1,deal2:2,bet2:3,showdown:4,result:4,tieannounce:5,tiedeal:5,tiebet:5,finished:5}[s.phase]??-1;
@@ -760,12 +791,12 @@ $('#volume').oninput=e=>{SFX.master=+e.target.value/100;};reset();
   $('gameRoomLabel').textContent=next==='online'?'온라인 대기 중':'컴퓨터 대전';
   $('boardFlag').textContent=next==='online'?'온라인 섯다':'컴퓨터와 대전';
   $('count').dispatchEvent(new Event('change'));
-  if(next==='online'){if(state)render();else {$('status').textContent='온라인 방에 입장해 주세요.';actionsDisabled(true);$('deal').disabled=true;$('reveal').disabled=true;}}
+  if(next==='online'){if(state)render();else {$('seats').innerHTML=Array.from({length:5},(_,i)=>`<div class="seat s${i} waiting"><div class="nameplate">${i===0?'방장 · 대기':`선수${i+1} · 대기`}</div><div class="cards"><div class="hwatu-slot empty"></div><div class="hwatu-slot empty"></div></div></div>`).join('');$('status').textContent='온라인 방에 입장해 주세요.';actionsDisabled(true);$('deal').disabled=true;$('reveal').disabled=true;}}
   else {if(socket){manualExit=true;socket.close();socket=null;}state=null;room='';role='spectator';myIndex=-1;$('deal').disabled=false;$('aiHint').textContent='난이도·인원을 선택한 후 컴퓨터 대전 시작을 눌러주세요.';}
  }
  $('modeOnline').addEventListener('click',()=>switchMode('online'));$('modeAi').addEventListener('click',()=>switchMode('ai'));
  $('aiStart').addEventListener('click',()=>{$('count').dispatchEvent(new Event('change'));$('deal').click();});
- $('createRoom').addEventListener('click',()=>{if(!requireAgreement())return;const name=requireName();if(!name)return;connectThen({type:'seotda_create',name,agree:true});});
+ $('createRoom').addEventListener('click',()=>{const name=requireName();if(!name)return;if(!requireAgreement())return;connectThen({type:'seotda_create',name,agree:true});});
  for(const [id,spectator] of [['joinRoom',false],['watchRoom',true]])$(id).addEventListener('click',()=>{
   if(!requireAgreement())return;const idRoom=toRoom();if(idRoom.length!==6){note('6자리 방 코드를 입력해 주세요.');return;}const name=spectator?$('nick').value.trim()||'관전자':requireName();if(!name)return;
   connectThen({type:'seotda_join',room:idRoom,name,spectator,agree:true,token:sessionStorage.getItem(tokenKey(idRoom))||''});
