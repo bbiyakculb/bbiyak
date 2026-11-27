@@ -382,50 +382,31 @@ body.online-preview.seotda-online-live .game-actions{display:flex!important}body
 }
 
 
-/* 섯다 모바일 집중 화면 - 화면의 세로 높이를 기준으로 보드 전체와 베팅 버튼을 맞춤 */
-#mobileFocusExit{display:none}
+/* 모바일: 게임 시작 전후 동일한 배치, 자유로운 세로 스크롤 */
+#mobileFocusExit{display:none!important}
 @media(max-width:850px){
- html,body{max-width:100%;overflow-x:hidden}
- #seotdaBoard{min-height:0!important}
- #seotdaBoard .felt-wrap{height:var(--bb-board-height, min(86vw, 360px))!important;min-height:0!important;max-height:none!important}
- .seat{transform:translate(-50%,-50%) scale(var(--bb-seat-scale,.69));transform-origin:center center}
- .table-center{transform:translate(-50%,-50%) scale(var(--bb-deck-scale,.76));transform-origin:center center}
- body.seotda-mobile-focus{overflow:hidden!important}
- body.seotda-mobile-focus main{width:100%;height:100dvh;max-height:100dvh;padding:2px 4px 0!important;overflow:hidden;display:flex;flex-direction:column}
- body.seotda-mobile-focus main>header,
- body.seotda-mobile-focus .bb-sound,
- body.seotda-mobile-focus .game-mode-top,
- body.seotda-mobile-focus .side,
- body.seotda-mobile-focus footer,
- body.seotda-mobile-focus #steps,
- body.seotda-mobile-focus #seotdaTableHelp{display:none!important}
- body.seotda-mobile-focus .layout{display:flex;flex:1 1 auto;min-height:0;gap:0;width:100%}
- body.seotda-mobile-focus .layout>section.card{padding:2px 2px 3px!important;display:flex;flex-direction:column;min-height:0;width:100%;overflow:hidden}
- body.seotda-mobile-focus .layout>section.card>.row{margin:0 0 3px!important;flex:0 0 auto;min-height:29px}
- body.seotda-mobile-focus .layout>section.card>.row h2{font-size:13px;margin:0}
- body.seotda-mobile-focus .hands-open,
- body.seotda-mobile-focus #mobileFocusExit{padding:3px 6px;font-size:10px;min-height:25px;line-height:1.1}
- body.seotda-mobile-focus #mobileFocusExit{display:inline-flex;align-items:center;background:#3c2b47;border-color:#997ea8}
- body.seotda-mobile-focus #gameRoomLabel{display:none!important}
- body.seotda-mobile-focus .boardwrap{flex:0 0 auto;width:100%;border-radius:7px;min-height:0!important;margin:0}
- body.seotda-mobile-focus .felt-wrap{border-width:3px!important;border-radius:6px;padding:0}
- body.seotda-mobile-focus .board-preview-flag{font-size:9px;top:3px;right:3px;padding:2px 4px}
- body.seotda-mobile-focus .game-actions{flex:0 0 auto;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:3px;margin:4px 0 0}
- body.seotda-mobile-focus .game-actions button{min-width:0;padding:5px 1px;font-size:11px;line-height:1.12;min-height:34px;white-space:normal}
- body.seotda-mobile-focus #deal,body.seotda-mobile-focus #reveal{display:none!important}
- body.seotda-mobile-focus #status{flex:0 0 auto;margin:3px 2px 0;font-size:11px;line-height:1.2;min-height:0;max-height:28px;overflow:hidden}
- body.seotda-mobile-focus .table-center{top:46%}
+ html,body{overflow-x:hidden!important;overflow-y:auto!important;height:auto!important;min-height:100%;}
+ body.seotda-mobile-focus{overflow-y:auto!important}
+ main{height:auto!important;max-height:none!important;overflow:visible!important}
+ #seotdaBoard .felt-wrap{height:clamp(290px,85vw,395px)!important;min-height:0!important;max-height:none!important;border-width:4px;padding:2px}
+ .seat{transform:translate(-50%,-50%) scale(.68);transform-origin:center center}
+ .table-center{transform:translate(-50%,-50%) scale(.74);transform-origin:center center}
+ .game-actions{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+ .game-actions button{min-height:34px;padding:6px 7px;font-size:12px}
+ .steps{margin-top:6px}
+ .status{font-size:13px}
 }
 @media(max-width:380px){
- body.seotda-mobile-focus .game-actions button{font-size:10px}
- body.seotda-mobile-focus .layout>section.card>.row h2{font-size:12px}
+ #seotdaBoard .felt-wrap{height:clamp(275px,88vw,325px)!important}
+ .seat{transform:translate(-50%,-50%) scale(.60)}
+ .table-center{transform:translate(-50%,-50%) scale(.67)}
 }
 </style></head>
 <body class="online-preview"><main>
 <header><p>삐약 · 테일즈위버</p><h1>섯다</h1></header>
 <div class="bb-sound" role="group" aria-label="게임 효과음 설정"><button id="soundToggle" type="button" aria-pressed="true">🔊 효과음 켜짐</button><label for="volume">음량 <input id="volume" type="range" min="0" max="100" value="45" step="5"><span class="bb-vol-text" id="volText">45%</span></label></div>
 <div class="toolbar card game-mode-top"><div class="mode-switch"><b>대전 방식</b><button id="modeOnline" class="active" type="button">온라인 대전</button><button id="modeAi" type="button">컴퓨터 대전</button></div><span class="pill" id="connection">온라인 대전 · 연결 대기</span><span class="tiny muted mode-subtitle">삐약 클럽원 전용 · 무료 · 정원 5명 · 20장 섯다</span><div class="mode-selections" id="aiPanel" hidden><label>컴퓨터 난이도<select id="aiLevel"><option value="easy">초급</option><option selected value="medium">중급</option><option value="hard">고급</option></select></label><label>참가 인원 (나 + 컴퓨터)<select id="count"><option value="2">2명</option><option value="3">3명</option><option value="4">4명</option><option value="5" selected>5명</option></select></label><button class="primary" id="aiStart" type="button">컴퓨터 대전 시작</button><p class="tiny muted" id="aiHint">난이도와 인원을 선택한 뒤 컴퓨터 대전을 시작하세요.</p></div></div>
-<div class="layout"><section class="card"><div class="row" style="justify-content:space-between;margin-bottom:10px"><h2>섯다 게임판</h2><div class="hands-board-tools"><button id="mobileFocusExit" type="button" aria-label="전체 메뉴로 돌아가기">화면 나가기</button><button id="handsOpen" class="hands-open" type="button" aria-haspopup="dialog" aria-controls="handsDialog">🀄 족보 보기</button><span class="pill" id="gameRoomLabel">온라인 대기 중</span></div></div><div class="boardwrap" id="seotdaBoard"><div class="felt-wrap"><span class="board-preview-flag" id="boardFlag">온라인 화면 미리보기</span><div class="table-center"><div class="table-deck" id="tableDeck" aria-label="중앙 화투패 더미"><span class="stack-card stack-back"></span><span class="stack-card stack-front">福</span></div><div class="pot" id="pot">🪙 0</div><div class="round" id="round">ROUND 1</div><div class="sidepot" id="sidepot"></div></div><div id="seats"></div><div class="deal-pieces" id="dealPieces" aria-hidden="true"></div></div></div>
+<div class="layout"><section class="card"><div class="row" style="justify-content:space-between;margin-bottom:10px"><h2>섯다 게임판</h2><div class="hands-board-tools"><button id="handsOpen" class="hands-open" type="button" aria-haspopup="dialog" aria-controls="handsDialog">🀄 족보 보기</button><span class="pill" id="gameRoomLabel">온라인 대기 중</span></div></div><div class="boardwrap" id="seotdaBoard"><div class="felt-wrap"><span class="board-preview-flag" id="boardFlag">온라인 화면 미리보기</span><div class="table-center"><div class="table-deck" id="tableDeck" aria-label="중앙 화투패 더미"><span class="stack-card stack-back"></span><span class="stack-card stack-front">福</span></div><div class="pot" id="pot">🪙 0</div><div class="round" id="round">ROUND 1</div><div class="sidepot" id="sidepot"></div></div><div id="seats"></div><div class="deal-pieces" id="dealPieces" aria-hidden="true"></div></div></div>
 <div class="steps" id="steps"><span>첫 패 공개</span><span>1차 베팅</span><span>두 번째 패 확인</span><span>2차 베팅</span><span>승부 공개</span><span>무승부 재승부</span></div>
 <div class="bottom-actions game-actions"><button id="deal" type="button" class="primary">🀄 패 돌리기</button><button id="fold" type="button">다이</button><button id="call" type="button">체크 / 콜</button><button id="raise" type="button" class="gold">하프</button><button id="allin" type="button" class="gold">🔥 올인</button><button id="reveal" type="button">다음 단계</button></div>
 <p id="status" class="status">컴퓨터 대전을 선택하면 게임을 시작할 수 있습니다.</p><p id="seotdaTableHelp" class="tiny muted">첫 패 → 1차 베팅 → 다음 패 자동 배분 → 2차 베팅 → 결과 공개 · 무승부 자동 재승부 · 사구/멍구사 조건부 재경기 · 암행어사 13·18광땡 제압 · 칩 0이면 탈락</p></section>
@@ -1018,56 +999,5 @@ $('#volume').oninput=e=>{SFX.master=+e.target.value/100;};reset();
  document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!overlay.hidden)hide()});
 })();
 </script>
-<script>
-/* 모바일 한 화면 맞춤: 게임 중 상단 메뉴 숨김 + 실제 iframe 높이 기준 보드 축소 */
-(()=>{'use strict';
- const body=document.body, board=document.querySelector('#seotdaBoard .felt-wrap');
- const holder=document.getElementById('seotdaBoard');
- const exit=document.getElementById('mobileFocusExit');
- let optOut=false,active=false,job=0;
- const eligible=()=>body.classList.contains('seotda-ai-live')||body.classList.contains('seotda-online-live');
- const onMobile=()=>window.innerWidth<=850;
- function notifyParent(value){
-   if(window.parent===window)return;
-   try{window.parent.postMessage({source:'bbiyak-seotda',type:'game-focus',active:value},window.location.origin);}catch(e){}
- }
- function fit(){
-   if(!board||!holder)return;
-   const focused=body.classList.contains('seotda-mobile-focus');
-   if(!onMobile()){
-     holder.style.removeProperty('--bb-board-height');
-     holder.style.removeProperty('--bb-seat-scale');
-     holder.style.removeProperty('--bb-deck-scale');
-     return;
-   }
-   const viewport=window.visualViewport?.height||window.innerHeight;
-   const boardTop=holder.getBoundingClientRect().top;
-   const gameActions=document.querySelector('.game-actions');
-   const status=document.getElementById('status');
-   const after=focused?(gameActions?.offsetHeight||45)+(status?.offsetHeight||22)+14:16;
-   // 집중 플레이에서는 배팅 버튼 높이를 반드시 남겨둔다.
-   const available=focused?Math.max(170,Math.floor(viewport-boardTop-after)):Math.min(Math.floor(window.innerWidth*1.08),Math.max(245,Math.floor(viewport-boardTop-18)));
-   const height=Math.min(focused?610:430, available);
-   holder.style.setProperty('--bb-board-height',height+'px');
-   const scale=Math.max(.39,Math.min(.86,height/535));
-   holder.style.setProperty('--bb-seat-scale',String(scale));
-   holder.style.setProperty('--bb-deck-scale',String(Math.max(.5,scale)));
- }
- function update(){
-   const focus=onMobile()&&eligible()&&!optOut;
-   if(active!==focus){active=focus;body.classList.toggle('seotda-mobile-focus',focus);notifyParent(focus);}
-   cancelAnimationFrame(job);job=requestAnimationFrame(fit);
- }
- exit?.addEventListener('click',()=>{optOut=true;update();});
- const observer=new MutationObserver(()=>{
-   if(!eligible())optOut=false;
-   update();
- });
- observer.observe(body,{attributes:true,attributeFilter:['class']});
- window.addEventListener('resize',update,{passive:true});
- window.visualViewport?.addEventListener('resize',update,{passive:true});
- window.addEventListener('pagehide',()=>notifyParent(false));
- update();
-})();
-</script>
+
 </body></html>
