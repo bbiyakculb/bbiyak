@@ -490,17 +490,28 @@ body.online-preview.seotda-online-live .game-actions{display:flex!important}body
 /* 칩/판돈 노란색 고정: PC 및 모바일 모두 적용 */
 .seat .scoretag{color:#ffdf52!important;border-color:#b59a36aa!important;font-weight:850;text-shadow:0 1px 2px #000b}
 .table-center .pot,#pot{color:#ffe14c!important;text-shadow:0 2px 9px #ffd53b55,0 2px 5px #000b}
+
+/* 모든 화면의 가상 칩: 아이콘과 숫자를 선명한 황금색으로 통일 */
+html body .seat .scoretag,html body .seat .scoretag *,
+html body .table-center .pot,html body #pot,
+html body .stat .chip-value,html body .chip-value{
+ color:#ffdf32!important;
+ -webkit-text-fill-color:#ffdf32!important;
+ font-weight:900!important;
+ text-shadow:0 1px 4px #000d,0 0 9px #ffc92855!important;
+}
+html body .seat .scoretag{border-color:#e6bd34!important;background:#302708e8!important}
 </style></head>
 <body class="online-preview"><main>
 <header><p>삐약 · 테일즈위버</p><h1>섯다</h1></header>
 <div class="bb-sound" role="group" aria-label="게임 효과음 설정"><button id="soundToggle" type="button" aria-pressed="true">🔊 효과음 켜짐</button><label for="volume">음량 <input id="volume" type="range" min="0" max="100" value="45" step="5"><span class="bb-vol-text" id="volText">45%</span></label></div>
 <div class="toolbar card game-mode-top"><div class="mode-switch"><b>대전 방식</b><button id="modeOnline" class="active" type="button">온라인 대전</button><button id="modeAi" type="button">컴퓨터 대전</button></div><span class="pill" id="connection">온라인 대전 · 연결 대기</span><span class="tiny muted mode-subtitle">삐약 클럽원 전용 · 무료 · 정원 5명 · 20장 섯다</span><div class="mode-selections" id="aiPanel" hidden><label>컴퓨터 난이도<select id="aiLevel"><option value="easy">초급</option><option selected value="medium">중급</option><option value="hard">고급</option></select></label><label>참가 인원 (나 + 컴퓨터)<select id="count"><option value="2">2명</option><option value="3">3명</option><option value="4">4명</option><option value="5" selected>5명</option></select></label><button class="primary" id="aiStart" type="button">컴퓨터 대전 시작</button><p class="tiny muted" id="aiHint">난이도와 인원을 선택한 뒤 컴퓨터 대전을 시작하세요.</p></div></div>
-<div class="layout"><section class="card"><div class="row" style="justify-content:space-between;margin-bottom:10px"><h2>섯다 게임판</h2><div class="hands-board-tools"><button id="handsOpen" class="hands-open" type="button" aria-haspopup="dialog" aria-controls="handsDialog">🀄 족보 보기</button><span class="pill" id="gameRoomLabel">온라인 대기 중</span></div></div><div class="boardwrap" id="seotdaBoard"><div class="felt-wrap"><span class="board-preview-flag" id="boardFlag">온라인 화면 미리보기</span><div class="table-center"><div class="table-deck" id="tableDeck" aria-label="중앙 화투패 더미"><span class="stack-card stack-back"></span><span class="stack-card stack-front">福</span></div><div class="pot" id="pot">🪙 0</div><div class="round" id="round">ROUND 1</div><div class="sidepot" id="sidepot"></div></div><div id="seats"></div><div class="deal-pieces" id="dealPieces" aria-hidden="true"></div></div></div>
+<div class="layout"><section class="card"><div class="row" style="justify-content:space-between;margin-bottom:10px"><h2>섯다 게임판</h2><div class="hands-board-tools"><button id="handsOpen" class="hands-open" type="button" aria-haspopup="dialog" aria-controls="handsDialog">🀄 족보 보기</button><span class="pill" id="gameRoomLabel">온라인 대기 중</span></div></div><div class="boardwrap" id="seotdaBoard"><div class="felt-wrap"><span class="board-preview-flag" id="boardFlag">온라인 화면 미리보기</span><div class="table-center"><div class="table-deck" id="tableDeck" aria-label="중앙 화투패 더미"><span class="stack-card stack-back"></span><span class="stack-card stack-front">福</span></div><div class="pot" id="pot">🟡 0</div><div class="round" id="round">ROUND 1</div><div class="sidepot" id="sidepot"></div></div><div id="seats"></div><div class="deal-pieces" id="dealPieces" aria-hidden="true"></div></div></div>
 <div class="steps" id="steps"><span>첫 패 공개</span><span>1차 베팅</span><span>두 번째 패 확인</span><span>2차 베팅</span><span>승부 공개</span><span>무승부 재승부</span></div>
 <div class="bottom-actions game-actions"><button id="deal" type="button" class="primary">🀄 패 돌리기</button><button id="fold" type="button">다이</button><button id="call" type="button">체크 / 콜</button><button id="raise" type="button" class="gold">하프</button><button id="allin" type="button" class="gold">🔥 올인</button><button id="reveal" type="button">다음 단계</button></div>
-<p id="status" class="status">컴퓨터 대전을 선택하면 게임을 시작할 수 있습니다.</p><p id="seotdaTableHelp" class="tiny muted">첫 패 → 1차 베팅 → 다음 패 자동 배분 → 2차 베팅 → 결과 공개 · 무승부 자동 재승부 · 최고 족보 동점자만 재승부 · 암행어사 13·18광땡 제압 · 칩 0이면 탈락</p></section>
+<p id="status" class="status">컴퓨터 대전을 선택하면 게임을 시작할 수 있습니다.</p><p id="seotdaTableHelp" class="tiny muted">첫 패 → 1차 베팅 → 다음 패 자동 배분 → 2차 베팅 → 결과 공개 · 무승부 자동 재승부 · 최고 족보 동점자만 재승부 · 칩 0이면 탈락</p></section>
 <div class="side"><section class="card online-mode-section" id="entryPanel"><h2>게임 입장 <span class="club-badge">🔒 클럽원 전용</span></h2><p class="club-gate-lead">삐약 클럽원끼리 무료로 즐기는 친목용 게임입니다. 이용 약속을 확인하면 입장할 수 있습니다.</p><label>닉네임<input id="nick" maxlength="16" autocomplete="off" placeholder="방장은 필수 · 참가자는 선택" aria-describedby="nickGuide"></label><p class="nick-guide ready" id="nickGuide" role="status" aria-live="polite">닉네임을 입력해 주세요. (필수)</p><p class="tiny muted">방장 닉네임 필수 · 참가자는 미입력 시 선수2, 선수3… 자동 지정 · 온라인 방 정원은 5명 고정 · 방장 시작 시 현재 입장자만 참여</p><label class="club-agreement"><input type="checkbox" id="clubAgreement"><span>삐약 클럽원이며, <b>현금 거래, 환전, 가상 칩의 양도 및 금전·상품권·현물 경품을 건 내기(게임시드 포함)를 하지 않겠습니다.</b></span></label><p class="club-gate-foot">클럽원 확인은 이용 약속 체크 방식입니다. 별도의 계정 인증은 하지 않습니다.</p><div class="row"><button class="primary" type="button" id="createRoom">새 방 만들기</button><button type="button" id="copyInvite">초대 링크 복사</button></div><div class="joinline"><input id="roomInput" maxlength="6" placeholder="6자리 방 코드" autocomplete="off"><button class="primary" type="button" id="joinRoom">참가</button><button type="button" id="watchRoom">관전</button></div><p class="online-entry-advice">온라인 방 정원은 항상 <b>5명</b>입니다. 방장이 시작을 누르면 그 순간 입장한 인원(2~5명)만으로 게임을 시작합니다. 방장이 시작하면 입장 중인 2~5명으로 실제 온라인 게임이 진행됩니다.</p><div class="row"><button class="primary" type="button" id="hostStart" disabled>🎮 방장 게임 시작</button></div><p class="tiny muted" id="hostRoomNotice">방장만 시작할 수 있습니다. 2명 이상이면 5명이 다 차지 않아도 시작 가능합니다.</p><div class="row"><button type="button" id="leaveRoom">방 나가기</button><span class="tiny muted" id="role">미입장</span></div><p id="onlinePreviewNote" role="status">서버 연결 상태를 확인하고 방을 생성하거나 초대 링크로 참가하세요.</p></section>
-<section class="card club-policy" id="clubPolicy"><div class="club-policy-head"><h2>🐥 클럽원 무료 이용 안내</h2><span class="club-badge">무료 오락</span></div><p class="club-policy-intro">삐약 섯다는 클럽원 간 친목을 위한 무료 오락용 게임입니다.</p><div class="club-policy-grid"><div><b>🪙 시작 칩</b><span>모든 선수 1,000칩 무료 지급</span></div><div><b>🔁 재시작</b><span>최종 우승 후 전체 칩 초기화</span></div><div><b>🏆 순위</b><span>게임 화면에만 표시 · 저장 안 함</span></div><div><b>🚫 유료 요소</b><span>칩 구매·판매·양도·환전 없음</span></div></div><p class="club-prohibition">현금 거래, 환전, 가상 칩의 양도 및 금전·상품권·현물 경품을 건 내기는 금지합니다.(게임시드 포함)</p><p class="club-policy-note">온라인 방 정원은 5명이며, 방장이 시작할 때 입장해 있는 2~5명만 해당 게임에 참가합니다.</p></section>
+<section class="card club-policy" id="clubPolicy"><div class="club-policy-head"><h2>🐥 클럽원 무료 이용 안내</h2><span class="club-badge">무료 오락</span></div><p class="club-policy-intro">삐약 섯다는 클럽원 간 친목을 위한 무료 오락용 게임입니다.</p><div class="club-policy-grid"><div><b>🟡 시작 칩</b><span>모든 선수 1,000칩 무료 지급</span></div><div><b>🔁 재시작</b><span>최종 우승 후 전체 칩 초기화</span></div><div><b>🏆 순위</b><span>게임 화면에만 표시 · 저장 안 함</span></div><div><b>🚫 유료 요소</b><span>칩 구매·판매·양도·환전 없음</span></div></div><p class="club-prohibition">현금 거래, 환전, 가상 칩의 양도 및 금전·상품권·현물 경품을 건 내기는 금지합니다.(게임시드 포함)</p><p class="club-policy-note">온라인 방 정원은 5명이며, 방장이 시작할 때 입장해 있는 2~5명만 해당 게임에 참가합니다.</p></section>
 <section class="card" id="gameStatusCard"><h2>게임 현황</h2><div id="seatList"><div class="player"><strong>참가자 정보</strong><small>방 입장 대기 중</small></div></div><p class="tiny muted" id="roundInfo">게임 대기 · 참가 0/5 · 관전자 0명</p><div id="history" class="history" hidden>패를 돌리면 이곳에 진행 내역이 표시됩니다.</div><p id="toast" role="status" style="color:#e5cc91;min-height:22px"></p></section>
 <section class="card" id="finalStandings" hidden><h2>🏆 최종 순위</h2><p class="tiny muted">모든 참가자의 순위는 이 화면에서만 표시되며 서버나 브라우저에 저장되지 않습니다. 같은 판에 탈락한 선수는 공동 순위입니다.</p><div id="finalStandingsList"></div><div class="row" style="margin-top:16px;justify-content:center"><button type="button" id="restartAllPlayers" class="primary">🔄 전체 참가자 새 게임 시작</button></div><p class="tiny muted" style="text-align:center;margin-top:8px">모든 탈락자 복귀 · 칩 1,000개씩 재지급 · 최종 순위 초기화</p></section>
 <section class="card online-mode-section" id="onlineChat"><h2>게임 채팅</h2><div id="chatLogs" aria-live="polite"><div class="msg">방에 입장하면 채팅이 표시됩니다.</div></div><form class="joinline" id="chatForm" style="margin-top:8px"><input id="chatMsg" maxlength="120" placeholder="메시지 입력"><button type="submit">보내기</button></form><p class="tiny muted">방 안에서만 메시지가 보이며 서버에 영구 저장하지 않습니다.</p></section></div></div>
@@ -512,7 +523,7 @@ body.online-preview.seotda-online-live .game-actions{display:flex!important}body
   <p class="hands-intro">현재 섯다 게임에 적용된 족보를 강한 순서대로 정리했습니다. 한 장이 아닌 <b>두 장의 조합</b>으로 판정합니다.</p>
   <div class="hands-grid">
    <div class="hands-entry"><strong><span class="hands-num">1</span> 38광땡</strong><small>3광 + 8광 · 가장 강한 일반 족보</small></div>
-   <div class="hands-entry"><strong><span class="hands-num">2</span> 13광땡 · 18광땡</strong><small>1광+3광 / 1광+8광 · 암행어사에 패배</small></div>
+   <div class="hands-entry"><strong><span class="hands-num">2</span> 13광땡 · 18광땡</strong><small>1광+3광 / 1광+8광</small></div>
    <div class="hands-entry"><strong><span class="hands-num">3</span> 땡</strong><small>같은 월 2장 · 장땡(10땡) &gt; 9땡 &gt; … &gt; 1땡</small></div>
    <div class="hands-entry"><strong><span class="hands-num">4</span> 알리</strong><small>1월 + 2월</small></div>
    <div class="hands-entry"><strong><span class="hands-num">5</span> 독사</strong><small>1월 + 4월</small></div>
@@ -522,13 +533,7 @@ body.online-preview.seotda-online-live .game-actions{display:flex!important}body
    <div class="hands-entry"><strong><span class="hands-num">9</span> 세륙</strong><small>4월 + 6월</small></div>
    <div class="hands-entry"><strong><span class="hands-num">10</span> 끗</strong><small>두 월 숫자의 합 일의 자리 · 갑오(9끗) &gt; 8~1끗 &gt; 망통(0끗)</small></div>
   </div>
-  <h3 class="hands-subheading">✨ 특수 족보</h3>
-  <div class="hands-specials">
-   <div><b>사구 (4월+9월)</b><p>이 게임에서는 <b>3끗</b>으로 판정하며, 최고 족보가 동점일 때만 동점자끼리 재승부합니다.</p></div>
-   <div><b>멍구사 (4월 열끗+9월 열끗)</b><p>이 게임에서는 <b>3끗</b>으로 판정하며, 최고 족보가 동점일 때만 동점자끼리 재승부합니다.</p></div>
-   <div><b>암행어사 (4월 열끗+7월 열끗)</b><p><b>13광땡·18광땡을 잡지만 38광땡은 잡지 못합니다.</b> 일반 상황에서는 1끗으로 취급합니다.</p></div>
-  </div>
-  <p class="hands-footnote">※ 일반 족보가 같은 최고 순위면 해당 동점자끼리 재승부합니다. 위 내용은 현재 삐약 섯다 샘플의 판정 기준입니다.</p>
+  <p class="hands-footnote">※ 최고 족보가 같으면 해당 동점자끼리만 재승부합니다. 4월+9월은 3끗, 4월+7월은 1끗으로 계산합니다.</p>
   <button type="button" id="handsDone" class="hands-done">닫기</button>
  </div>
 </div>
@@ -579,31 +584,19 @@ function deck(){let d=CARD_MAP.map(c=>({...c}));for(let i=d.length-1;i>0;i--){le
 function rank(c){
  if(c.length<2)return [0,''];
  const a=c[0].m,b=c[1].m,lo=Math.min(a,b),hi=Math.max(a,b);
- const isTen=(card,month)=>card.m===month&&card.k===0;
- const bothTen=(m,n)=>c.some(x=>isTen(x,m))&&c.some(x=>isTen(x,n));
  const g=c[0].kwang&&c[1].kwang;
  if(g&&lo===3&&hi===8)return [1000,'38광땡'];
  if(g&&lo===1&&(hi===3||hi===8))return [900,hi===3?'13광땡':'18광땡'];
  if(a===b)return [600+a,a===10?'장땡':a+'땡'];
  const key=lo+'-'+hi;
- // 사구·멍구사는 조건이 맞을 때만 재경기, 아니면 3끗.
- if(key==='4-9')return [3,bothTen(4,9)?'멍구사':'사구'];
- // 암행어사는 13/18광땡을 잡을 때만 특수 효과가 있으며 평상시는 1끗.
- if(key==='4-7'&&bothTen(4,7))return [1,'암행어사'];
  const sp={'1-2':[520,'알리'],'1-4':[510,'독사'],'1-9':[500,'구삥'],'1-10':[490,'장삥'],'4-10':[480,'장사'],'4-6':[470,'세륙']};
  if(sp[key])return sp[key];
  const k=(a+b)%10;return [k,k===9?'갑오':k===0?'망통':k+'끗'];
 }
-// 다이한 선수를 제외한 최종 공개 인원만 대상으로 특수패를 판정합니다.
+// 일반 승부: 최고 족보가 같은 선수들끼리만 재승부합니다.
 function resolveShowdown(alive){
  if(alive.length<2)return {type:'win',winners:alive};
  const strongest=Math.max(...alive.map(i=>players[i].hand[0]));
- const assassins=alive.filter(i=>players[i].hand[1]==='암행어사');
- // 38광땡은 암행어사로 잡을 수 없습니다. 13·18광땡만 잡습니다.
- if(strongest===900&&assassins.length){
-   return {type:'win',winners:assassins,reason:'암행어사가 13·18광땡을 잡았습니다!'};
- }
- // 클럽 규칙: 사구·멍구사로 전원 재경기하지 않으며 최고 패 동점자만 재승부합니다.
  const winners=alive.filter(i=>players[i].hand[0]===strongest);
  return winners.length>1?{type:'rematch',winners,reason:'동점'}:{type:'win',winners};
 }
@@ -628,8 +621,8 @@ function render(){
  ${p.winner?'<div class="winner-label">🏆 WINNER!</div>':''}${['tieannounce','tiebet','tiecomplete'].includes(phase)&&tiePlayers.includes(i)?'<div class="draw-label">🤝 DRAW!</div>':''}<div class="bubble ${p.message?'visible':''} ${p.message&&p.messageSerial<actionSerial?'older':''} ${p.betType||''}">${p.message||''}</div>
  <div class="nameplate">${i===0?'★ ':''}${p.name}${p.eliminated?' · 탈락':p.folded?' · 다이':''}${!p.eliminated&&p.allin?' · 올인':''}${['tieannounce','tiebet','tiecomplete'].includes(phase)&&tiePlayers.includes(i)?' · 무승부':''}${aPhase&&turn===i?' · 차례':''}</div>
  <div class="cards">${[0,1].map(j=>`<div class="card-slot ${!p.eliminated&&j<visibleCardCount()?'filled':'empty'}" data-slot="${j}">${!p.eliminated&&p.cards[j]&&j<visibleCardCount()?card(p.cards[j],hiddenCard(i,j)):''}</div>`).join('')}${!p.folded&&p.cards.length===2&&['revealed','tieannounce'].includes(phase)&&p.hand[1]?`<div class="hand-result">${p.hand[1]}</div>`:''}</div>
- <div class="scoretag">🪙 ${p.chips.toLocaleString()}${p.stagePaid?' · 베팅 '+p.stagePaid.toLocaleString():''}${['revealed'].includes(phase)&&!p.folded?` · ${p.hand[1]}`:''}</div></div>`).join('');
- $('#pot').textContent='🪙 '+pot.toLocaleString();$('#round').textContent='ROUND '+round;
+ <div class="scoretag">🟡 ${p.chips.toLocaleString()}${p.stagePaid?' · 베팅 '+p.stagePaid.toLocaleString():''}${['revealed'].includes(phase)&&!p.folded?` · ${p.hand[1]}`:''}</div></div>`).join('');
+ $('#pot').textContent='🟡 '+pot.toLocaleString();$('#round').textContent='ROUND '+round;
  $('#sidepot').textContent=['tieannounce','tiebet','tiecomplete'].includes(phase)?`무승부 ${tieCount}차 · ${tiePlayers.map(i=>players[i].name).join(', ')}`:'';
  const stepIx={ready:-1,dealing1:0,bet1:1,bet1done:1,dealing2:2,bet2:3,waitresult:3,tieannounce:5,'tie-dealing':5,tiebet:5,tiecomplete:5,revealed:5}[phase]??-1;
  [...$('#steps').children].forEach((e,i)=>e.className=i===stepIx?'current':i<stepIx?'done':'');
@@ -971,12 +964,12 @@ $('#volume').oninput=e=>{SFX.master=+e.target.value/100;};reset();
      <div class="bubble ${p.message?'visible':''} ${recent?'':'older'}">${escape(p.message)}</div>
      <div class="nameplate">${isMe?'★ ':''}${escape(p.name)}${p.eliminated?' · 탈락':p.folded?' · 다이':''}${p.allin?' · 올인':''}${active&&s.turn===i?' · 차례':''}</div>
      <div class="cards">${cardNode(p.cards[0])}${cardNode(p.cards[1])}${p.hand&&['result','finished','tieannounce'].includes(s.phase)&&!p.folded?`<div class="hand-result">${escape(p.hand)}</div>`:''}</div>
-     <div class="scoretag">🪙 ${p.chips.toLocaleString()}${p.stagePaid?' · 베팅 '+p.stagePaid.toLocaleString():''}${p.hand?' · '+escape(p.hand):''}</div></div>`;
+     <div class="scoretag">🟡 ${p.chips.toLocaleString()}${p.stagePaid?' · 베팅 '+p.stagePaid.toLocaleString():''}${p.hand?' · '+escape(p.hand):''}</div></div>`;
   }).join('') + (s.started?'':Array.from({length:Math.max(0,5-s.players.length)},(_,offset)=>{
     const i=s.players.length+offset;
     return `<div class="seat s${i} waiting"><div class="nameplate">선수${i+1} · 대기</div><div class="cards"><div class="hwatu-slot empty"></div><div class="hwatu-slot empty"></div></div></div>`;
   }).join(''));
-  $('pot').textContent='🪙 '+s.pot.toLocaleString();$('round').textContent='ROUND '+(s.round||1);
+  $('pot').textContent='🟡 '+s.pot.toLocaleString();$('round').textContent='ROUND '+(s.round||1);
   $('sidepot').textContent=s.tiePlayers.length?`무승부 ${s.tieCount}차 · ${s.tiePlayers.map(i=>s.players[i].name).join(', ')}`:'';
   const stepIdx={lobby:-1,deal1:0,bet1:1,deal2:2,bet2:3,showdown:4,result:4,tieannounce:5,tiedeal:5,tiebet:5,finished:5}[s.phase]??-1;
   [...$('steps').children].forEach((el,i)=>el.className=i===stepIdx?'current':i<stepIdx?'done':'');
