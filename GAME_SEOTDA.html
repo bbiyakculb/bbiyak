@@ -715,7 +715,8 @@ function deal(){cancelAutoTransition();if(!['ready','revealed'].includes(phase))
  playDealMotion(starters,[0],()=>stageStart('bet1',players[nextRoundStarter]?.eliminated?(players.findIndex(p=>!p.eliminated)):nextRoundStarter));
 } 
 function stageRemaining(){return currentActors().filter(i=>!players[i].folded)}
-function endStage(){generation++;pending=[];let alive=stageRemaining();if(alive.length<=1){award(alive.length?alive:[0]);return;}if(phase==='bet1'){nextStageStarter=lastRaiser>=0?lastRaiser:0;phase='bet1done';$('#status').textContent=`1차 베팅 완료! 잠시 후 두 번째 패가 자동 배분됩니다. ${players[nextStageStarter].name}부터 2차 베팅을 시작합니다.`;}else if(phase==='bet2'){phase='waitresult';$('#status').textContent='2차 베팅 완료! 「결과 공개」를 누르세요.';}else if(phase==='tiebet'){phase='tiecomplete';$('#status').textContent='무승부 참가자의 추가 베팅 완료! 「재승부 결과」를 누르세요.';}render();if(phase==='bet1done')queueAutoTransition('bet1done',750,nextStep);}
+function endStage(){generation++;pending=[];let alive=stageRemaining();if(alive.length<=1){award(alive.length?alive:[0]);return;}if(phase==='bet1'){nextStageStarter=lastRaiser>=0?lastRaiser:0;phase='bet1done';$('#status').textContent=`1차 베팅 완료! 잠시 후 두 번째 패가 자동 배분됩니다. ${players[nextStageStarter].name}부터 2차 베팅을 시작합니다.`;}else if(phase==='bet2'){phase='waitresult';$('#status').textContent='2차 베팅 완료! 3초 후 결과가 자동 공개됩니다.';}else if(phase==='tiebet'){phase='tiecomplete';$('#status').textContent='재승부 베팅 완료! 3초 후 결과가 자동 공개됩니다.';}render();if(phase==='bet1done')queueAutoTransition('bet1done',750,nextStep);
+ else if(phase==='waitresult'||phase==='tiecomplete')queueAutoTransition(phase,3000,nextStep);}
 function action(i,type){if(!['bet1','bet2','tiebet'].includes(phase)||nextActor()!==i||players[i].eliminated)return false;
  const p=players[i],need=due(i),existingPot=pot;let pay=0,word='',kind='call',newHigh=false;
  if(type==='fold'){p.folded=true;word='다이';kind='fold';}
@@ -808,7 +809,7 @@ function showdown(){
  if(result.type==='rematch')startTie(result.winners,result.reason);
  else {if(result.reason)log(result.reason);award(result.winners);}
 }
-function nextStep(){if(phase==='bet1done'){
+function nextStep(){if(phase==='waitresult'||phase==='tiecomplete')cancelAutoTransition();if(phase==='bet1done'){
   phase='dealing2';generation++;render();
   $('#status').textContent='중앙 패 더미에서 두 번째 화투패를 한 장씩 배분 중입니다…';
   log(`두 번째 패 배분: ${players[nextStageStarter].name}부터 2차 베팅 예정`);
