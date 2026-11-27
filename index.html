@@ -26,6 +26,13 @@
   .menu-options.open { display: grid; gap: 4px; }
   nav .menu-options a { display: block; padding: 10px 12px; white-space: nowrap; }
   iframe { border: 0; display: block; width: 100%; height: 100%; }
+  /* 갤러그가 모바일에서 시작되면 홈페이지 제목/메뉴를 숨기고 게임 화면을 확장 */
+  @media (max-width: 850px) {
+    body.galaga-focus { grid-template-rows: minmax(0, 1fr); overflow: hidden; }
+    body.galaga-focus > header { display: none; }
+    body.galaga-focus > main { min-height: 0; overflow: hidden; }
+    body.galaga-focus iframe { height: 100%; }
+  }
   @media (max-width: 600px) {
     .menu-options { max-width: calc(100vw - 24px); }
     nav .menu-options a { white-space: normal; }
@@ -55,7 +62,7 @@
       <div class="menu-group" id="game-menu">
         <button type="button" class="menu-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="game-options">미니게임</button>
         <div class="menu-options" id="game-options">
-          <a href="./GAME_GALAGA.html" target="club-content">갤러</a>
+          <a href="./GAME_GALAGA.html" target="club-content">갤러그</a>
           <a href="./GAME_SUDOKU.html" target="club-content">스도쿠</a>
           <a href="./GAME_MINESWEEPER.html" target="club-content">지뢰찾기</a>
           <a href="./OMOK_ONLINE.html" target="club-content">온라인 오목</a>
@@ -77,6 +84,25 @@
   const frame = document.getElementById('club-content');
   const links = [...document.querySelectorAll('nav a')];
   const menus = [...document.querySelectorAll('.menu-group')];
+
+  // GAME_GALAGA.html의 모바일 게임 시작/종료 알림만 처리합니다.
+  let galagaPlaying = false;
+  function syncGalagaFocus() {
+    document.body.classList.toggle('galaga-focus', galagaPlaying && window.innerWidth <= 850);
+  }
+  window.addEventListener('message', event => {
+    if (event.source !== frame.contentWindow || event.origin !== window.location.origin) return;
+    const data = event.data;
+    if (!data || data.source !== 'bbiyak-galaga' || data.type !== 'game-focus') return;
+    galagaPlaying = Boolean(data.active);
+    syncGalagaFocus();
+    if (galagaPlaying && window.innerWidth <= 850) window.scrollTo(0, 0);
+  });
+  frame.addEventListener('load', () => {
+    galagaPlaying = false;
+    syncGalagaFocus();
+  });
+  window.addEventListener('resize', syncGalagaFocus, {passive:true});
 
   function closeMenus(except = null) {
     for (const menu of menus) {
