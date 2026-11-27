@@ -251,6 +251,19 @@ body.online-preview .game-actions,body.online-preview #steps,body.online-preview
 .rank-row:first-child{border-color:#ddb86e;background:#44341e66}
 #hostStart:disabled,#demoJoin:disabled{opacity:.45;cursor:not-allowed}
 
+/* 방장 시작 가능 상태만 노란 테두리. 시작 후 비활성화되면 원래 색상 복원. */
+#hostStart:not(:disabled){
+  border:2px solid #f7da76;
+  box-shadow:0 0 0 2px #f7da7638,0 0 12px #f5ca5440;
+}
+#hostStart:disabled{
+  border-color:#a780cb;
+  box-shadow:none;
+  opacity:.45;
+  cursor:not-allowed;
+}
+
+
 /* Two persistent, fixed positions: the second card appears only once dealt. */
 .seat .cards .card-slot{position:relative;flex:0 0 66px;width:66px;height:96px;display:flex;align-items:center;justify-content:center}
 .seat .cards .card-slot.empty{border:1px dashed #dbe7db38;border-radius:8px;background:#e9f4e907}
