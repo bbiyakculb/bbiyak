@@ -434,6 +434,27 @@ body.online-preview.seotda-online-live .game-actions{display:flex!important}body
   #seotdaBoard .felt-wrap{height:clamp(265px,84vw,320px)!important}
   .layout > .card:first-child > .game-actions button{font-size:11px;min-height:33px}
 }
+
+/* 모바일 실제 게임판 높이와 버튼 간격 정확히 맞춤: PC의 610px 최소높이 제거 */
+@media (max-width:850px){
+  #seotdaBoard.boardwrap,
+  #seotdaBoard{
+    min-height:0!important;
+    height:auto!important;
+    max-height:none!important;
+    margin:0!important;
+    padding:0!important;
+    display:block!important;
+    line-height:normal;
+  }
+  #seotdaBoard > .felt-wrap{margin:0!important;display:block;}
+  .layout > .card:first-child > .game-actions{
+    position:relative!important;
+    bottom:auto!important;
+    margin:3px 0 0!important;
+    padding:4px 3px 5px!important;
+  }
+}
 </style></head>
 <body class="online-preview"><main>
 <header><p>삐약 · 테일즈위버</p><h1>섯다</h1></header>
