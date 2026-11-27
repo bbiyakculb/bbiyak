@@ -468,6 +468,24 @@ body.online-preview.seotda-online-live .game-actions{display:flex!important}body
     padding:4px 3px 5px!important;
   }
 }
+
+/* 패 두 장 사이의 족보 결과 — 공개된 승부에서만 표시 */
+.seat .cards{position:relative}
+.seat .hand-result{
+ position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+ z-index:12;pointer-events:none;white-space:nowrap;
+ border:1.5px solid #ffe5a4;border-radius:8px;
+ padding:5px 10px;background:rgba(27,19,36,.94);
+ color:#ffe7a7;font-size:15px;font-weight:900;
+ letter-spacing:-.035em;line-height:1.25;
+ box-shadow:0 3px 12px #000b,0 0 11px #f3ce5c66;
+ text-shadow:0 1px 2px #000b;
+}
+.seat.winner .hand-result{background:rgba(89,53,12,.97);border-color:#ffe48b;color:#fff0ba}
+.seat.draw-tie .hand-result{background:rgba(24,51,82,.96);border-color:#9bd8ff;color:#e9f6ff}
+@media(max-width:570px){
+ .seat .hand-result{font-size:11px;padding:3px 6px;border-radius:6px;max-width:calc(100% - 2px)}
+}
 </style></head>
 <body class="online-preview"><main>
 <header><p>삐약 · 테일즈위버</p><h1>섯다</h1></header>
@@ -617,7 +635,7 @@ function render(){
  $('#seats').innerHTML=players.map((p,i)=>`<div class="seat s${i} ${i===0?'me':''} ${p.folded?'folded':''} ${p.eliminated?'eliminated':''} ${p.winner?'winner':''} ${aPhase&&turn===i?'active':''} ${['tieannounce','tiebet','tiecomplete'].includes(phase)&&tiePlayers.includes(i)?'tied draw-tie':''}">
  ${p.winner?'<div class="winner-label">🏆 WINNER!</div>':''}${['tieannounce','tiebet','tiecomplete'].includes(phase)&&tiePlayers.includes(i)?'<div class="draw-label">🤝 DRAW!</div>':''}<div class="bubble ${p.message?'visible':''} ${p.message&&p.messageSerial<actionSerial?'older':''} ${p.betType||''}">${p.message||''}</div>
  <div class="nameplate">${i===0?'★ ':''}${p.name}${p.eliminated?' · 탈락':p.folded?' · 다이':''}${!p.eliminated&&p.allin?' · 올인':''}${['tieannounce','tiebet','tiecomplete'].includes(phase)&&tiePlayers.includes(i)?' · 무승부':''}${aPhase&&turn===i?' · 차례':''}</div>
- <div class="cards">${[0,1].map(j=>`<div class="card-slot ${!p.eliminated&&j<visibleCardCount()?'filled':'empty'}" data-slot="${j}">${!p.eliminated&&p.cards[j]&&j<visibleCardCount()?card(p.cards[j],hiddenCard(i,j)):''}</div>`).join('')}</div>
+ <div class="cards">${[0,1].map(j=>`<div class="card-slot ${!p.eliminated&&j<visibleCardCount()?'filled':'empty'}" data-slot="${j}">${!p.eliminated&&p.cards[j]&&j<visibleCardCount()?card(p.cards[j],hiddenCard(i,j)):''}</div>`).join('')}${!p.folded&&p.cards.length===2&&['revealed','tieannounce'].includes(phase)&&p.hand[1]?`<div class="hand-result">${p.hand[1]}</div>`:''}</div>
  <div class="scoretag">🪙 ${p.chips.toLocaleString()}${p.stagePaid?' · 베팅 '+p.stagePaid.toLocaleString():''}${['tiebet','tiecomplete','revealed'].includes(phase)&&!p.folded?` · ${p.hand[1]}`:''}</div></div>`).join('');
  $('#pot').textContent='🪙 '+pot.toLocaleString();$('#round').textContent='ROUND '+round;
  $('#sidepot').textContent=['tieannounce','tiebet','tiecomplete'].includes(phase)?`무승부 ${tieCount}차 · ${tiePlayers.map(i=>players[i].name).join(', ')}`:'';
@@ -715,8 +733,8 @@ function deal(){cancelAutoTransition();if(!['ready','revealed'].includes(phase))
  playDealMotion(starters,[0],()=>stageStart('bet1',players[nextRoundStarter]?.eliminated?(players.findIndex(p=>!p.eliminated)):nextRoundStarter));
 } 
 function stageRemaining(){return currentActors().filter(i=>!players[i].folded)}
-function endStage(){generation++;pending=[];let alive=stageRemaining();if(alive.length<=1){award(alive.length?alive:[0]);return;}if(phase==='bet1'){nextStageStarter=lastRaiser>=0?lastRaiser:0;phase='bet1done';$('#status').textContent=`1차 베팅 완료! 잠시 후 두 번째 패가 자동 배분됩니다. ${players[nextStageStarter].name}부터 2차 베팅을 시작합니다.`;}else if(phase==='bet2'){phase='waitresult';$('#status').textContent='2차 베팅 완료! 3초 후 결과가 자동 공개됩니다.';}else if(phase==='tiebet'){phase='tiecomplete';$('#status').textContent='재승부 베팅 완료! 3초 후 결과가 자동 공개됩니다.';}render();if(phase==='bet1done')queueAutoTransition('bet1done',750,nextStep);
- else if(phase==='waitresult'||phase==='tiecomplete')queueAutoTransition(phase,3000,nextStep);}
+function endStage(){generation++;pending=[];let alive=stageRemaining();if(alive.length<=1){award(alive.length?alive:[0]);return;}if(phase==='bet1'){nextStageStarter=lastRaiser>=0?lastRaiser:0;phase='bet1done';$('#status').textContent=`1차 베팅 완료! 잠시 후 두 번째 패가 자동 배분됩니다. ${players[nextStageStarter].name}부터 2차 베팅을 시작합니다.`;}else if(phase==='bet2'){phase='waitresult';$('#status').textContent='2차 베팅 완료! 5초 후 결과가 자동 공개됩니다.';}else if(phase==='tiebet'){phase='tiecomplete';$('#status').textContent='재승부 베팅 완료! 5초 후 결과가 자동 공개됩니다.';}render();if(phase==='bet1done')queueAutoTransition('bet1done',750,nextStep);
+ else if(phase==='waitresult'||phase==='tiecomplete')queueAutoTransition(phase,5000,nextStep);}
 function action(i,type){if(!['bet1','bet2','tiebet'].includes(phase)||nextActor()!==i||players[i].eliminated)return false;
  const p=players[i],need=due(i),existingPot=pot;let pay=0,word='',kind='call',newHigh=false;
  if(type==='fold'){p.folded=true;word='다이';kind='fold';}
@@ -960,7 +978,7 @@ $('#volume').oninput=e=>{SFX.master=+e.target.value/100;};reset();
      ${p.tied?'<div class="draw-label">🤝 DRAW!</div>':''}
      <div class="bubble ${p.message?'visible':''} ${recent?'':'older'}">${escape(p.message)}</div>
      <div class="nameplate">${isMe?'★ ':''}${escape(p.name)}${p.eliminated?' · 탈락':p.folded?' · 다이':''}${p.allin?' · 올인':''}${active&&s.turn===i?' · 차례':''}</div>
-     <div class="cards">${cardNode(p.cards[0])}${cardNode(p.cards[1])}</div>
+     <div class="cards">${cardNode(p.cards[0])}${cardNode(p.cards[1])}${p.hand&&['result','finished','tieannounce'].includes(s.phase)&&!p.folded?`<div class="hand-result">${escape(p.hand)}</div>`:''}</div>
      <div class="scoretag">🪙 ${p.chips.toLocaleString()}${p.stagePaid?' · 베팅 '+p.stagePaid.toLocaleString():''}${p.hand?' · '+escape(p.hand):''}</div></div>`;
   }).join('') + (s.started?'':Array.from({length:Math.max(0,5-s.players.length)},(_,offset)=>{
     const i=s.players.length+offset;
