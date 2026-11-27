@@ -401,6 +401,39 @@ body.online-preview.seotda-online-live .game-actions{display:flex!important}body
  .seat{transform:translate(-50%,-50%) scale(.60)}
  .table-center{transform:translate(-50%,-50%) scale(.67)}
 }
+
+/* 모바일 베팅 버튼: 게임판 바로 아래로 끌어올리고 스크롤 중 접근 가능 */
+@media(max-width:850px){
+  .layout > .card:first-child{display:flex;flex-direction:column;min-width:0;overflow:visible}
+  .layout > .card:first-child > .row{order:0}
+  #seotdaBoard{order:1}
+  .layout > .card:first-child > .game-actions{
+    order:2;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+    align-items:stretch;gap:5px;margin:4px 0 0!important;
+    padding:5px 4px 7px;
+    position:sticky;bottom:0;z-index:30;
+    border:1px solid #765c92;border-radius:9px;
+    background:rgba(30,22,43,.97);
+    box-shadow:0 -3px 14px #07030c66;
+  }
+  .layout > .card:first-child > .game-actions button{
+    display:block;width:100%;min-width:0;min-height:35px;
+    padding:6px 3px;font-size:12px;line-height:1.2;white-space:nowrap;
+  }
+  .layout > .card:first-child > #steps{order:3;margin:5px 0 3px!important;gap:3px}
+  .layout > .card:first-child > #steps span{font-size:10px;padding:2px 4px}
+  .layout > .card:first-child > #status{order:4;margin:5px 0 0!important}
+  .layout > .card:first-child > #seotdaTableHelp{order:5}
+  /* 기존 온라인 대기 화면에서는 베팅 버튼을 숨기고, 시작 후에만 표시 */
+  body.online-preview:not(.seotda-online-live) .game-actions{display:none!important}
+}
+@media(max-width:600px){
+  #seotdaBoard .felt-wrap{height:clamp(275px,82vw,355px)!important}
+}
+@media(max-width:380px){
+  #seotdaBoard .felt-wrap{height:clamp(265px,84vw,320px)!important}
+  .layout > .card:first-child > .game-actions button{font-size:11px;min-height:33px}
+}
 </style></head>
 <body class="online-preview"><main>
 <header><p>삐약 · 테일즈위버</p><h1>섯다</h1></header>
