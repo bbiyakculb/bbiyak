@@ -49,7 +49,7 @@
 @media(max-width:500px){.bb-sound{padding:7px 9px;gap:8px}.bb-sound input[type="range"]{width:80px}}
 @media(max-width:850px){body.mobile-playing .bb-sound{display:none}}
 </style></head>
-<body><main><header><p>삐약 · 테일즈위버</p><h1>🚀 삐약 갤러그</h1></header><div class="bb-sound" role="group" aria-label="게임 효과음 설정"><button id="bbSoundToggle" type="button" aria-pressed="true">🔊 효과음 켜짐</button><label for="bbSoundVolume">음량 <input id="bbSoundVolume" type="range" min="0" max="100" value="45" step="5"><span class="bb-vol-text" id="bbSoundVolumeText">45%</span></label></div><div class="layout"><section class="card"><div class="row between" style="margin-bottom:11px"><h2 style="margin:0">우주 방어전</h2><span class="pill">무한 스테이지 · 목숨 3개</span></div><div class="scorebar"><div class="stat"><strong id="score">0</strong><span>점수</span></div><div class="stat"><strong id="stage">1</strong><span>스테이지</span></div><div class="stat"><strong id="lives">♥ ♥ ♥</strong><span>남은 목숨</span></div></div><div class="mobile-game-actions"><button type="button" id="mobilePause">일시정지</button><button type="button" id="mobileExit">게임 종료</button></div><div class="boardholder" id="holder"><canvas id="screen" width="480" height="650" aria-label="갤러그 슈팅 게임"></canvas><div class="shade" id="overlay"><div class="shadebox"><strong id="overlayTitle">삐약 갤러그</strong><span id="overlayDesc">시작 전에 오른쪽 플레이어 칸에 닉네임을 입력해 주세요. 좌우로 이동하고 발사해 적을 격추하세요!</span><button id="start" class="primary">게임 시작</button></div></div></div><div class="touch" aria-label="모바일 조작"><button id="left" aria-label="왼쪽 이동">◀</button><button id="shoot" aria-label="발사">● 발사</button><button id="right" aria-label="오른쪽 이동">▶</button></div><p class="tiny boardhint">PC: ← → / A D 이동 · 스페이스 발사 · P 일시정지<br>모바일: 게임판을 터치하고 드래그하면 이동하며 자동 발사</p></section><div class="side"><section class="card"><h2>플레이어</h2><label>닉네임<input id="nick" maxlength="16" placeholder="닉네임 (필수)" autocomplete="off" required></label><div class="row" style="margin-top:13px"><button id="pause">일시정지</button><button id="restart">새 게임</button></div><p class="tiny">적을 격추할수록 점수를 획득합니다. 일부 적은 급강하하며 탄환을 발사합니다. 스테이지가 올라갈수록 어려워집니다.</p><p class="msg" id="notice" role="status"></p></section><section class="card"><div class="row between"><h2>🏆 최고 점수 TOP 5</h2><button id="refresh" style="padding:6px 10px;font-size:12px">새로고침</button></div><ol id="ranking" class="ranking"><li style="display:block">서버 기록 불러오는 중...</li></ol><p class="tiny" style="margin-bottom:0">게임 종료 시 점수를 저장합니다.</p></section></div></div><footer>삐약 클럽</footer></main>
+<body><main><header><p>삐약 · 테일즈위버</p><h1>🚀 삐약 갤러그</h1></header><div class="bb-sound" role="group" aria-label="게임 효과음 설정"><button id="bbSoundToggle" type="button" aria-pressed="true">🔊 효과음 켜짐</button><label for="bbSoundVolume">음량 <input id="bbSoundVolume" type="range" min="0" max="100" value="45" step="5"><span class="bb-vol-text" id="bbSoundVolumeText">45%</span></label></div><div class="layout"><section class="card"><div class="row between" style="margin-bottom:11px"><h2 style="margin:0">우주 방어전</h2><span class="pill">무한 스테이지 · 5단계마다 보스 · 목숨 3개</span></div><div class="scorebar"><div class="stat"><strong id="score">0</strong><span>점수</span></div><div class="stat"><strong id="stage">1</strong><span>스테이지</span></div><div class="stat"><strong id="lives">♥ ♥ ♥</strong><span>남은 목숨</span></div></div><div class="mobile-game-actions"><button type="button" id="mobilePause">일시정지</button><button type="button" id="mobileExit">게임 종료</button></div><div class="boardholder" id="holder"><canvas id="screen" width="480" height="650" aria-label="갤러그 슈팅 게임"></canvas><div class="shade" id="overlay"><div class="shadebox"><strong id="overlayTitle">삐약 갤러그</strong><span id="overlayDesc">시작 전에 오른쪽 플레이어 칸에 닉네임을 입력해 주세요. 좌우로 이동하고 발사해 적을 격추하세요!</span><button id="start" class="primary">게임 시작</button></div></div></div><div class="touch" aria-label="모바일 조작"><button id="left" aria-label="왼쪽 이동">◀</button><button id="shoot" aria-label="발사">● 발사</button><button id="right" aria-label="오른쪽 이동">▶</button></div><p class="tiny boardhint">PC: ← → / A D 이동 · 스페이스 발사 · P 일시정지<br>모바일: 게임판을 터치하고 드래그하면 이동하며 자동 발사</p></section><div class="side"><section class="card"><h2>플레이어</h2><label>닉네임<input id="nick" maxlength="16" placeholder="닉네임 (필수)" autocomplete="off" required></label><div class="row" style="margin-top:13px"><button id="pause">일시정지</button><button id="restart">새 게임</button></div><p class="tiny">적을 격추할수록 점수를 획득합니다. 일부 적은 급강하하며 탄환을 발사합니다. 스테이지가 올라갈수록 어려워지고 5스테이지마다 보스가 등장합니다.</p><p class="msg" id="notice" role="status"></p></section><section class="card"><div class="row between"><h2>🏆 최고 점수 TOP 5</h2><button id="refresh" style="padding:6px 10px;font-size:12px">새로고침</button></div><ol id="ranking" class="ranking"><li style="display:block">서버 기록 불러오는 중...</li></ol><p class="tiny" style="margin-bottom:0">게임 종료 시 점수를 저장합니다.</p></section></div></div><footer>삐약 클럽</footer></main>
 <script>
 /* 미리듣기 샘플과 동일한 Web Audio 효과음 · 별도 음원 불필요 */
 (()=>{'use strict';let ctx,master,enabled=true,volume=45,lastShoot=0;
@@ -65,6 +65,9 @@ function noise(t,d,o={}){const c=ctx,len=Math.ceil(c.sampleRate*(d+.02)),buf=c.c
 function wood(t,{low=175,high=900,loud=.22}={}){noise(t,.056,{freq:high,vol:loud});tone(t,low,.077,{type:'triangle',vol:loud*.7,end:low*.52});tone(t,low*1.9,.035,{type:'sine',vol:loud*.25,end:low});}
 function melody(t,notes,step=.115,vol=.17){notes.forEach(([f,k=1],i)=>tone(t+i*step,f,step*k,{type:'sine',vol}))}
 const recipes={
+bossWarning:t=>{tone(t,185,.26,{type:'sawtooth',vol:.15,end:135});tone(t+.32,185,.26,{type:'sawtooth',vol:.15,end:135});tone(t+.64,230,.35,{type:'triangle',vol:.18,end:105})},
+bossHit:t=>{tone(t,215,.10,{type:'square',vol:.12,end:98});noise(t,.13,{freq:1200,vol:.10})},
+bossWin:t=>{noise(t,.75,{freq:920,vol:.36,smooth:true});tone(t,130,.66,{type:'sawtooth',vol:.21,end:38});melody(t+.4,[[440],[587],[784],[1047,2]],.14,.16)},
 shoot:t=>{tone(t,1250,.115,{end:360,type:'sawtooth',vol:.12});tone(t,690,.07,{end:240,type:'square',vol:.065})},
 hit:t=>{tone(t,740,.10,{end:130,type:'square',vol:.13});noise(t,.085,{freq:3200,vol:.12})},
 hurt:t=>{tone(t,190,.28,{end:55,type:'sawtooth',vol:.15});noise(t,.20,{freq:1100,vol:.13})},
@@ -103,7 +106,19 @@ function updateMobilePlaying(active){
 }
 function hideOverlay(){$('overlay').hidden=true;}
 function formation(stage){const enemies=[];const rows=Math.min(5,3+Math.floor(stage/4)),cols=8;for(let r=0;r<rows;r++)for(let c=0;c<cols;c++)enemies.push({x:55+c*53,y:85+r*44,homeX:55+c*53,homeY:85+r*44,phase:Math.random()*Math.PI*2,diving:false,diveT:0,dx:0,dy:0,hp:r===0&&(stage%4===0)?3:1,type:r===0?'boss':r<2?'elite':'basic',id:Math.random()});return enemies;}
-function init(){return {x:W/2,y:H-54,shots:[],bad:[],fx:[],enemies:formation(1),stage:1,score:0,lives:3,inv:1.7,time:0,fireDelay:0,shotTimer:0,formTime:0,stageBreak:0,done:false};}
+function bossForStage(stage){
+ if(stage%5!==0)return null;
+ const type=(Math.floor(stage/5)-1)%3;
+ return {x:W/2,y:115,baseX:W/2,baseY:112,type,hp:Math.round((type===2?115:type===1?85:65)*(1+Math.floor(stage/15)*.28)),maxHp:0,attack:0,phase:0,enter:0,stage,name:['침략자','파괴자','지배자'][type]};
+}
+function startStage(stage){
+ g.stage=stage;g.formTime=0;g.stageBreak=0;g.bad=[];g.shots=[];g.bossWarning=0;g.bossDefeated=false;
+ g.boss=bossForStage(stage);
+ if(g.boss){g.boss.maxHp=g.boss.hp;g.boss.y=-105;g.bossWarning=2.5;window.BbiyakSound?.play('bossWarning');notify(`${stage} 스테이지 · ${g.boss.name} 등장!`);}
+ g.enemies=g.boss?[]:formation(stage);
+ hud();
+}
+function init(){return {x:W/2,y:H-54,shots:[],bad:[],fx:[],enemies:formation(1),stage:1,score:0,lives:3,inv:1.7,time:0,fireDelay:0,shotTimer:0,formTime:0,stageBreak:0,boss:null,bossWarning:0,bossDefeated:false,done:false};}
 async function post(path,data){const r=await fetch(HOST+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});const v=await r.json();if(!r.ok)throw Error(v.error||'서버 연결 오류');return v;}
 async function startGame(){const name=$('nick').value.trim();if(!name){notify('닉네임을 입력해야 게임을 시작할 수 있습니다.');$('nick').focus();return;}roundName=name.slice(0,16);if(playing){stop(false);}g=init();playing=true;paused=false;ticket='';keys.left=keys.right=keys.fire=false;hideOverlay();hud();updateMobilePlaying(true);last=performance.now();if(!raf)raf=requestAnimationFrame(loop);try{const result=await post('/api/galaga/start',{});if(playing)ticket=result.ticket;}catch(e){notify('온라인 랭킹 연결 실패: 게임은 플레이할 수 있습니다.');}}
 function stop(submit){if(!playing)return;playing=false;paused=false;keys.fire=false;updateMobilePlaying(false);if(window.innerWidth<=850)requestAnimationFrame(()=>window.scrollTo({top:0,behavior:'instant'}));$('pause').textContent='일시정지';$('mobilePause').textContent='일시정지';const score=g?.score||0;const stage=g?.stage||1;overlay('게임 종료',`최종 점수 ${number(score)}점 · ${stage}스테이지`,'다시 시작');if(submit)saveScore(score,stage);}
@@ -113,23 +128,86 @@ function particle(x,y,color,count=9){for(let i=0;i<count;i++){const a=Math.rando
 function shoot(){window.BbiyakSound?.play('shoot');g.shots.push({x:g.x,y:g.y-19,vy:-530});g.fireDelay=.14;}
 function drawShip(x,y,inv){if(inv>0&&Math.floor(inv*10)%2===0)return;ctx.save();ctx.translate(x,y);ctx.fillStyle='#8cfff0';ctx.shadowColor='#45f5fb';ctx.shadowBlur=17;ctx.beginPath();ctx.moveTo(0,-23);ctx.lineTo(11,-2);ctx.lineTo(22,7);ctx.lineTo(11,12);ctx.lineTo(-11,12);ctx.lineTo(-22,7);ctx.lineTo(-11,-2);ctx.closePath();ctx.fill();ctx.shadowBlur=0;ctx.fillStyle='#a98bff';ctx.fillRect(-5,-5,10,16);ctx.fillStyle='#ffc9f4';ctx.fillRect(-13,3,7,5);ctx.fillRect(6,3,7,5);ctx.fillStyle='#ffc052';ctx.beginPath();ctx.moveTo(-6,12);ctx.lineTo(0,23+Math.random()*8);ctx.lineTo(6,12);ctx.fill();ctx.restore();}
 function drawEnemy(e,now){ctx.save();ctx.translate(e.x,e.y);const c=e.type==='boss'?'#f9bf69':e.type==='elite'?'#ff69af':'#a58aff';ctx.shadowColor=c;ctx.shadowBlur=9;ctx.fillStyle=c;const bob=Math.sin(now*2+e.phase)*2;ctx.translate(0,bob);ctx.beginPath();ctx.moveTo(-19,-7);ctx.lineTo(-12,-17);ctx.lineTo(-6,-10);ctx.lineTo(0,-16);ctx.lineTo(6,-10);ctx.lineTo(12,-17);ctx.lineTo(19,-7);ctx.lineTo(13,9);ctx.lineTo(7,5);ctx.lineTo(0,15);ctx.lineTo(-7,5);ctx.lineTo(-13,9);ctx.closePath();ctx.fill();ctx.shadowBlur=0;ctx.fillStyle='#101326';ctx.fillRect(-10,-2,6,4);ctx.fillRect(4,-2,6,4);if(e.hp>1){ctx.fillStyle='#ffecae';ctx.fillRect(-3,-22,6,4);}ctx.restore();}
+function bossFire(b){
+ const ty=b.type,spd=165+g.stage*7;
+ const put=(vx,vy,x=b.x,y=b.y+32,r=5)=>g.bad.push({x,y,vx,vy,r,boss:true});
+ if(ty===0){ // 침략자: 3발 확산탄 + 조준탄
+  for(const vx of [-90,0,90])put(vx,spd);
+  const a=Math.atan2(g.y-b.y,g.x-b.x);put(Math.cos(a)*220,Math.sin(a)*220);
+ }else if(ty===1){ // 파괴자: 부채꼴 7연발, 교차 패턴
+  for(let j=-3;j<=3;j++)put(j*61,spd+Math.cos(j*.6)*22,b.x+j*14,b.y+35);
+ }else{ // 지배자: 격자 장벽 + 조준 탄환
+  for(let j=-4;j<=4;j++)put(j*44,spd*.90,b.x+j*18,b.y+42,6);
+  for(const x of [b.x-65,b.x+65]){
+   const dx=g.x-x,dy=g.y-(b.y+40),k=240/Math.max(1,Math.hypot(dx,dy));put(dx*k,dy*k,x,b.y+40,5);
+  }
+ }
+}
+function drawBoss(b,now){
+ ctx.save();ctx.translate(b.x,b.y);const pulse=1+Math.sin(now*4)*.05;
+ ctx.scale(pulse,pulse);ctx.shadowBlur=26;
+ const colors=['#ffb26f','#dd88ff','#ff628e'];const c=colors[b.type];ctx.shadowColor=c;
+ ctx.fillStyle='#261a44';ctx.strokeStyle=c;ctx.lineWidth=5;
+ ctx.beginPath();ctx.moveTo(-70,0);ctx.lineTo(-48,-31);ctx.lineTo(-31,-25);ctx.lineTo(-22,-54);ctx.lineTo(22,-54);ctx.lineTo(31,-25);ctx.lineTo(48,-31);ctx.lineTo(70,0);ctx.lineTo(45,30);ctx.lineTo(25,17);ctx.lineTo(0,46);ctx.lineTo(-25,17);ctx.lineTo(-45,30);ctx.closePath();ctx.fill();ctx.stroke();
+ ctx.shadowBlur=10;ctx.fillStyle=c;
+ ctx.fillRect(-36,-3,18,12);ctx.fillRect(18,-3,18,12);ctx.fillRect(-9,0,18,21);
+ if(b.type>0){ctx.strokeStyle=b.type===2?'#ffdb8c':'#99f2ff';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(-49,-26);ctx.lineTo(-81,-47);ctx.moveTo(49,-26);ctx.lineTo(81,-47);ctx.stroke();}
+ if(b.type===2){ctx.fillStyle='#ffe7a1';ctx.beginPath();ctx.arc(0,-28,12,0,Math.PI*2);ctx.fill();}
+ ctx.restore();
+ // 보스 HP바 (게임판 상단)
+ ctx.save();ctx.fillStyle='#161225d9';ctx.fillRect(46,14,W-92,30);ctx.strokeStyle='#ad93d1';ctx.strokeRect(46,14,W-92,30);
+ ctx.fillStyle=c;ctx.fillRect(49,17,(W-98)*Math.max(0,b.hp/b.maxHp),24);
+ ctx.font='bold 15px system-ui';ctx.textAlign='center';ctx.fillStyle='#fff';ctx.shadowColor='#000';ctx.shadowBlur=4;
+ ctx.fillText(`BOSS · ${b.name}  ${Math.ceil(b.hp)}/${b.maxHp}`,W/2,36);ctx.restore();
+}
 function hit(a,b,rad){return Math.hypot(a.x-b.x,a.y-b.y)<rad;}
 function simulate(dt){if(!g||g.done)return;g.time+=dt;g.formTime+=dt;g.fireDelay=Math.max(0,g.fireDelay-dt);g.inv=Math.max(0,g.inv-dt);g.shotTimer+=dt;
 const speed=330;if(keys.left)g.x=Math.max(22,g.x-speed*dt);if(keys.right)g.x=Math.min(W-22,g.x+speed*dt);if(keys.fire&&g.fireDelay<=0)shoot();
 for(const a of stars){a.y+=a.v*dt*(1+g.stage*.025);if(a.y>H)a.y=-3;}
 for(const s of g.shots)s.y+=s.vy*dt;g.shots=g.shots.filter(s=>s.y>-12);
 const t=g.time,level=g.stage;
+ if(g.boss){
+  const b=g.boss;b.enter+=dt;
+  if(b.y<b.baseY)b.y=Math.min(b.baseY,b.y+dt*110);
+  b.x=b.baseX+Math.sin(t*(b.type===2?1.6:1.1))*Math.min(118,70+level*2);
+  b.attack-=dt;
+  if(b.y>=b.baseY&&b.attack<=0){bossFire(b);b.attack=[1.3,.94,.76][b.type]*Math.max(.65,1-level*.009);}
+  g.bossWarning=Math.max(0,g.bossWarning-dt);
+ }
+
 for(const e of g.enemies){if(!e.diving){e.x=e.homeX+Math.sin(g.formTime*(.8+level*.04))*Math.min(34,14+level*2);e.y=e.homeY+Math.cos(g.formTime*.65+e.phase)*3;if(Math.random()<dt*(.026+level*.005)){e.diving=true;e.diveT=0;e.dx=e.x;e.dy=e.y;}}else{e.diveT+=dt;const sp=Math.min(1.6,1+level*.03);e.y=e.dy+e.diveT*165*sp;e.x=e.dx+Math.sin(e.diveT*3+e.phase)*95;if(e.y>H+35){e.diving=false;e.x=e.homeX;e.y=e.homeY;}}
 if(Math.random()<dt*(e.diving?.16:.018)*Math.min(2.5,1+level*.09)&&e.y>10&&e.y<H-120)g.bad.push({x:e.x,y:e.y+12,vy:160+level*10});}
-for(const b of g.bad)b.y+=b.vy*dt;g.bad=g.bad.filter(b=>b.y<H+12);
+for(const b of g.bad){b.y+=b.vy*dt;b.x+=(b.vx||0)*dt;}g.bad=g.bad.filter(b=>b.y<H+12);
 for(const shot of g.shots){if(shot.dead)continue;for(const e of g.enemies){if(hit(shot,e,20)){shot.dead=true;e.hp--;particle(shot.x,shot.y,e.type==='boss'?'#ffcb71':'#b9a4ff',4);if(e.hp<=0){e.dead=true;window.BbiyakSound?.play('hit');g.score+=e.type==='boss'?300:e.type==='elite'?150:100;particle(e.x,e.y,e.type==='boss'?'#ffce80':'#dcbaff',13);}break;}}}
-g.shots=g.shots.filter(s=>!s.dead);g.enemies=g.enemies.filter(e=>!e.dead);
+if(g.boss){
+  const b=g.boss;
+  for(const shot of g.shots){
+   if(shot.dead)continue;
+   if(Math.abs(shot.x-b.x)<67&&Math.abs(shot.y-b.y)<52){
+    shot.dead=true;b.hp--;particle(shot.x,shot.y,'#ffca86',2);
+    if(b.hp<=0){
+     g.score+=2000+g.stage*150;g.boss=null;g.bossDefeated=true;
+     g.bad=[];particle(b.x,b.y,'#ffcd79',75);window.BbiyakSound?.play('bossWin');
+     notify(`${g.stage} 스테이지 ${b.name} 격파! 보너스 ${number(2000+g.stage*150)}점`);
+     break;
+    }else if(b.hp%8===0)window.BbiyakSound?.play('bossHit');
+    break;
+   }
+  }
+ }
+ g.shots=g.shots.filter(s=>!s.dead);g.enemies=g.enemies.filter(e=>!e.dead);
 if(g.inv<=0){let damaged=false;for(const b of g.bad)if(hit(b,g,20)){b.dead=true;damaged=true;break;}if(!damaged)for(const e of g.enemies)if(hit(e,g,25)){e.dead=true;damaged=true;break;}if(damaged){window.BbiyakSound?.play(g.lives<=1?'boom':'hurt');g.lives--;g.inv=2;particle(g.x,g.y,'#75faff',25);if(g.lives<=0){g.done=true;hud();stop(true);return;}}}
 g.bad=g.bad.filter(b=>!b.dead);g.enemies=g.enemies.filter(e=>!e.dead);
-if(g.enemies.length===0){g.stageBreak+=dt;if(g.stageBreak>1.3){g.stage++;window.BbiyakSound?.play('stage');g.enemies=formation(g.stage);g.formTime=0;g.stageBreak=0;g.bad=[];notify(`${g.stage} 스테이지 시작!`);}}else g.stageBreak=0;
+if(g.enemies.length===0&&!g.boss){
+  g.stageBreak+=dt;
+  if(g.stageBreak>1.8){const next=g.stage+1;window.BbiyakSound?.play('stage');startStage(next);if(next%5!==0)notify(`${next} 스테이지 시작!`);}
+ }else g.stageBreak=0;
 for(const p of g.fx){p.x+=p.vx*dt;p.y+=p.vy*dt;p.life-=dt;}g.fx=g.fx.filter(p=>p.life>0);hud();}
 function draw(){ctx.fillStyle='#090b1d';ctx.fillRect(0,0,W,H);for(const s of stars){ctx.fillStyle='rgba(210,225,255,'+(.25+s.r*.26)+')';ctx.fillRect(s.x,s.y,s.r,s.r);}ctx.strokeStyle='#251e44';ctx.lineWidth=1;for(let y=0;y<H;y+=65){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}if(!g){ctx.fillStyle='#5b3e80';ctx.fillRect(W/2-14,H-72,28,16);return;}
-for(const e of g.enemies)drawEnemy(e,g.time);ctx.fillStyle='#8afff2';ctx.shadowColor='#2bdcff';ctx.shadowBlur=10;for(const s of g.shots)ctx.fillRect(s.x-2,s.y-12,4,16);ctx.fillStyle='#ff769e';ctx.shadowColor='#ff5f97';for(const b of g.bad){ctx.beginPath();ctx.arc(b.x,b.y,4,0,Math.PI*2);ctx.fill();}ctx.shadowBlur=0;for(const p of g.fx){ctx.globalAlpha=Math.min(1,p.life*2);ctx.fillStyle=p.color;ctx.fillRect(p.x,p.y,4,4);}ctx.globalAlpha=1;drawShip(g.x,g.y,g.inv);if(paused){ctx.fillStyle='#0d0d23bb';ctx.fillRect(0,0,W,H);ctx.font='bold 35px system-ui';ctx.fillStyle='#fff3c2';ctx.textAlign='center';ctx.fillText('일시정지',W/2,H/2);ctx.textAlign='left';}}
+for(const e of g.enemies)drawEnemy(e,g.time);
+ if(g.boss)drawBoss(g.boss,g.time);
+ if(g.bossWarning>0&&g.boss){ctx.save();ctx.textAlign='center';ctx.font='bold 30px system-ui';ctx.fillStyle=Math.floor(g.time*5)%2?'#ffdf9b':'#ff718f';ctx.shadowColor='#ef5079';ctx.shadowBlur=18;ctx.fillText('⚠ BOSS WARNING ⚠',W/2,Math.min(280,180+g.boss.enter*40));ctx.restore();}
+ctx.fillStyle='#8afff2';ctx.shadowColor='#2bdcff';ctx.shadowBlur=10;for(const s of g.shots)ctx.fillRect(s.x-2,s.y-12,4,16);ctx.fillStyle='#ff769e';ctx.shadowColor='#ff5f97';for(const b of g.bad){ctx.beginPath();ctx.arc(b.x,b.y,b.r||4,0,Math.PI*2);ctx.fill();}ctx.shadowBlur=0;for(const p of g.fx){ctx.globalAlpha=Math.min(1,p.life*2);ctx.fillStyle=p.color;ctx.fillRect(p.x,p.y,4,4);}ctx.globalAlpha=1;drawShip(g.x,g.y,g.inv);if(paused){ctx.fillStyle='#0d0d23bb';ctx.fillRect(0,0,W,H);ctx.font='bold 35px system-ui';ctx.fillStyle='#fff3c2';ctx.textAlign='center';ctx.fillText('일시정지',W/2,H/2);ctx.textAlign='left';}}
 function loop(ts){raf=requestAnimationFrame(loop);const dt=Math.min(.05,(ts-last)/1000||0);last=ts;if(playing&&!paused)simulate(dt);draw();}
 function pause(){if(!playing)return;paused=!paused;$('pause').textContent=paused?'계속하기':'일시정지';$('mobilePause').textContent=paused?'계속하기':'일시정지';if(!paused)last=performance.now();}
 const isControl=k=>['ArrowLeft','ArrowRight','a','A','d','D',' ','p','P'].includes(k);window.addEventListener('keydown',e=>{if(document.activeElement?.tagName==='INPUT')return;if(isControl(e.key))e.preventDefault();if(e.key==='ArrowLeft'||e.key.toLowerCase()==='a')keys.left=true;if(e.key==='ArrowRight'||e.key.toLowerCase()==='d')keys.right=true;if(e.key===' ')keys.fire=true;if(e.key.toLowerCase()==='p'&&!e.repeat)pause();});window.addEventListener('keyup',e=>{if(e.key==='ArrowLeft'||e.key.toLowerCase()==='a')keys.left=false;if(e.key==='ArrowRight'||e.key.toLowerCase()==='d')keys.right=false;if(e.key===' ')keys.fire=false;});window.addEventListener('blur',()=>{keys.left=keys.right=keys.fire=false;if(playing&&!paused)pause();});
