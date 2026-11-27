@@ -1019,7 +1019,7 @@ $('#volume').oninput=e=>{SFX.master=+e.target.value/100;};reset();
   const name=$('nick').value.trim()||(spectator?'관전자':'');
   showNicknameWarning(false);
   const agreed=requireAgreement();
-  if(!name||!agreed)return;
+  if(!agreed)return; // 참가자와 관전자는 닉네임을 비워도 입장 가능
   const idRoom=toRoom();if(idRoom.length!==6){note('6자리 방 코드를 입력해 주세요.');return;}
   connectThen({type:'seotda_join',room:idRoom,name,spectator,agree:true,token:sessionStorage.getItem(tokenKey(idRoom))||''});
  });
