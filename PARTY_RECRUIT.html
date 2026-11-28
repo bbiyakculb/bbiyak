@@ -302,7 +302,6 @@ const koreaClock = new Intl.DateTimeFormat('sv-SE', {
 });
 
 const normalize = name => String(name ?? '').trim().normalize('NFC').toLowerCase();
-const partyVisibilityDuration = 7 * 24 * 60 * 60 * 1000;
 
 let activeNickname = null;
 let parties = [];
@@ -403,7 +402,7 @@ function updatePartyVisibility(now = Date.now()) {
 
     card.classList.toggle('departed', hasDeparted);
     card.querySelector('.ended').hidden = !hasDeparted;
-    card.hidden = age >= partyVisibilityDuration;
+    card.hidden = false;
 
     if (!card.hidden) hasVisibleParty = true;
   }
